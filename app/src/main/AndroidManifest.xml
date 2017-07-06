@@ -39,8 +39,14 @@
             </intent-filter>
         </activity>
         <activity android:name="com.odoo.core.account.ManageAccounts" />
+
+
         <activity
             android:name="com.odoo.OdooActivity"
+            android:label="${applicationName}" />
+
+        <activity
+            android:name="com.odoo.DashboardMenu"
             android:label="${applicationName}" />
         <activity android:name="odoo.controls.SearchableItemActivity" />
         <activity android:name="com.odoo.SettingsActivity" />
@@ -82,7 +88,7 @@
         <!-- Sync Provider & Service  // -->
         <provider
             android:name="com.odoo.addons.customers.providers.CustomersSyncProvider"
-            android:authorities="${applicationId}.core.provider.content.sync.res_partner"
+            android:authorities="${applicationId}.res_partner"
             android:label="@string/sync_label_customers"
             android:multiprocess="true" />
 
@@ -102,6 +108,117 @@
         <activity
             android:name="com.odoo.addons.customers.CustomerDetails"
             android:windowSoftInputMode="adjustPan" />
+
+        <!-- Sync Provider & Service TECHNIC // -->
+
+        <provider
+            android:name="mn.odoo.addons.technic.providers.TechnicsSyncProvider"
+            android:authorities="${applicationId}.core.provider.content.sync.technic"
+            android:label="@string/sync_label_technics"
+            android:multiprocess="true" />
+
+        <service
+            android:name="mn.odoo.addons.technic.services.TechnicSyncService"
+            android:exported="true"
+            android:process=":sync_feeds">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/technic_sync_adapter" />
+        </service>
+
+        <activity
+            android:name="mn.odoo.addons.technic.TechnicsDetails"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+
+        <!-- Sync Provider & Service TECHNIC INSPECTION // -->
+
+        <provider
+            android:name="mn.odoo.addons.TechnicInspection.providers.TechnicsInspectionSyncProvider"
+            android:authorities="${applicationId}.core.provider.content.sync.technic_inspection"
+            android:label="@string/sync_label_technics"
+            android:multiprocess="true" />
+
+        <service
+            android:name="mn.odoo.addons.TechnicInspection.services.TechnicInspectionSyncService"
+            android:exported="true"
+            android:process=":sync_feeds">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/technic_inspection_sync_adapter" />
+        </service>
+
+        <activity
+            android:name="mn.odoo.addons.TechnicInspection.TechnicsInspectionDetails"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity
+            android:name="mn.odoo.addons.TechnicInspection.TechnicsInspectionSignature"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+
+
+        <!-- Sync Provider & Service Scrap Parts // -->
+
+        <provider
+            android:name="mn.odoo.addons.scrapParts.providers.ScrapPartsSyncProvider"
+            android:authorities="${applicationId}.core.provider.content.sync.scrap_parts"
+            android:label="@string/sync_label_scrap_parts"
+            android:multiprocess="true" />
+
+        <service
+            android:name="mn.odoo.addons.scrapParts.services.ScrapPartsSyncService"
+            android:exported="true"
+            android:process=":sync_feeds">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/scrap_parts_sync_adapter" />
+        </service>
+
+        <activity
+            android:name="mn.odoo.addons.scrapParts.ScrapPartsDetails"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+
+        <!-- Sync Provider & Service Scrap Tire // -->
+
+        <provider
+            android:name="mn.odoo.addons.scrapTire.providers.ScrapTireSyncProvider"
+            android:authorities="${applicationId}.core.provider.content.sync.scrap_tire"
+            android:label="@string/sync_label_scrap_tire"
+            android:multiprocess="true" />
+
+        <service
+            android:name="mn.odoo.addons.scrapTire.services.ScrapTireSyncService"
+            android:exported="true"
+            android:process=":sync_feeds">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/scrap_tire_sync_adapter" />
+        </service>
+
+        <activity
+            android:name="mn.odoo.addons.scrapTire.ScrapTireDetails"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+
     </application>
 
 </manifest>

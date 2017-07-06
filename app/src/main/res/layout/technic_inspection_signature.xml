@@ -1,0 +1,84 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@color/gts_yellow"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="7dp"
+        android:layout_marginTop="40dp"
+        android:layout_gravity="center"
+        android:orientation="horizontal" >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:text="Тоон гарын үсэг:"
+            android:id="@+id/textView3" />
+        <EditText
+            android:layout_width="300dp"
+            android:inputType="textPassword"
+            android:layout_height="wrap_content"
+            android:id="@+id/et_confirm_code" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:orientation="horizontal" >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:text="Баталгаат гарын үсгээ зурна уу"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ss"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:orientation="horizontal" >
+            <Button
+                android:id="@+id/clear"
+                style="@style/button_text"
+                android:background="@drawable/green_button"
+                android:layout_width="wrap_content"
+                android:layout_gravity="right"
+                android:layout_height="wrap_content"
+                android:text="Арилгах" />
+            <Button
+                android:id="@+id/save"
+                android:layout_gravity="right"
+                style="@style/button_text"
+                android:background="@drawable/green_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Хадгалах" />
+        </LinearLayout>
+    <LinearLayout
+        android:id="@+id/mysignature"
+        android:layout_margin="5dp"
+        android:layout_width="fill_parent"
+        android:background="@drawable/signature_bg"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5"
+        android:orientation="horizontal" >
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textColor="@android:color/black"-->
+            <!--android:layout_gravity="center_vertical"-->
+            <!--android:text="/........./"-->
+            <!--android:textSize="250dp"/>-->
+    </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

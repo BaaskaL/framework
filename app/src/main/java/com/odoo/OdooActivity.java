@@ -98,9 +98,12 @@ public class OdooActivity extends OdooCompatActivity {
     private Boolean mHasActionBarSpinner = false;
     private App app;
 
+//    private Integer selectedIndexFromDashboardMenu = -1;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mDrawerSelectedIndex = getIntent().getExtras().getInt("selectedMenuIndex");
         Log.i(TAG, "OdooActivity->onCreate");
         mSavedInstanceState = savedInstanceState;
         app = (App) getApplicationContext();
@@ -549,22 +552,33 @@ public class OdooActivity extends OdooCompatActivity {
         super.onPostCreate(savedInstanceState);
         mSavedInstanceState = savedInstanceState;
         if (savedInstanceState == null) {
-            // Loading Default Fragment (if any)
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    IBaseFragment fragment = DrawerUtils.getDefaultDrawerFragment();
-                    if (fragment != null) {
-                        ODrawerItem item = DrawerUtils.getStartableObject(OdooActivity.this, fragment);
-                        setTitle(item.getTitle());
-                        loadDrawerItemInstance(item.getInstance(), item.getExtra());
-                        int selected_item = DrawerUtils.findItemIndex(item, mDrawerItemContainer);
-                        if (selected_item > -1) {
-                            focusOnDrawerItem(selected_item);
+            if (mDrawerSelectedIndex > 0) {
+                focusOnDrawerItem(mDrawerSelectedIndex);
+                View view = mDrawerItemContainer.getChildAt(mDrawerSelectedIndex);
+                ODrawerItem item = (ODrawerItem) view.getTag();
+                if (item.getInstance() instanceof Fragment) {
+                    focusOnDrawerItem(mDrawerSelectedIndex);
+                    setTitle(item.getTitle());
+                }
+                loadDrawerItemInstance(item.getInstance(), item.getExtra());
+            } else {
+                // Loading Default Fragment (if any)
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        IBaseFragment fragment = DrawerUtils.getDefaultDrawerFragment();
+                        if (fragment != null) {
+                            ODrawerItem item = DrawerUtils.getStartableObject(OdooActivity.this, fragment);
+                            setTitle(item.getTitle());
+                            loadDrawerItemInstance(item.getInstance(), item.getExtra());
+                            int selected_item = DrawerUtils.findItemIndex(item, mDrawerItemContainer);
+                            if (selected_item > -1) {
+                                focusOnDrawerItem(selected_item);
+                            }
                         }
                     }
-                }
-            }, DRAWER_ITEM_LAUNCH_DELAY);
+                }, DRAWER_ITEM_LAUNCH_DELAY);
+            }
         } else {
             mHasActionBarSpinner = savedInstanceState.getBoolean(KEY_HAS_ACTIONBAR_SPINNER);
             mDrawerSelectedIndex = savedInstanceState.getInt(KEY_CURRENT_DRAWER_ITEM);

@@ -35,6 +35,8 @@ import com.odoo.core.support.OUser;
 import com.odoo.core.utils.OdooRecordUtils;
 import com.odoo.datas.OConstants;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -112,7 +114,7 @@ public class ServerDataHelper {
         return mOdoo;
     }
 
-    public Object callMethod(String method, OArguments args) {
+    public Object callMethod(String method, OArguments args, JSONObject jsonObject) {
         return callMethod(method, args, null, null);
     }
 

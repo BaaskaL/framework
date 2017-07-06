@@ -1,0 +1,142 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/home_root"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/dashboard_menu_background"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="50dp"
+        android:src="@drawable/logo"
+        android:tint="@color/body_text_3" />
+
+    <TextView
+        android:id="@+id/title_txt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_8dp"
+        android:fontFamily="@string/font_light"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text="@string/app_title"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#ffffff"
+        android:textColorLink="#ffffff"
+        android:textSize="40dp"
+        android:textStyle="bold" />
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <!--  News Feed Button -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_employee"
+                style="@style/DashboardButton"
+                android:width="200dp"
+                android:drawableTop="@drawable/button_employees"
+                android:onClick="on_click_menu_button"
+                android:padding="30dp"
+                android:text="Ажилтан" />
+            <!--  Friends Button -->
+            <Button
+                android:id="@+id/btn_technic"
+                style="@style/DashboardButton"
+                android:width="200dp"
+                android:drawableTop="@drawable/button_bursger_tractor"
+                android:onClick="on_click_menu_button"
+                android:padding="30dp"
+                android:text="Техник" />
+            <!--  Messages Button -->
+            <Button
+                android:id="@+id/btn_inpection"
+                style="@style/DashboardButton"
+                android:width="200dp"
+                android:drawableTop="@drawable/button_technic_inspection"
+                android:onClick="on_click_menu_button"
+                android:padding="30dp"
+                android:text="Техникийн үзлэг" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_repair_in"
+                style="@style/DashboardButton"
+                android:width="200dp"
+                android:drawableTop="@drawable/button_repair_bursger"
+                android:onClick="on_click_menu_button"
+                android:padding="30dp"
+                android:text="Засварын ажиллабар" />
+
+            <Button
+                android:id="@+id/btn_technic_scrap"
+                style="@style/DashboardButton"
+                android:width="200dp"
+                android:drawableTop="@drawable/button_bursger_tractor"
+                android:onClick="on_click_menu_button"
+                android:padding="30dp"
+                android:text="Техник актлах хүсэлт" />
+
+            <Button
+                android:id="@+id/btn_part_scrap"
+                style="@style/DashboardButton"
+                android:width="200dp"
+                android:drawableTop="@drawable/button_part_bursger"
+                android:onClick="on_click_menu_button"
+                android:padding="30dp"
+                android:text="Сэлбэг актлах хүсэлт" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_tire_scrap"
+                style="@style/DashboardButton"
+                android:width="200dp"
+                android:drawableTop="@drawable/button_tire_bursger_tod"
+                android:onClick="on_click_menu_button"
+                android:padding="30dp"
+                android:text="Дугуй актлах хүсэлт" />
+
+            <Button
+                android:id="@+id/btn_oil_scrap"
+                style="@style/DashboardButton"
+                android:width="200dp"
+                android:drawableTop="@drawable/button_oil_scrap"
+                android:onClick="on_click_menu_button"
+                android:padding="30dp"
+                android:text="ШТМ актлах хүсэлт" />
+
+            <Button
+                android:id="@+id/btn_accumulator_scrap"
+                style="@style/DashboardButton"
+                android:width="200dp"
+                android:drawableTop="@drawable/button_accum_bursger"
+                android:onClick="on_click_menu_button"
+                android:padding="30dp"
+                android:text="Аккумлятор актлах хүсэлт" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="#247648"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/default_8dp">
+
+            <TextView
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:fontFamily="@string/font_normal"
+                android:gravity="left"
+                android:text="Сэлбэг"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textColor="#ffffff"
+                android:textStyle="bold"></TextView>
+
+            <TextView
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:fontFamily="@string/font_normal"
+                android:gravity="left"
+                android:text="Техникийн нэр"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textColor="#ffffff"
+                android:textStyle="bold"></TextView>
+
+            <TextView
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="0.5"
+                android:fontFamily="@string/font_normal"
+                android:gravity="left"
+                android:text="Бүртгэсэн огноо"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textColor="#ffffff"
+                android:textStyle="bold"></TextView>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

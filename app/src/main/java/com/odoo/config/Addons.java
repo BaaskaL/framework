@@ -23,6 +23,11 @@ import com.odoo.addons.customers.Customers;
 import com.odoo.core.support.addons.AddonsHelper;
 import com.odoo.core.support.addons.OAddon;
 
+import mn.odoo.addons.TechnicInspection.TechnicsInspection;
+import mn.odoo.addons.scrapParts.ScrapPart;
+import mn.odoo.addons.scrapTire.ScrapTire;
+import mn.odoo.addons.technic.Technics;
+
 public class Addons extends AddonsHelper {
 
     /**
@@ -34,4 +39,8 @@ public class Addons extends AddonsHelper {
      * OAddon partners = new OAddon(Partners.class).withSequence(2);
      */
     OAddon customers = new OAddon(Customers.class).setDefault();
+    OAddon technic = new OAddon(Technics.class);
+    OAddon technicInspection = new OAddon(TechnicsInspection.class);
+    OAddon scrapParts = new OAddon(ScrapPart.class);
+    OAddon scrapTire = new OAddon(ScrapTire.class);
 }

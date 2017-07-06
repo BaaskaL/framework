@@ -64,6 +64,7 @@
                         android:gravity="center_vertical"
                         android:hint="@string/label_your_self_hosted_url"
                         android:singleLine="true"
+                        android:text="10.0.9.11:808"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColorHint="@color/body_text_3" />
 
@@ -115,6 +116,7 @@
                         android:fontFamily="@string/font_light"
                         android:gravity="center_vertical"
                         android:hint="@string/label_username_or_email"
+                        android:text="admin"
                         android:singleLine="true"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColorHint="@color/body_text_3" />
@@ -150,6 +152,7 @@
                         android:fontFamily="@string/font_light"
                         android:gravity="center_vertical"
                         android:hint="@string/label_password"
+                        android:text="123"
                         android:inputType="textPassword"
                         android:singleLine="true"
                         android:textAppearance="?android:attr/textAppearanceMedium"

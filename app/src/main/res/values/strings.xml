@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Odoo</string>
+    <!--<string name="app_name">Odoo</string>-->
+    <string name="app_name">Техник Ашиглалт Бүртгэл</string>
     <string name="sync_label_customers">Customers</string>
     <string name="toast_information_saved">Information Saved</string>
     <string name="toast_image_size_too_large">Image size too large !</string>
@@ -16,4 +17,13 @@
     <string name="toast_permission_download_storage_help">Storage permission required to store downloaded files on sdcard of your phone. Please grant permission for use this feature</string>
     <string name="confirm_are_you_sure_want_to_delete">Are you sure want to delete ?</string>
     <string name="toast_record_deleted">Record deleted</string>
+    <string name="label_no_technic_found">No Technic Found !</string>
+    <string name="sync_label_technics">Technics</string>
+    <string name="sync_label_scrap_parts">Scrap Parts</string>
+    <string name="sync_label_scrap_tire">Scrap Tire</string>
+    <string name="label_no_technic_inspection_found">No Technic Inspection Found !</string>
+    <string name="label_no_scrap_parts_found">No Parts Scrap Found !</string>
+    <string name="label_no_scrap_tires_found">No Tires Scrap Found !</string>
+    <string name="label_new">New</string>
+    <string name="app_title">Техник Ашиглалт Бүртгэл</string>
 </resources>
