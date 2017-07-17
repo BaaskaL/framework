@@ -59,7 +59,8 @@
                         android:layout_height="wrap_content"
                         app:fieldLabelColor="@color/theme_secondary"
                         app:fieldName="is_payable"
-                        app:fieldTextAppearance="?android:textAppearanceSmall" />
+                        app:fieldTextAppearance="?android:textAppearanceSmall"
+                        app:showLabel="false" />
 
                     <odoo.controls.OField
                         android:layout_width="match_parent"
@@ -165,7 +166,7 @@
                         app:fieldLabelColor="@color/theme_secondary"
                         app:fieldName="is_payable"
                         app:fieldTextAppearance="?android:textAppearanceMedium"
-                        app:fieldType="Selection" />
+                        app:showLabel="false" />
 
                     <odoo.controls.OField
                         android:id="@+id/description"

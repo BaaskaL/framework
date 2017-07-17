@@ -24,6 +24,7 @@
     <string name="label_no_technic_inspection_found">No Technic Inspection Found !</string>
     <string name="label_no_scrap_parts_found">No Parts Scrap Found !</string>
     <string name="label_no_scrap_tires_found">No Tires Scrap Found !</string>
+    <string name="label_no_scrap_oil_found">No Oil Scrap Found !</string>
     <string name="label_new">New</string>
     <string name="app_title">Техник Ашиглалт Бүртгэл</string>
 </resources>

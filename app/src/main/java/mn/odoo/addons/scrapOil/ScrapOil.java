@@ -1,9 +1,7 @@
-package mn.odoo.addons.scrapTire;
+package mn.odoo.addons.scrapOil;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.Cursor;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.LoaderManager;
@@ -21,9 +19,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.odoo.R;
-import com.odoo.addons.scrapTire.models.ScrapTires;
+import com.odoo.addons.scrapOil.models.ScrapOils;
 import com.odoo.core.orm.ODataRow;
-import com.odoo.core.rpc.helper.ODomain;
 import com.odoo.core.support.addons.fragment.BaseFragment;
 import com.odoo.core.support.addons.fragment.IOnSearchViewChangeListener;
 import com.odoo.core.support.addons.fragment.ISyncStatusObserverListener;
@@ -37,20 +34,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by baaska on 6/29/17.
+ * Created by baaska on 7/16/17.
  */
 
-public class ScrapTire extends BaseFragment implements LoaderManager.LoaderCallbacks<Cursor>,
+public class ScrapOil extends BaseFragment implements LoaderManager.LoaderCallbacks<Cursor>,
         ISyncStatusObserverListener, SwipeRefreshLayout.OnRefreshListener, OCursorListAdapter.OnViewBindListener, IOnSearchViewChangeListener,
         AdapterView.OnItemClickListener, View.OnClickListener {
 
-    public static final String KEY = ScrapTire.class.getSimpleName();
+    public static final String KEY = ScrapOil.class.getSimpleName();
     private String mCurFilter = null;
     private View mView;
     private OCursorListAdapter mAdapter = null;
     private boolean syncRequested = false;
-    private ScrapTires scrapTire;
-    private Context mContext;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -67,10 +62,8 @@ public class ScrapTire extends BaseFragment implements LoaderManager.LoaderCallb
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mView = view;
-        mContext = this.getContext();
-        scrapTire = new ScrapTires(mContext, null);
         ListView mListViewScrap = (ListView) mView.findViewById(R.id.listview_scrap);
-        mAdapter = new OCursorListAdapter(getActivity(), null, R.layout.scrap_tire_row_item);
+        mAdapter = new OCursorListAdapter(getActivity(), null, R.layout.scrap_oil_row_item);
         mAdapter.setOnViewBindListener(this);
 
         mListViewScrap.setAdapter(mAdapter);
@@ -90,9 +83,9 @@ public class ScrapTire extends BaseFragment implements LoaderManager.LoaderCallb
 
     @Override
     public void onViewBind(View view, Cursor cursor, ODataRow row) {
-        OControls.setText(view, R.id.tvTireName, (row.getString("origin").equals("false") ? "" : row.getString("origin")));
-        OControls.setText(view, R.id.tvTechnicName, (row.getString("technic_name")));
-        OControls.setText(view, R.id.tvDate, (row.getString("date")));
+        OControls.setText(view, R.id.tvOilSequence, (row.getString("origin").equals("false") ? "" : row.getString("origin")));
+        OControls.setText(view, R.id.tvOilTechnicName, (row.getString("technic_name")));
+        OControls.setText(view, R.id.tvOilDate, (row.getString("date")));
     }
 
     @Override
@@ -124,8 +117,7 @@ public class ScrapTire extends BaseFragment implements LoaderManager.LoaderCallb
                     OControls.setGone(mView, R.id.loadingProgress);
                     OControls.setVisible(mView, R.id.swipe_container_scrap);
                     OControls.setGone(mView, R.id.data_list_no_item);
-                    setHasSwipeRefreshView(mView, R.id.swipe_container_scrap, ScrapTire.this);
-
+                    setHasSwipeRefreshView(mView, R.id.swipe_container_scrap, ScrapOil.this);
                 }
             }, 500);
         } else {
@@ -135,9 +127,9 @@ public class ScrapTire extends BaseFragment implements LoaderManager.LoaderCallb
                     OControls.setGone(mView, R.id.loadingProgress);
                     OControls.setGone(mView, R.id.swipe_container_scrap);
                     OControls.setVisible(mView, R.id.data_list_no_item);
-                    setHasSwipeRefreshView(mView, R.id.data_list_no_item, ScrapTire.this);
+                    setHasSwipeRefreshView(mView, R.id.data_list_no_item, ScrapOil.this);
                     OControls.setImage(mView, R.id.icon, R.drawable.ic_action_customers);
-                    OControls.setText(mView, R.id.title, _s(R.string.label_no_scrap_tires_found));
+                    OControls.setText(mView, R.id.title, _s(R.string.label_no_scrap_oil_found));
                     OControls.setText(mView, R.id.subTitle, "");
                 }
             }, 500);
@@ -151,41 +143,11 @@ public class ScrapTire extends BaseFragment implements LoaderManager.LoaderCallb
     @Override
     public void onRefresh() {
         if (inNetwork()) {
-            parent().sync().requestSync(ScrapTires.AUTHORITY);
-            OnTireScrapChangeUpdate onTireScrapChangeUpdate = new OnTireScrapChangeUpdate();
-            ODomain d = new ODomain();
-            onTireScrapChangeUpdate.execute(d);
+            parent().sync().requestSync(ScrapOils.AUTHORITY);
             setSwipeRefreshing(true);
         } else {
             hideRefreshingProgress();
             Toast.makeText(getActivity(), _s(R.string.toast_network_required), Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private class OnTireScrapChangeUpdate extends AsyncTask<ODomain, Void, Void> {
-        private ProgressDialog progressDialog;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = new ProgressDialog(mContext);
-            progressDialog.setCancelable(false);
-            progressDialog.setTitle(R.string.title_please_wait);
-            progressDialog.setMessage("Update");
-            progressDialog.hide();
-        }
-
-        @Override
-        protected Void doInBackground(ODomain... params) {
-            ODomain domain = params[0];
-            scrapTire.quickSyncRecords(domain);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            progressDialog.dismiss();
         }
     }
 
@@ -197,15 +159,15 @@ public class ScrapTire extends BaseFragment implements LoaderManager.LoaderCallb
     @Override
     public List<ODrawerItem> drawerMenus(Context context) {
         List<ODrawerItem> items = new ArrayList<>();
-        items.add(new ODrawerItem(KEY).setTitle("Дугуй актлах хүсэлт")
-                .setIcon(R.drawable.ic_action_tire)
-                .setInstance(new ScrapTire()));
+        items.add(new ODrawerItem(KEY).setTitle("ШТМ актлах хүсэлт")
+                .setIcon(R.drawable.ic_action_customers)
+                .setInstance(new ScrapOil()));
         return items;
     }
 
     @Override
-    public Class<ScrapTires> database() {
-        return ScrapTires.class;
+    public Class<ScrapOils> database() {
+        return ScrapOils.class;
     }
 
     @Override
@@ -233,10 +195,7 @@ public class ScrapTire extends BaseFragment implements LoaderManager.LoaderCallb
         if (row != null) {
             data = row.getPrimaryBundleData();
         }
-        IntentUtils.startActivity(getActivity(), ScrapTireDetails.class, data);
-//        ODomain aa = new ODomain();
-//        parent().sync().requestSync(ScrapTires.AUTHORITY);
-//        ScrapTires.quickSyncRecords(aa);
+        IntentUtils.startActivity(getActivity(), ScrapOilDetails.class, data);
     }
 
     @Override

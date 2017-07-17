@@ -21,25 +21,25 @@ public class DashboardMenu extends Activity {
             case R.id.btn_employee:
                 index = 0;
                 break;
-            case R.id.btn_part_scrap:
+            case R.id.btn_oil_scrap:
                 index = 3;
                 break;
-            case R.id.btn_tire_scrap:
+            case R.id.btn_part_scrap:
                 index = 4;
                 break;
-            case R.id.btn_technic:
+            case R.id.btn_tire_scrap:
                 index = 5;
                 break;
-            case R.id.btn_inpection:
+            case R.id.btn_technic:
                 index = 6;
+                break;
+            case R.id.btn_inpection:
+                index = 7;
                 break;
             case R.id.btn_repair_in:
                 index = -1;
                 break;
             case R.id.btn_technic_scrap:
-                index = -1;
-                break;
-            case R.id.btn_oil_scrap:
                 index = -1;
                 break;
             case R.id.btn_accumulator_scrap:

@@ -17,7 +17,7 @@
  * <p>
  * Created on 31/12/14 6:43 PM
  */
-package com.odoo.addons.scrapTire.models;
+package com.odoo.addons.scrapOil.models;
 
 import android.content.Context;
 
@@ -25,23 +25,22 @@ import com.odoo.addons.technic.models.TechnicsModel;
 import com.odoo.core.orm.OModel;
 import com.odoo.core.orm.fields.OColumn;
 import com.odoo.core.orm.fields.types.ODateTime;
-import com.odoo.core.orm.fields.types.OInteger;
+import com.odoo.core.orm.fields.types.OFloat;
 import com.odoo.core.orm.fields.types.OVarchar;
 import com.odoo.core.support.OUser;
 
-public class TechnicTire extends OModel {
+public class TechnicOil extends OModel {
 
     OColumn name = new OColumn("Дугуйны нэр", OVarchar.class);
     OColumn serial = new OColumn("Сериал", OVarchar.class);
     OColumn technic_id = new OColumn("Техникийн нэр", TechnicsModel.class, OColumn.RelationType.ManyToOne);
+    OColumn product_id = new OColumn("Бараа", ProductProduct.class, OColumn.RelationType.ManyToOne);
+    OColumn capacity = new OColumn("Хэмжээ", OFloat.class);
     OColumn date_record = new OColumn("Суурилуулсан огноо", ODateTime.class);
-    //    OColumn tread_depreciation_percent = new OColumn("Хээний элэгдлийн хувь", Float.class);
-    OColumn current_position = new OColumn("Одоогийн байрлал", OInteger.class);
-    OColumn reason = new OColumn("Reason", TiresScrapReason.class, OColumn.RelationType.ManyToOne);
+    OColumn reason = new OColumn("Reason", TiresOilReason.class, OColumn.RelationType.ManyToOne);
     OColumn state = new OColumn("State", OVarchar.class);
-    OColumn scrap_id = new OColumn("Scrap id", ScrapTires.class, OColumn.RelationType.ManyToOne);
 
-    public TechnicTire(Context context, OUser user) {
-        super(context, "tire.register", user);
+    public TechnicOil(Context context, OUser user) {
+        super(context, "shtm.register", user);
     }
 }

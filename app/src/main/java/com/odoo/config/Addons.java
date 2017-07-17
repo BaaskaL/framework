@@ -24,6 +24,7 @@ import com.odoo.core.support.addons.AddonsHelper;
 import com.odoo.core.support.addons.OAddon;
 
 import mn.odoo.addons.TechnicInspection.TechnicsInspection;
+import mn.odoo.addons.scrapOil.ScrapOil;
 import mn.odoo.addons.scrapParts.ScrapPart;
 import mn.odoo.addons.scrapTire.ScrapTire;
 import mn.odoo.addons.technic.Technics;
@@ -43,4 +44,5 @@ public class Addons extends AddonsHelper {
     OAddon technicInspection = new OAddon(TechnicsInspection.class);
     OAddon scrapParts = new OAddon(ScrapPart.class);
     OAddon scrapTire = new OAddon(ScrapTire.class);
+    OAddon scrapOil = new OAddon(ScrapOil.class);
 }

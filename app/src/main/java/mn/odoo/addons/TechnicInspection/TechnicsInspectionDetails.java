@@ -760,7 +760,7 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
             userImages.setColorFilter(null);
             userImages.setImageBitmap(BitmapUtils.getBitmapImage(this, newImage));
 
-            Uri aa = userImages.getim;
+//            Uri aa = userImages.getim;
 
             Bitmap img = BitmapUtils.getBitmapImage(this, newImage);
             Matrix matrix = new Matrix();

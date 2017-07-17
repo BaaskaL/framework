@@ -929,6 +929,7 @@ public class OModel implements ISyncServiceListener {
         for (RelCommands commands : columnValues.keySet()) {
             switch (column.getRelationType()) {
                 case OneToMany:
+                    Log.i("columnValues===", columnValues.toString());
                     handleOneToManyRecords(column, commands, relModel, record_id, columnValues);
                     break;
                 case ManyToMany:
@@ -944,17 +945,21 @@ public class OModel implements ISyncServiceListener {
             // Force to unlink record even no any other record values available.
             OValues old_values = new OValues();
             old_values.put(column.getRelatedColumn(), 0);
+            Log.i("ene_idddd==", record_id + "");
             int count = relModel.update(column.getRelatedColumn() + " = ?", new String[]{record_id + ""},
                     old_values);
             Log.i(TAG, String.format("#%d references removed " + relModel.getModelName(), count));
         }
         for (Object rowObj : values.get(commands)) {
+            Log.i("o2m_value_inser====", rowObj.toString());
             switch (commands) {
                 case Append:
                     OValues value;
                     if (rowObj instanceof OValues) {
                         value = (OValues) rowObj;
                         value.put(column.getRelatedColumn(), record_id);
+                        Log.i("o2m_value_inser====", value.toString());
+                        Log.i("relModel===========", relModel.toString());
                         relModel.insert(value);
                     } else {
                         int rec_id = (int) rowObj;

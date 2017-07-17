@@ -30,7 +30,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -411,7 +410,7 @@ public class OSelectionField extends LinearLayout implements IOControlData,
                         row = getRecordData(row_id);
                     } else {
                         row = new ODataRow();
-                        row.put(mModel.getDefaultNameColumn(), "No " + mCol.getLabel() + " selected");
+                        row.put(mModel.getDefaultNameColumn(), "No " + mCol.getLabel() + " сонгоогүй байна");
                     }
                 }
             }
@@ -625,7 +624,7 @@ public class OSelectionField extends LinearLayout implements IOControlData,
                 args, rel_model.getDefaultNameColumn());
         ODataRow row = new ODataRow();
         row.put(OColumn.ROW_ID, -1);
-        row.put(rel_model.getDefaultNameColumn(), "No " + column.getLabel() + " selected");
+        row.put(rel_model.getDefaultNameColumn(), column.getLabel() + " сонгоогүй байна.");
         items.add(row);
         items.addAll(rows);
         return items;

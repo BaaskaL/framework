@@ -17,10 +17,9 @@
  * <p>
  * Created on 31/12/14 6:43 PM
  */
-package com.odoo.addons.scrapTire.models;
+package com.odoo.addons.scrapOil.models;
 
 import android.content.Context;
-import android.net.Uri;
 import android.util.Log;
 
 import com.odoo.BuildConfig;
@@ -34,12 +33,12 @@ import com.odoo.core.orm.fields.types.ODateTime;
 import com.odoo.core.orm.fields.types.OVarchar;
 import com.odoo.core.support.OUser;
 
-public class ScrapTires extends OModel {
-    public static final String AUTHORITY = BuildConfig.APPLICATION_ID + ".core.provider.content.sync.scrap_tire";
+public class ScrapOils extends OModel {
+    public static final String AUTHORITY = BuildConfig.APPLICATION_ID + ".core.provider.content.sync.oil_scrap";
 
     OColumn origin = new OColumn("Актын дугаар", OVarchar.class);
     OColumn technic_id = new OColumn("Техник", TechnicsModel.class, OColumn.RelationType.ManyToOne);
-    OColumn tire_ids = new OColumn("Дугуй", TechnicTire.class, OColumn.RelationType.OneToMany).setRelatedColumn("scrap_id");
+    OColumn oil_ids = new OColumn("ШТМ", TechnicOil.class, OColumn.RelationType.OneToMany);
     OColumn is_payable = new OColumn("Төлбөртэй эсэх", OBoolean.class);
     OColumn date = new OColumn("Огноо", ODateTime.class);
     OColumn description = new OColumn("Тайлбар", OVarchar.class);
@@ -49,8 +48,8 @@ public class ScrapTires extends OModel {
     OColumn technic_name = new OColumn("Техник", OVarchar.class).setLocalColumn();
 
 
-    public ScrapTires(Context context, OUser user) {
-        super(context, "tire.scrap", user);
+    public ScrapOils(Context context, OUser user) {
+        super(context, "oil.scrap", user);
     }
 
     public String storeTechnicName(OValues row) {
@@ -70,11 +69,6 @@ public class ScrapTires extends OModel {
             }
         }
         return name;
-    }
-
-    @Override
-    public Uri uri() {
-        return buildURI(AUTHORITY);
     }
 
 }

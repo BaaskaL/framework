@@ -131,7 +131,7 @@ public class OSyncAdapter extends AbstractThreadedSyncAdapter {
                         mDomain.get(mModel.getModelName()) : null;
 
                 // Ready for sync data from server
-                syncData(mModel, mUser, domain, syncResult, true, true);
+                 syncData(mModel, mUser, domain, syncResult, true, true);
             } else {
                 Log.e(TAG, "Unable to connect with Odoo Server.");
             }
@@ -333,10 +333,13 @@ public class OSyncAdapter extends AbstractThreadedSyncAdapter {
      * @param model model object
      */
     private void createRecordsOnServer(OModel model) {
+        Log.i("model====", model.toString());
         List<ODataRow> records = model.select(null,
                 "(id = ? or id = ?)", new String[]{"0", "false"});
         int counter = 0;
+        Log.i("records====", records.toString());
         for (ODataRow record : records) {
+            Log.i("record====", record.toString());
             if (validateRelationRecords(model, record)) {
                 /*
                  Need to check server id for record.
@@ -345,10 +348,12 @@ public class OSyncAdapter extends AbstractThreadedSyncAdapter {
                 if (model.selectServerId(record.getInt(OColumn.ROW_ID)) == 0) {
                     int id = createOnServer(model, OdooRecordUtils.createRecordValues(model, record));
                     if (id != OModel.INVALID_ROW_ID) {
+                        Log.i("new_id=====", id + "");
                         OValues values = new OValues();
                         values.put("id", id);
                         values.put("_is_dirty", "false");
                         values.put("_write_date", ODateUtils.getUTCDate());
+                        Log.i("OColumn.ROW_ID=====", record.getInt(OColumn.ROW_ID) + "");
                         model.update(record.getInt(OColumn.ROW_ID), values);
                         counter++;
                     } else {
@@ -400,6 +405,10 @@ public class OSyncAdapter extends AbstractThreadedSyncAdapter {
                     break;
                 case OneToMany:
                     List<ODataRow> o2mRecs = row.getO2MRecord(column.getName()).browseEach();
+                    Log.i("model======", model.toString());
+                    Log.i("row======", row.toString());
+                    Log.i("column.getName()==", column.getName().toString());
+                    Log.i("o2mRecs==", o2mRecs.toString());
                     if (!o2mRecs.isEmpty()) {
                         for (ODataRow o2mRec : o2mRecs) {
                             if (o2mRec.getInt("id") == 0) {
@@ -433,6 +442,7 @@ public class OSyncAdapter extends AbstractThreadedSyncAdapter {
         int id = OModel.INVALID_ROW_ID;
         try {
             if (values != null) {
+                Log.i("values====11", values.toString());
                 OdooResult result = mOdoo.createRecord(model.getModelName(), values);
                 id = result.getInt("result");
             }
