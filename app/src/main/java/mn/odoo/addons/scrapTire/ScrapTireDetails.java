@@ -9,8 +9,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -267,10 +265,6 @@ public class ScrapTireDetails extends OdooCompatActivity implements OField.IOnFi
             setMode(mEditMode);
             mForm.setEditable(mEditMode);
             mForm.initForm(null);
-//            tireImage.setOnClickListener(this);
-//            tireImage.setColorFilter(Color.parseColor("#ffffff"));
-//            tireImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-//            ((OField) mForm.findViewById(R.id.inspection_registrar_id)).setValue(myId);
             ((OField) mForm.findViewById(R.id.tire_date)).setValue(ODateUtils.getDate());
             OField oState = (OField) mForm.findViewById(R.id.tire_state);
             oState.setValue("Ноорог");
@@ -281,6 +275,8 @@ public class ScrapTireDetails extends OdooCompatActivity implements OField.IOnFi
             record = scrapTires.browse(rowId);
             setMode(mEditMode);
             tireLines = record.getO2MRecord("tire_ids").browseEach();
+            getTire();
+            Log.i("browse_value==", record.toString());
             mForm.setEditable(mEditMode);
             mForm.initForm(record);
         }
@@ -333,9 +329,8 @@ public class ScrapTireDetails extends OdooCompatActivity implements OField.IOnFi
                 OValues values = mForm.getValues();
                 if (values != null) {
                     if (record != null) {
-                        Log.i("update value===", values.toString());
                         scrapTires.update(record.getInt(OColumn.ROW_ID), values);
-                        Toast.makeText(this, R.string.toast_information_saved, Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, R.string.tech_toast_information_saved, Toast.LENGTH_LONG).show();
                         mEditMode = !mEditMode;
                         onCustomerChangeUpdate.execute(ccc);
                         setupToolbar();
@@ -455,18 +450,13 @@ public class ScrapTireDetails extends OdooCompatActivity implements OField.IOnFi
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-//            progressDialog = new ProgressDialog(ScrapTireDetails.this);
-//            progressDialog.setCancelable(false);
-//            progressDialog.setTitle(R.string.title_please_wait);
-//            progressDialog.setMessage(OResource.string(ScrapTireDetails.this, R.string.title_working));
-//            progressDialog.show();
         }
 
         @Override
         protected Void doInBackground(ODomain... params) {
             ODomain aa = params[0];
-//            scrapTires.quickCreateRecord()
             scrapTires.quickSyncRecords(aa);
+            //required 2 call
             scrapTires.quickSyncRecords(aa);
             return null;
         }
@@ -474,7 +464,6 @@ public class ScrapTireDetails extends OdooCompatActivity implements OField.IOnFi
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-//            progressDialog.dismiss();
         }
     }
 
@@ -543,15 +532,9 @@ public class ScrapTireDetails extends OdooCompatActivity implements OField.IOnFi
         public boolean onMenuItemClick(MenuItem menuItem) {
             switch (menuItem.getItemId()) {
                 case R.id.menu_delete:
+                    tireLines.remove(position);
                     TireObjects.remove(position);
                     mAdapter.notifyDataSetChanged(TireObjects);
-//                    String RemoveCategory = mDataSet.get(position).getCategory();
-//                    // mDataSet.remove(position);
-//                    //notifyItemRemoved(position);
-//                    // notifyItemRangeChanged(position,mDataSet.size());
-//
-//                    mySharedPreferences.saveStringPrefs(Constants.REMOVE_CTAGURY, RemoveCategory, MainActivity.context);
-//                    Toast.makeText(MainActivity.context, "Add to favourite", Toast.LENGTH_SHORT).show();
                     return true;
                 default:
             }
@@ -575,7 +558,6 @@ public class ScrapTireDetails extends OdooCompatActivity implements OField.IOnFi
     }
 
     private void showPopupMenu(View view, int position) {
-        // inflate menu
         PopupMenu popup = new PopupMenu(view.getContext(), view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.card_view_menu, popup.getMenu());
@@ -583,7 +565,7 @@ public class ScrapTireDetails extends OdooCompatActivity implements OField.IOnFi
         popup.show();
     }
 
-    private void TireshowPopupMenu(View view, int position) {
+    private void TireShowPopupMenu(View view, int position) {
         PopupMenu popup = new PopupMenu(view.getContext(), view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.card_view_menu, popup.getMenu());
@@ -596,11 +578,15 @@ public class ScrapTireDetails extends OdooCompatActivity implements OField.IOnFi
 
     private void getTire() {
         if (extra != null && record != null) {
+
+//            List<ODataRow> crapTire = scrapTires.select(new String[]{"tires"}, "_id = ? ", new String[]{record.getString("technic_id")});
+
             List<ODataRow> tech = technic.select(new String[]{"tires"}, "_id = ? ", new String[]{record.getString("technic_id")});
             if (tech.size() > 0) {
                 ODataRow techs = technic.select(new String[]{"tires"}, "_id = ? ", new String[]{record.getString("technic_id")}).get(0);
                 Log.i("techs====", techs.toString());
-                tireLines = techs.getO2MRecord("tires").browseEach();
+//                tireLines = techs.getO2MRecord("tires").browseEach();
+                tireLines = record.getO2MRecord("tire_ids").browseEach();
                 Log.i("tire_o2m get val ===", tireLines.toString());
             }
         }
@@ -616,24 +602,24 @@ public class ScrapTireDetails extends OdooCompatActivity implements OField.IOnFi
                             if (mView == null) {
                                 mView = getLayoutInflater().inflate(template, parent, false);
                             }
-                            final EditText serial = (EditText) mView.findViewById(R.id.serial);
-                            serial.setEnabled(mEditMode);
+                            EditText serial = (EditText) mView.findViewById(R.id.serial);
+                            serial.setEnabled(false);
                             TextView name = (TextView) mView.findViewById(R.id.name);
                             ImageButton mImageButton = (ImageButton) mView.findViewById(R.id.btn_detail);
-
+                            mImageButton.setVisibility(mEditMode ? View.VISIBLE : View.GONE);
                             mImageButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
                                     showPopupMenu(view, position);
                                 }
                             });
-
                             TextView date_record = (TextView) mView.findViewById(R.id.date_record);
 //                            TextView tread_depreciation_percent = (TextView) mView.findViewById(R.id.tread_depreciation_percent);
                             TextView current_position = (TextView) mView.findViewById(R.id.current_position);
                             TextView state = (TextView) mView.findViewById(R.id.state);
                             ImageView tireImage = (ImageView) mView.findViewById(R.id.tireImage);
-                            final FloatingActionButton captureImageTire = (FloatingActionButton) mView.findViewById(R.id.captureImageTire);
+                            FloatingActionButton captureImageTire = (FloatingActionButton) mView.findViewById(R.id.captureImageTire);
+                            captureImageTire.setVisibility(mEditMode ? View.VISIBLE : View.GONE);
 
                             ODataRow row = (ODataRow) mAdapter.getItem(position);
                             name.setText((position + 1) + ". " + row.getString("name"));
@@ -642,23 +628,6 @@ public class ScrapTireDetails extends OdooCompatActivity implements OField.IOnFi
                             current_position.setText(row.getString("current_position"));
                             serial.setText(row.getString("serial"));
                             state.setText(row.getString("state"));
-                            serial.addTextChangedListener(new TextWatcher() {
-                                @Override
-                                public void afterTextChanged(Editable s) {
-                                    if (s.length() != 0) {
-                                        tireLines.get(position).put("usage_value", serial.getText().toString());
-                                    }
-                                    Log.i("linesUom=====", tireLines.toString());
-                                }
-
-                                @Override
-                                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                                }
-
-                                @Override
-                                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                                }
-                            });
                             pos = position;
                             if (images.get(pos) != null) {
                                 tireImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -669,11 +638,10 @@ public class ScrapTireDetails extends OdooCompatActivity implements OField.IOnFi
                             tireImage.setOnLongClickListener(new View.OnLongClickListener() {
                                 @Override
                                 public boolean onLongClick(View v) {
-                                    TireshowPopupMenu(v, position);
+                                    TireShowPopupMenu(v, position);
                                     return true;
                                 }
                             });
-
                             captureImageTire.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -681,8 +649,6 @@ public class ScrapTireDetails extends OdooCompatActivity implements OField.IOnFi
                                     fileManager.requestForFile(OFileManager.RequestType.IMAGE_OR_CAPTURE_IMAGE);
                                 }
                             });
-                            Log.i("pos=====", pos + "" + "\n fffff" + images.toString());
-                            Log.i("SECCCSESSSSSSS", "1111111");
                             return mView;
                         }
 
@@ -747,12 +713,6 @@ public class ScrapTireDetails extends OdooCompatActivity implements OField.IOnFi
         } else if (values != null) {
             Toast.makeText(this, R.string.toast_image_size_too_large, Toast.LENGTH_LONG).show();
         }
-//        if (values != null) {
-//            if (attachments.size() >= selectedCapture)
-//                attachments.set(selectedCapture - 1, values);
-//            else
-//                attachments.add(values);
-//        }
     }
 
     private class CreateAttachments extends AsyncTask<List<OValues>, Void, List<Integer>> {
@@ -816,43 +776,4 @@ public class ScrapTireDetails extends OdooCompatActivity implements OField.IOnFi
             finish();
         }
     }
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        OValues values = fileManager.handleResult(requestCode, resultCode, data);
-//        if (values != null && !values.contains("size_limit_exceed")) {
-//            newImage = values.getString("datas");
-//            Uri selectedImageUri = data.getData();
-//
-//            String nameaa = data.getStringExtra("name");
-//
-////            userImage.setImageBitmap(BitmapUtils.getBitmapImage(this, newImage));
-//            url_maps.put("aaaa", nameaa);
-//
-//            for (String name : url_maps.keySet()) {
-//                TextSliderView textSliderView = new TextSliderView(this);
-//                // initialize a SliderLayout
-//                textSliderView.description(name).image(file_maps.get(name))
-//                        .setScaleType(BaseSliderView.ScaleType.Fit)
-//                        .setOnSliderClickListener(this);
-//
-//                //add your extra information setImageBitmap
-////            userImage.setImageBitmap(BitmapUtils.getBitmapImage(this, newImage));
-//                textSliderView.bundle(new Bundle());
-//                textSliderView.getBundle()
-//                        .putString("extra", name);
-//
-//                mDemoSlider.addSlider(textSliderView);
-//            }
-//
-////            userImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
-////            userImage.setColorFilter(null);
-////            userImage.setImageBitmap(BitmapUtils.getBitmapImage(this, newImage));
-////            file_maps.put("Hannibal", BitmapUtils.getBitmapImage(this, newImage));
-//        } else if (values != null) {
-//            Toast.makeText(this, R.string.toast_image_size_too_large, Toast.LENGTH_LONG).show();
-//        }
-//    }
-
 }

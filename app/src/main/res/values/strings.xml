@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Technic app -->
+    <string name="tech_toast_information_saved">Мэдээлэл хадгалагдлаа</string>
     <!--<string name="app_name">Odoo</string>-->
     <string name="app_name">Техник Ашиглалт Бүртгэл</string>
     <string name="sync_label_customers">Customers</string>
