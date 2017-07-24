@@ -159,7 +159,7 @@ public class ScrapPart extends BaseFragment implements LoaderManager.LoaderCallb
     @Override
     public List<ODrawerItem> drawerMenus(Context context) {
         List<ODrawerItem> items = new ArrayList<>();
-        items.add(new ODrawerItem(KEY).setTitle("Scrap Parts")
+        items.add(new ODrawerItem(KEY).setTitle("Сэлбэг актлах хүсэлт")
                 .setIcon(R.drawable.ic_action_suppliers)
                 .setInstance(new ScrapPart()));
         return items;

@@ -24,9 +24,9 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.odoo.BuildConfig;
+import com.odoo.addons.employees.models.Employee;
 import com.odoo.addons.scrapTire.models.TechnicTire;
 import com.odoo.base.addons.res.ResCompany;
-import com.odoo.core.orm.ODataRow;
 import com.odoo.core.orm.OModel;
 import com.odoo.core.orm.OValues;
 import com.odoo.core.orm.annotation.Odoo;
@@ -81,7 +81,7 @@ public class TechnicsModel extends OModel {
     OColumn ownership_department_id = new OColumn("Ownership department", HrDepartment.class, OColumn.RelationType.ManyToOne);
     OColumn current_company_id = new OColumn("Current company", ResCompany.class, OColumn.RelationType.ManyToOne);
     OColumn current_department_id = new OColumn("Current department", HrDepartment.class, OColumn.RelationType.ManyToOne);
-    OColumn current_respondent_id = new OColumn("Current respondent", HrEmployee.class, OColumn.RelationType.ManyToOne);
+    OColumn current_respondent_id = new OColumn("Current respondent", Employee.class, OColumn.RelationType.ManyToOne);
     OColumn id_gps = new OColumn("Gps", OInteger.class);
     OColumn tires = new OColumn("Tires", TechnicTire.class, OColumn.RelationType.OneToMany).setRelatedColumn("technic_id");
 
@@ -125,8 +125,6 @@ public class TechnicsModel extends OModel {
     public ODomain defaultDomain() {
         ODomain domain = new ODomain();
         List<Integer> projectIds = projectObj.selectManyToManyServerIds("members", userObj.getUserId());
-        List<ODataRow> sel = projectObj.select();
-        Log.i("project_select_val++++", sel.toString());
         domain.add("project", "in", projectIds);
         Log.i("projectIds======", projectIds.toString());
         return domain;

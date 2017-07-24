@@ -17,150 +17,59 @@
         app:theme="@style/ToolBarBackTheme"
         app:titleMarginStart="@dimen/default_8dp" />
 
-    <!--View Layout-->
-    <LinearLayout
-        android:id="@+id/scrap_tire_view_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <odoo.controls.OForm
-                android:id="@+id/scrap_tire_form"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:modelName="tire.scrap">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <odoo.controls.OField
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:fieldLabelColor="@color/theme_secondary"
-                        app:fieldName="origin"
-                        app:fieldTextAppearance="?android:textAppearanceSmall" />
-
-                    <odoo.controls.OField
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:fieldLabelColor="@color/theme_secondary"
-                        app:fieldName="technic_name"
-                        app:fieldTextAppearance="?android:textAppearanceSmall" />
-
-                    <odoo.controls.OField
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:fieldLabelColor="@color/theme_secondary"
-                        app:fieldName="is_payable"
-                        app:fieldTextAppearance="?android:textAppearanceSmall"
-                        app:showLabel="false" />
-
-                    <odoo.controls.OField
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:fieldLabelColor="@color/theme_secondary"
-                        app:fieldName="date"
-                        app:fieldTextAppearance="?android:textAppearanceSmall"
-                        app:iconResource="@drawable/ic_action_time_clock"
-                        app:parsePattern="MMM dd yyyy, hh:MM a" />
-
-                    <odoo.controls.OField
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:fieldLabelColor="@color/theme_secondary"
-                        app:fieldName="description"
-                        app:fieldTextAppearance="?android:textAppearanceMedium" />
-
-                    <odoo.controls.OField
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:fieldLabelColor="@color/theme_secondary"
-                        app:fieldName="state"
-                        app:fieldTextAppearance="?android:textAppearanceMedium" />
-
-                </LinearLayout>
-
-                <View
-                    style="@style/ViewSeparator"
-                    android:layout_marginLeft="72dp" />
-
-                <odoo.controls.ExpandableListControl
-                    android:id="@+id/expListTireLine"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/default_8dp"
-                    android:layout_marginTop="@dimen/default_8dp"
-                    android:orientation="vertical" />
-
-            </odoo.controls.OForm>
-        </ScrollView>
-    </LinearLayout>
-
     <!--Edit Layout-->
     <LinearLayout
         android:id="@+id/scrap_tire_edit_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipToPadding="false"
-        android:paddingTop="@dimen/statusBarHeight"
-        android:visibility="gone">
+        android:paddingTop="@dimen/statusBarHeight">
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <odoo.controls.OForm
-                android:id="@+id/scrap_tire_edit_form"
+                android:id="@+id/OFormTireScrap"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#ffffff"
-                android:orientation="vertical"
-                app:modelName="tire.scrap">
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
+
                     <odoo.controls.OField
-                        android:id="@+id/origin_detail"
+                        android:id="@+id/OriginTireScrap"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="@dimen/default_8dp"
-                        android:visibility="gone"
-                        app:defaultFieldValue="/"
+                        app:defaultFieldValue="-"
                         app:fieldName="origin"
                         app:fieldTextAppearance="?android:textAppearanceLarge" />
 
                     <odoo.controls.OField
-                        android:id="@+id/tire_date"
+                        android:id="@+id/DateTireScrap"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:fieldLabelColor="@color/theme_secondary"
                         app:fieldName="date"
-                        app:fieldTextAppearance="?android:textAppearanceSmall" />
-
+                        app:fieldTextAppearance="?android:textAppearanceSmall"
+                        app:iconResource="@drawable/ic_action_time_clock" />
 
                     <odoo.controls.OField
-                        android:id="@+id/technic_id"
+                        android:id="@+id/TechnicTireScrap"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:fieldLabelColor="@color/theme_secondary"
                         app:fieldName="technic_id"
                         app:fieldTextAppearance="?android:textAppearanceSmall"
-                        app:fieldType="Selection"
                         app:widgetType="SearchableLive" />
 
-
                     <odoo.controls.OField
-                        android:id="@+id/is_payable"
+                        android:id="@+id/IsPayableTireScrap"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:fieldLabelColor="@color/theme_secondary"
@@ -177,9 +86,10 @@
                         app:fieldTextAppearance="?android:textAppearanceMedium" />
 
                     <odoo.controls.OField
-                        android:id="@+id/tire_state"
+                        android:id="@+id/StateTireScrap"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        app:defaultFieldValue="request"
                         app:fieldLabelColor="@color/theme_secondary"
                         app:fieldName="state"
                         app:fieldTextAppearance="?android:textAppearanceMedium" />
@@ -190,13 +100,26 @@
                     style="@style/ViewSeparator"
                     android:layout_marginLeft="72dp" />
 
-                <odoo.controls.ExpandableListControl
-                    android:id="@+id/expListTireLineEdit"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/default_8dp"
-                    android:layout_marginTop="@dimen/default_8dp"
-                    android:orientation="vertical" />
+                    android:layout_height="wrap_content">
+
+                    <odoo.controls.ExpandableListControl
+                        android:id="@+id/ExpandListTireLine"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/default_8dp"
+                        android:layout_marginTop="@dimen/default_8dp"
+                        android:orientation="vertical" />
+
+                    <ProgressBar
+                        android:id="@+id/TireScrapProgress"
+                        style="?android:attr/progressBarStyleSmall"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:visibility="gone" />
+
+                </RelativeLayout>
 
             </odoo.controls.OForm>
         </ScrollView>

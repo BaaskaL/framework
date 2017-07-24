@@ -24,8 +24,11 @@ import android.content.Context;
 import com.odoo.addons.technic.models.TechnicsModel;
 import com.odoo.core.orm.OModel;
 import com.odoo.core.orm.fields.OColumn;
+import com.odoo.core.orm.fields.types.OBlob;
+import com.odoo.core.orm.fields.types.OBoolean;
 import com.odoo.core.orm.fields.types.ODateTime;
 import com.odoo.core.orm.fields.types.OInteger;
+import com.odoo.core.orm.fields.types.OSelection;
 import com.odoo.core.orm.fields.types.OVarchar;
 import com.odoo.core.support.OUser;
 
@@ -38,8 +41,15 @@ public class TechnicTire extends OModel {
     //    OColumn tread_depreciation_percent = new OColumn("Хээний элэгдлийн хувь", Float.class);
     OColumn current_position = new OColumn("Одоогийн байрлал", OInteger.class);
     OColumn reason = new OColumn("Reason", TiresScrapReason.class, OColumn.RelationType.ManyToOne);
-    OColumn state = new OColumn("State", OVarchar.class);
+    OColumn state = new OColumn("Төлөв", OSelection.class)
+            .addSelection("draft", "Ноорог")
+            .addSelection("using", "Хэрэглэж буй")
+            .addSelection("inactive", "Нөөцөнд")
+            .addSelection("rejected", "Акталсан")
+            .setDefaultValue("draft");
     OColumn scrap_id = new OColumn("Scrap id", ScrapTires.class, OColumn.RelationType.ManyToOne);
+    OColumn tire_image = new OColumn("Tire image", OBlob.class);
+    OColumn in_scrap = new OColumn("In scrap", OBoolean.class);
 
     public TechnicTire(Context context, OUser user) {
         super(context, "tire.register", user);

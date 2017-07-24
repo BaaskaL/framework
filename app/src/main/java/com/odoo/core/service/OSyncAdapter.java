@@ -131,7 +131,7 @@ public class OSyncAdapter extends AbstractThreadedSyncAdapter {
                         mDomain.get(mModel.getModelName()) : null;
 
                 // Ready for sync data from server
-                 syncData(mModel, mUser, domain, syncResult, true, true);
+                syncData(mModel, mUser, domain, syncResult, true, true);
             } else {
                 Log.e(TAG, "Unable to connect with Odoo Server.");
             }

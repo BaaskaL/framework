@@ -203,7 +203,7 @@ public class Technics extends BaseFragment implements LoaderManager.LoaderCallba
     public List<ODrawerItem> drawerMenus(Context context) {
         List<ODrawerItem> items = new ArrayList<>();
 
-        items.add(new ODrawerItem(KEY).setTitle("Technics")
+        items.add(new ODrawerItem(KEY).setTitle("Техник")
                 .setIcon(R.drawable.ic_action_suppliers)
                 .setInstance(new Technics()));
         return items;

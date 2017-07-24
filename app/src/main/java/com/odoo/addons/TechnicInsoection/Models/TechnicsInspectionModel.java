@@ -25,7 +25,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.odoo.BuildConfig;
-import com.odoo.addons.technic.models.HrEmployee;
+import com.odoo.addons.employees.models.Employee;
 import com.odoo.addons.technic.models.TechnicsModel;
 import com.odoo.base.addons.res.ResUsers;
 import com.odoo.core.orm.ODataRow;
@@ -45,7 +45,7 @@ public class TechnicsInspectionModel extends OModel {
     private static int TechnicNormId;
     private static TechnicsModel technic;
     private static TechnicInspectionType insType;
-    private static HrEmployee employ;
+    private static Employee employ;
     private static ResUsers resUser;
     private Context mContext;
     private int myId;
@@ -57,7 +57,7 @@ public class TechnicsInspectionModel extends OModel {
     OColumn inspection_type_id = new OColumn("Үзлэгийн төрөл", TechnicInspectionType.class, OColumn.RelationType.ManyToOne);
     OColumn technic_inspection_check_list_ids = new OColumn("Check lists", TechnicInspectionCheckList.class, OColumn.RelationType.OneToMany).setRelatedColumn("inspection_id");
     OColumn inspection_usage_ids = new OColumn("inspection_id", TechnicInspectionUsage.class, OColumn.RelationType.OneToMany).setRelatedColumn("inspection_id");
-    OColumn inspection_respondent_id = new OColumn("Жолооч/Хариуцагч", HrEmployee.class, OColumn.RelationType.ManyToOne);
+    OColumn inspection_respondent_id = new OColumn("Жолооч/Хариуцагч", Employee.class, OColumn.RelationType.ManyToOne);
     OColumn inspection_registrar_id = new OColumn("Бүртгэгч", ResUsers.class, OColumn.RelationType.ManyToOne);
     @Odoo.Functional(store = true, depends = {"inspection_respondent_id"}, method = "storeInsName")
     OColumn inspection_respondent_name = new OColumn("Жолооч", OVarchar.class).setLocalColumn();
@@ -76,7 +76,7 @@ public class TechnicsInspectionModel extends OModel {
 
         technic = new TechnicsModel(context, user);
         insType = new TechnicInspectionType(context, user);
-        employ = new HrEmployee(context, user);
+        employ = new Employee(context, user);
         resUser = new ResUsers(context, user);
     }
 

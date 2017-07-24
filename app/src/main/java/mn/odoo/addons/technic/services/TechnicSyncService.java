@@ -46,7 +46,6 @@ public class TechnicSyncService extends OSyncService {
             Log.i("project======", "start");
             project.quickSyncRecords(projectDomain);
 
-
 //            if (technic.isEmptyTable()) {
 //                Log.i("project synced ======", "norm start");
 //                norm.quickSyncRecords(projectDomain);
@@ -61,8 +60,6 @@ public class TechnicSyncService extends OSyncService {
 //            Log.i("DOMAIN==========", domain + "");
 //            adapter.syncDataLimit(80).setDomain(domain);
             adapter.syncDataLimit(80);
-            List<ODataRow> aa = technic.select();
-            Log.i("technic======", aa.toString());
         }
     }
 }

@@ -3,7 +3,6 @@ package mn.odoo.addons.TechnicInspection;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
@@ -432,39 +431,39 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
                 finish();
                 break;
             case R.id.menu_technic_save:
-                Intent intent = new Intent(this, TechnicsInspectionSignature.class);
-                startActivityForResult(intent, 1);
+//                Intent intent = new Intent(this, TechnicsInspectionSignature.class);
+//                startActivityForResult(intent, 1);
                 OValues values = mForm.getValues();
                 if (values != null) {
-//                    if (record != null) {
-//                        try {
-//                            saveLine(values);
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//                        technicIns.update(record.getInt(OColumn.ROW_ID), values);
-//                        Toast.makeText(this, R.string.toast_information_saved, Toast.LENGTH_LONG).show();
-//                        mEditMode = !mEditMode;
-//                        setupToolbar();
-//                        finish();
-//                    } else {
-//                        values.put("origin", "/");
-//                        if (app.inNetwork()) {
-//                            try {
-//                                saveLine(values);
-//                                Toast.makeText(this, R.string.toast_save, Toast.LENGTH_LONG).show();
-//                            } catch (JSONException e) {
-//                                e.printStackTrace();
-//                            }
-//                        } else {
-//                            try {
-//                                saveLine(values);
-//                                Toast.makeText(this, R.string.toast_offline_save, Toast.LENGTH_LONG).show();
-//                            } catch (JSONException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    }
+                    if (record != null) {
+                        try {
+                            saveLine(values);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        technicIns.update(record.getInt(OColumn.ROW_ID), values);
+                        Toast.makeText(this, R.string.toast_information_saved, Toast.LENGTH_LONG).show();
+                        mEditMode = !mEditMode;
+                        setupToolbar();
+                        finish();
+                    } else {
+                        values.put("origin", "/");
+                        if (app.inNetwork()) {
+                            try {
+                                saveLine(values);
+                                Toast.makeText(this, R.string.toast_save, Toast.LENGTH_LONG).show();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            try {
+                                saveLine(values);
+                                Toast.makeText(this, R.string.toast_offline_save, Toast.LENGTH_LONG).show();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
                 }
                 break;
             case R.id.menu_technic_cancel:
@@ -755,18 +754,18 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
         if (values != null && !values.contains("size_limit_exceed")) {
             newImage = values.getString("datas");
 
-            ImageView userImages = null;
-            userImages.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            userImages.setColorFilter(null);
-            userImages.setImageBitmap(BitmapUtils.getBitmapImage(this, newImage));
+//            ImageView userImages = null;
+////            userImages.setScaleType(ImageView.ScaleType.CENTER_CROP);
+//            userImages.setColorFilter(null);
+//            userImages.setImageBitmap(BitmapUtils.getBitmapImage(this, newImage));
 
 //            Uri aa = userImages.getim;
 
             Bitmap img = BitmapUtils.getBitmapImage(this, newImage);
             Matrix matrix = new Matrix();
-            matrix.postRotate(270);
+            matrix.postRotate(90);
 //            x + width must be <= bitmap.width()
-            Bitmap b = BitmapFactory.decodeByteArray(data.getByteArrayExtra("byteArray"), 0, data.getByteArrayExtra("byteArray").length);
+//            Bitmap b = BitmapFactory.decodeByteArray(data.getByteArrayExtra("byteArray"), 0, data.getByteArrayExtra("byteArray").length);
             Bitmap rotatedImg = Bitmap.createBitmap(img, 0, 0, img.getWidth(), img.getHeight(), matrix, false);
             String path = MediaStore.Images.Media.insertImage(getApplicationContext().getContentResolver(), rotatedImg, "Title", null);
 

@@ -245,6 +245,32 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
+        <!-- Sync Provider & Service Employee // -->
+
+        <provider
+            android:name="mn.odoo.addons.employees.providers.EmployeeSyncProvider"
+            android:authorities="${applicationId}.core.provider.content.sync.hr_employee"
+            android:label="@string/sync_label_hr_employee"
+            android:multiprocess="true" />
+
+        <service
+            android:name="mn.odoo.addons.employees.services.EmployeeSyncService"
+            android:exported="true"
+            android:process=":sync_feeds">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/employee_sync_adapter" />
+        </service>
+
+        <activity
+            android:name="mn.odoo.addons.employees.EmployeeDetails"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+
     </application>
 
 </manifest>

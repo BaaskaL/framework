@@ -36,7 +36,6 @@ import com.odoo.core.support.OdooCompatActivity;
 import com.odoo.core.utils.BitmapUtils;
 import com.odoo.core.utils.OAlert;
 import com.odoo.core.utils.OAppBarUtils;
-import com.odoo.core.utils.ODateUtils;
 import com.odoo.core.utils.OResource;
 
 import java.util.ArrayList;
@@ -117,17 +116,17 @@ public class ScrapOilDetails extends OdooCompatActivity implements OField.IOnFie
             mMenu.findItem(R.id.menu_cancel).setVisible(edit);
         }
         if (edit) {
-            mForm = (OForm) findViewById(R.id.scrap_tire_edit_form);
-            findViewById(R.id.scrap_tire_view_layout).setVisibility(View.GONE);
+//            mForm = (OForm) findViewById(R.id.scrap_tire_edit_form);
+//            findViewById(R.id.scrap_tire_view_layout).setVisibility(View.GONE);
             findViewById(R.id.scrap_tire_edit_layout).setVisibility(View.VISIBLE);
-            OField technicField = (OField) findViewById(R.id.technic_id);
-            technicField.setOnValueChangeListener(this);
-            mList = (ExpandableListControl) findViewById(R.id.expListTireLineEdit);
+//            OField technicField = (OField) findViewById(R.id.technic_id);
+//            technicField.setOnValueChangeListener(this);
+//            mList = (ExpandableListControl) findViewById(R.id.expListTireLineEdit);
         } else {
-            mForm = (OForm) findViewById(R.id.scrap_tire_form);
-            findViewById(R.id.scrap_tire_edit_layout).setVisibility(View.GONE);
-            findViewById(R.id.scrap_tire_view_layout).setVisibility(View.VISIBLE);
-            mList = (ExpandableListControl) findViewById(R.id.expListTireLine);
+//            mForm = (OForm) findViewById(R.id.scrap_tire_form);
+//            findViewById(R.id.scrap_tire_edit_layout).setVisibility(View.GONE);
+//            findViewById(R.id.scrap_tire_view_layout).setVisibility(View.VISIBLE);
+//            mList = (ExpandableListControl) findViewById(R.id.expListTireLine);
         }
     }
 
@@ -266,10 +265,10 @@ public class ScrapOilDetails extends OdooCompatActivity implements OField.IOnFie
 //            tireImage.setColorFilter(Color.parseColor("#ffffff"));
 //            tireImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
 //            ((OField) mForm.findViewById(R.id.inspection_registrar_id)).setValue(myId);
-            ((OField) mForm.findViewById(R.id.tire_date)).setValue(ODateUtils.getDate());
-            OField oState = (OField) mForm.findViewById(R.id.tire_state);
-            oState.setValue("Ноорог");
-            oState.setEditable(false);
+//            ((OField) mForm.findViewById(R.id.tire_date)).setValue(ODateUtils.getDate());
+//            OField oState = (OField) mForm.findViewById(R.id.tire_state);
+//            oState.setValue("Ноорог");
+//            oState.setEditable(false);
         } else {
             int rowId = extra.getInt(OColumn.ROW_ID);
             setTitle("Tire scrap detail");

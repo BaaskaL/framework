@@ -164,7 +164,7 @@ public class TechnicsInspection extends BaseFragment implements LoaderManager.Lo
     public List<ODrawerItem> drawerMenus(Context context) {
         List<ODrawerItem> items = new ArrayList<>();
 
-        items.add(new ODrawerItem(KEY).setTitle("Technic inspections")
+        items.add(new ODrawerItem(KEY).setTitle("Техникийн үзлэг")
                 .setIcon(R.drawable.ic_action_suppliers)
                 .setInstance(new TechnicsInspection()));
         return items;

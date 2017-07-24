@@ -28,7 +28,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.odoo.core.auth.OdooAccountManager;
 import com.odoo.core.orm.OModel;
@@ -150,24 +149,17 @@ public class BaseModelProvider extends ContentProvider {
         OModel model = getModel(uri);
         setMatcher(model, uri);
         ContentValues[] values = generateValues(model, all_values);
-        Log.i("values===last", values[0].toString());
         ContentValues value_to_insert = values[0];
         value_to_insert.put("_write_date", ODateUtils.getUTCDate());
-        if (!value_to_insert.containsKey("_is_active")) {
+        if (!value_to_insert.containsKey("_is_active"))
             value_to_insert.put("_is_active", "true");
-        }
-        if (!value_to_insert.containsKey("_is_dirty")) {
+        if (!value_to_insert.containsKey("_is_dirty"))
             value_to_insert.put("_is_dirty", "false");
-        }
         int match = matcher.match(uri);
         switch (match) {
             case COLLECTION:
                 SQLiteDatabase db = model.getWritableDatabase();
-                Log.i("value_to_insert==", value_to_insert.toString());
                 long new_id = db.insert(model.getTableName(), null, value_to_insert);
-                Log.i("provider_new_id", new_id + "");
-                Log.i("prov_value_to_insert", value_to_insert.toString());
-                Log.i("values[1]", values[1].toString());
                 // Updating relation columns for record
                 if (values[1].size() > 0) {
                     storeUpdateRelationRecords(model, values[1], OColumn.ROW_ID + "  = ?",
@@ -256,11 +248,9 @@ public class BaseModelProvider extends ContentProvider {
     private void storeUpdateRelationRecords(OModel model, ContentValues values,
                                             String selection, String[] args) {
         int row_id = model.selectRowId(selection, args);
-        Log.i("idddsada===", row_id + "");
         for (String key : values.keySet()) {
             try {
                 OColumn column = model.getColumn(key);
-                Log.i("values.get(key)==", values.get(key).toString());
                 RelValues relValues = (RelValues) OObjectUtils.byteToObject(
                         (byte[]) values.get(key));
                 model.handleRelationValues(row_id, column, relValues);
@@ -295,15 +285,11 @@ public class BaseModelProvider extends ContentProvider {
                             }
                         }
                     } else {
-                        Log.i("key==", key.toString());
-                        Log.i("om2_val==", values.get(key).toString());
                         rel_value.put(key, values.get(key));
                     }
                 }
             }
         }
-        Log.i("retun_val==", rel_value.toString());
-        Log.i("data_value==", data_value.toString());
         return new ContentValues[]{data_value.toContentValues(), rel_value.toContentValues()};
     }
 

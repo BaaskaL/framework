@@ -298,11 +298,8 @@ public class OSyncDataUtils {
         try {
             // Use key (modal name) from updateToServerRecords
             // use updateToServerRecords ids
-            Log.i("update server====", "update");
-            Log.i("updateToServerRxds=", updateToServerRecords.toString());
             int counter = 0;
             for (String key : updateToServerRecords.keySet()) {
-                Log.i("key====", key);
                 OModel model = OModel.get(mContext, key, mUser.getAndroidName());
                 List<String> ids = OListUtils.toStringList(updateToServerRecords.get(key));
                 counter += ids.size();

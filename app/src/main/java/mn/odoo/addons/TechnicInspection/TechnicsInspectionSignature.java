@@ -20,7 +20,7 @@ import android.widget.LinearLayout;
 
 import com.odoo.R;
 import com.odoo.addons.TechnicInsoection.Models.TechnicsInspectionModel;
-import com.odoo.addons.technic.models.HrEmployee;
+import com.odoo.addons.employees.models.Employee;
 import com.odoo.core.orm.ODataRow;
 import com.odoo.core.support.OUser;
 
@@ -48,7 +48,7 @@ public class TechnicsInspectionSignature extends Activity {
         clear = (Button) findViewById(R.id.clear);
         mContent = (LinearLayout) findViewById(R.id.mysignature);
         etxConfirmCode = (EditText) findViewById(R.id.et_confirm_code);
-        HrEmployee employee = new HrEmployee(this, null);
+        Employee employee = new Employee(this, null);
         ODataRow employeeInfo = employee.select(null, "_id = ?", new String[]{"" + technicIns.myId()}).get(0);
         confirmCode = employeeInfo.getString("confirm_code");
         mSignature = new signature(this, null);

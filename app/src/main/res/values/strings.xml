@@ -2,6 +2,11 @@
 <resources>
     <!--Technic app -->
     <string name="tech_toast_information_saved">Мэдээлэл хадгалагдлаа</string>
+    <string name="tech_toast_information_created">Мэдээлэл бүртгэгдлээ</string>
+    <string name="tech_toast_information_deleted">Мэдээлэл устгагдлаа</string>
+    <string name="label_no_employee_found">No Employee Found !</string>
+    <string name="close_activity">Анхааруулга, бичлэг засварлагдсан байгаа ч өөрчлөлтүүд хэрэгсэгдэхгүй.</string>
+    <string name="to_delete">Та энэ мэдээллийг үнэхээр устгах уу?</string>
     <!--<string name="app_name">Odoo</string>-->
     <string name="app_name">Техник Ашиглалт Бүртгэл</string>
     <string name="sync_label_customers">Customers</string>
@@ -23,6 +28,7 @@
     <string name="sync_label_technics">Technics</string>
     <string name="sync_label_scrap_parts">Scrap Parts</string>
     <string name="sync_label_scrap_tire">Scrap Tire</string>
+    <string name="sync_label_hr_employee">Employee</string>
     <string name="label_no_technic_inspection_found">No Technic Inspection Found !</string>
     <string name="label_no_scrap_parts_found">No Parts Scrap Found !</string>
     <string name="label_no_scrap_tires_found">No Tires Scrap Found !</string>

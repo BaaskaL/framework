@@ -28,7 +28,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/default_8dp"
-                android:layout_weight="2.5">
+                android:layout_weight="2.4">
 
                 <TextView
                     android:id="@+id/name"
@@ -45,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_weight="0.8">
+                android:layout_weight="1.1">
 
                 <TextView
                     android:id="@+id/date_record"
@@ -63,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_weight="0.5">
+                android:layout_weight="0.4">
 
                 <TextView
                     android:id="@+id/current_position"
@@ -88,6 +88,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@string/font_normal"
+                    android:gravity="center"
                     android:textColor="@color/body_text_1"
                     android:textSize="@dimen/text_size_medium" />
 
@@ -120,9 +121,6 @@
                     android:id="@+id/tireImage"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Зураг"
-                    android:textColor="@color/body_text_1"
-                    android:textSize="@dimen/text_size_medium"
                     android:visibility="gone" />
 
                 <android.support.design.widget.FloatingActionButton

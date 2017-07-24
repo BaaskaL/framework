@@ -20,7 +20,6 @@
 package com.odoo.core.orm;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.google.gson.internal.LinkedTreeMap;
 import com.odoo.App;
@@ -144,10 +143,7 @@ public class ServerDataHelper {
 
 
     public int createOnServer(ORecordValues data) {
-        Log.i("mModelgetModelName====", mModel.getModelName().toString());
-        Log.i("data====", data.toString());
         OdooResult result = mOdoo.createRecord(mModel.getModelName(), data);
-        Log.i("result=======", result.toString());
         return result.getInt("result");
     }
 
