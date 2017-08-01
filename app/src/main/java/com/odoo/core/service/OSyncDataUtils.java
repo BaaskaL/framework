@@ -173,7 +173,9 @@ public class OSyncDataUtils {
                     for (OColumn column : columns) {
                         String name = column.getSyncColumn();
                         String lName = column.getName();
+                        Log.i("column_lname===", lName);
                         if (column.getRelationType() == null) {
+                            Log.i("no relation filed===", "");
                             // checks for functional store fields
                             if (column.isFunctionalColumn() && column.canFunctionalStore()) {
                                 List<String> depends = column.getFunctionalStoreDepends();
@@ -192,6 +194,7 @@ public class OSyncDataUtils {
                                 values.put(lName, record.get(name));
                             }
                         } else {
+                            Log.i("column_RelationType===", column.getRelationType().toString());
                             // Relation Columns
                             if (!record.getString(name).equals("false")) {
                                 switch (column.getRelationType()) {
@@ -258,6 +261,7 @@ public class OSyncDataUtils {
                                         break;
                                     case OneToMany:
                                         if (mCreateRelationRecords) {
+                                            Log.i("mModel=====", mModel.toString());
                                             OModel o2mModel = mModel.createInstance(column.getType());
                                             List<Integer> o2mIds = OListUtils.doubleToIntList(record.getO2M(name));
                                             addUpdateRelationRecord(mModel, o2mModel.getTableName(),
@@ -298,8 +302,11 @@ public class OSyncDataUtils {
         try {
             // Use key (modal name) from updateToServerRecords
             // use updateToServerRecords ids
+            Log.i("update server====", "update");
+            Log.i("updateToServerRxds=", updateToServerRecords.toString());
             int counter = 0;
             for (String key : updateToServerRecords.keySet()) {
+                Log.i("key====", key);
                 OModel model = OModel.get(mContext, key, mUser.getAndroidName());
                 List<String> ids = OListUtils.toStringList(updateToServerRecords.get(key));
                 counter += ids.size();

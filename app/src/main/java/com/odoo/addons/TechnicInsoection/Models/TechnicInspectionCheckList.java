@@ -51,10 +51,11 @@ public class TechnicInspectionCheckList extends OModel {
 
     public String getCategName(OValues row) {
         String name = "Хоосон";
-        Log.i("Technic name ====", row.toString());
+        Log.i("Technic_name ====", row.toString());
         try {
-            if (!row.getString("technic_inspection_category_id").equals(null)) {
+            if (!row.getString("technic_inspection_category_id").equals("false")) {
                 String value = row.getString("technic_inspection_category_id");
+                Log.i("tehcnic_name222===", value);
                 String[] parts = value.split(",");
                 name = parts[1].substring(1, parts[1].length() - 1);
             }

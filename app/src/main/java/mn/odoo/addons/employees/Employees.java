@@ -15,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -52,17 +53,20 @@ public class Employees extends BaseFragment implements LoaderManager.LoaderCallb
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         setHasSyncStatusObserver(KEY, this, db());
-        mView = inflater.inflate(R.layout.common_listview, container, false);
+        mView = inflater.inflate(R.layout.employee_listview, container, false);
+        LinearLayout HeaderContainer = (LinearLayout) mView.findViewById(R.id.employee_header_container);
+        LinearLayout Header = (LinearLayout) inflater.inflate(R.layout.header_employee_list, container, false);
+        HeaderContainer.addView(Header);
         return mView;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setHasSwipeRefreshView(view, R.id.swipe_container, this);
+        setHasSwipeRefreshView(view, R.id.swipe_container_employee, this);
         mView = view;
-        ListView mEmployeeList = (ListView) mView.findViewById(R.id.listview);
-        mAdapter = new OCursorListAdapter(getActivity(), null, R.layout.customer_row_item);
+        ListView mEmployeeList = (ListView) mView.findViewById(R.id.listview_employee);
+        mAdapter = new OCursorListAdapter(getActivity(), null, R.layout.employee_row_item);
         mAdapter.setOnViewBindListener(this);
 
         mEmployeeList.setAdapter(mAdapter);
@@ -88,12 +92,23 @@ public class Employees extends BaseFragment implements LoaderManager.LoaderCallb
         } else {
             img = BitmapUtils.getBitmapImage(getActivity(), row.getString("image_small"));
         }
-        OControls.setImage(view, R.id.image_small, img);
-        OControls.setText(view, R.id.name, row.getString("name"));
-//        OControls.setText(view, R.id.company_name, (row.getString("company_id").equals("false"))
-//                ? "" : row.getString("company_id"));
-        OControls.setText(view, R.id.last_name, (row.getString("last_name").equals("false") ? " "
+        OControls.setImage(view, R.id.employeeImageSmall, img);
+        OControls.setText(view, R.id.employeeName, row.getString("name"));
+        OControls.setText(view, R.id.employeeLname, (row.getString("last_name").equals("false") ? " "
                 : row.getString("last_name")));
+
+        OControls.setText(view, R.id.employeeSSIND, (row.getString("ssnid").equals("false"))
+                ? "" : row.getString("ssnid"));
+
+        OControls.setText(view, R.id.employeePhone, (row.getString("mobile_phone").equals("false"))
+                ? "" : row.getString("mobile_phone"));
+
+        OControls.setText(view, R.id.employeeJob, (row.getString("job_name").equals("false"))
+                ? "" : row.getString("job_name"));
+        OControls.setText(view, R.id.employeeCompany, (row.getString("company_name").equals("false"))
+                ? "" : row.getString("company_name"));
+        OControls.setText(view, R.id.employeeDepartment, (row.getString("department_name").equals("false"))
+                ? "" : row.getString("department_name"));
     }
 
     @Override
@@ -123,9 +138,9 @@ public class Employees extends BaseFragment implements LoaderManager.LoaderCallb
                 @Override
                 public void run() {
                     OControls.setGone(mView, R.id.loadingProgress);
-                    OControls.setVisible(mView, R.id.swipe_container);
+                    OControls.setVisible(mView, R.id.swipe_container_employee);
                     OControls.setGone(mView, R.id.data_list_no_item);
-                    setHasSwipeRefreshView(mView, R.id.swipe_container, Employees.this);
+                    setHasSwipeRefreshView(mView, R.id.swipe_container_employee, Employees.this);
                 }
             }, 500);
         } else {
@@ -133,7 +148,7 @@ public class Employees extends BaseFragment implements LoaderManager.LoaderCallb
                 @Override
                 public void run() {
                     OControls.setGone(mView, R.id.loadingProgress);
-                    OControls.setGone(mView, R.id.swipe_container);
+                    OControls.setGone(mView, R.id.swipe_container_employee);
                     OControls.setVisible(mView, R.id.data_list_no_item);
                     setHasSwipeRefreshView(mView, R.id.data_list_no_item, Employees.this);
                     OControls.setImage(mView, R.id.icon, R.drawable.ic_action_customers);

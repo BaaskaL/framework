@@ -32,7 +32,7 @@
                 custom:auto_cycle="true"
                 custom:indicator_visibility="visible"
                 custom:pager_animation="Accordion"
-                custom:pager_animation_span="1100"></com.daimajia.slider.library.SliderLayout>
+                custom:pager_animation_span="1100" />
 
             <com.daimajia.slider.library.Indicators.PagerIndicator
                 android:id="@+id/custom_indicator"

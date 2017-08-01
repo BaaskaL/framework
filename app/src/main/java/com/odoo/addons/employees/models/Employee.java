@@ -24,10 +24,15 @@ import android.content.Context;
 import com.odoo.BuildConfig;
 import com.odoo.base.addons.res.ResCompany;
 import com.odoo.core.orm.OModel;
+import com.odoo.core.orm.OValues;
+import com.odoo.core.orm.annotation.Odoo;
 import com.odoo.core.orm.fields.OColumn;
-import com.odoo.core.orm.fields.types.ODateTime;
+import com.odoo.core.orm.fields.types.ODate;
 import com.odoo.core.orm.fields.types.OVarchar;
 import com.odoo.core.support.OUser;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Employee extends OModel {
     public static final String AUTHORITY = BuildConfig.APPLICATION_ID + ".core.provider.content.sync.hr_employee";
@@ -37,19 +42,57 @@ public class Employee extends OModel {
     OColumn confirm_code = new OColumn("Зөвшөөрөх код", OVarchar.class);
     OColumn mobile_phone = new OColumn("Ажлын утас", OVarchar.class);
     OColumn ssnid = new OColumn("Регистр", OVarchar.class).setRequired();
-    OColumn birthday = new OColumn("Төрсөн огноо", ODateTime.class);
+    OColumn birthday = new OColumn("Төрсөн огноо", ODate.class);
     OColumn company_id = new OColumn("Компани", ResCompany.class, OColumn.RelationType.ManyToOne).setRequired();
     OColumn job_id = new OColumn("Ажлын нэр", HrJob.class, OColumn.RelationType.ManyToOne).setRequired();
     OColumn department_id = new OColumn("Хэлтэс", HrDepartment.class, OColumn.RelationType.ManyToOne).setRequired();
     OColumn image_small = new OColumn("Image small", OVarchar.class);
     OColumn image_medium = new OColumn("Image medium", OVarchar.class);
 
-//    OColumn company_name = new OColumn("company name", OVarchar.class).setLocalColumn();
-//    OColumn job_name = new OColumn("job_name", OVarchar.class).setLocalColumn();
-//    OColumn department_name = new OColumn("department_name", OVarchar.class).setLocalColumn();
+    @Odoo.Functional(store = true, depends = {"company_id"}, method = "storeCompanyName")
+    OColumn company_name = new OColumn("company name", OVarchar.class).setLocalColumn();
+    @Odoo.Functional(store = true, depends = {"job_id"}, method = "storeJobName")
+    OColumn job_name = new OColumn("job_name", OVarchar.class).setLocalColumn();
+    @Odoo.Functional(store = true, depends = {"department_id"}, method = "storeDepartmentName")
+    OColumn department_name = new OColumn("department_name", OVarchar.class).setLocalColumn();
 
     public Employee(Context context, OUser user) {
         super(context, "hr.employee", user);
     }
 
+    public String storeCompanyName(OValues value) {
+        try {
+            if (!value.getString("company_id").equals("false")) {
+                List<Object> parent_id = (ArrayList<Object>) value.get("company_id");
+                return parent_id.get(1) + "";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public String storeJobName(OValues value) {
+        try {
+            if (!value.getString("job_id").equals("false")) {
+                List<Object> parent_id = (ArrayList<Object>) value.get("job_id");
+                return parent_id.get(1) + "";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public String storeDepartmentName(OValues value) {
+        try {
+            if (!value.getString("department_id").equals("false")) {
+                List<Object> parent_id = (ArrayList<Object>) value.get("department_id");
+                return parent_id.get(1) + "";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
 }

@@ -271,6 +271,33 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
+
+        <!-- Sync Provider & Service Technic Scrap // -->
+
+        <provider
+            android:name="mn.odoo.addons.scrapTechnic.providers.ScrapTechnicSyncProvider"
+            android:authorities="${applicationId}.core.provider.content.sync.technic_scrap"
+            android:label="@string/sync_label_scrap_technic"
+            android:multiprocess="true" />
+
+        <service
+            android:name="mn.odoo.addons.scrapTechnic.services.ScrapTechnicSyncService"
+            android:exported="true"
+            android:process=":sync_feeds">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/scrap_technic_sync_adapter" />
+        </service>
+
+        <activity
+            android:name="mn.odoo.addons.scrapTechnic.ScrapTechnicsDetail"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+
     </application>
 
 </manifest>

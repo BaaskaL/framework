@@ -1,7 +1,10 @@
 package mn.odoo.addons.TechnicInspection;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.LoaderManager;
@@ -21,6 +24,7 @@ import android.widget.Toast;
 import com.odoo.R;
 import com.odoo.addons.TechnicInsoection.Models.TechnicsInspectionModel;
 import com.odoo.core.orm.ODataRow;
+import com.odoo.core.rpc.helper.ODomain;
 import com.odoo.core.support.addons.fragment.BaseFragment;
 import com.odoo.core.support.addons.fragment.IOnSearchViewChangeListener;
 import com.odoo.core.support.addons.fragment.ISyncStatusObserverListener;
@@ -46,6 +50,8 @@ public class TechnicsInspection extends BaseFragment implements LoaderManager.Lo
     private View mView;
     private OCursorListAdapter mAdapter = null;
     private boolean syncRequested = false;
+    private TechnicsInspectionModel techInspection;
+    private Context mContext;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -62,6 +68,8 @@ public class TechnicsInspection extends BaseFragment implements LoaderManager.Lo
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mView = view;
+        mContext = this.getContext();
+        techInspection = new TechnicsInspectionModel(mContext, null);
         ListView mTechnicInspectionList = (ListView) mView.findViewById(R.id.listview_technic_inspection);
         mAdapter = new OCursorListAdapter(getActivity(), null, R.layout.technic_inspection_row_item);
         mAdapter.setOnViewBindListener(this);
@@ -83,13 +91,22 @@ public class TechnicsInspection extends BaseFragment implements LoaderManager.Lo
 
     @Override
     public void onViewBind(View view, Cursor cursor, ODataRow row) {
-        OControls.setText(view, R.id.inspection_origin, (row.getString("origin").equals("false"))
-                ? "Хоосон" : row.getString("origin"));
-//        OControls.setText(view, R.id.inspection_description, (row.getString("ins_description").equals("false") ? "" : row.getString("origin")));
-        OControls.setText(view, R.id.technic_name, (row.getString("technic_name")));
-        OControls.setText(view, R.id.inspection_respondent_name, (row.getString("inspection_respondent_name")));
-        OControls.setText(view, R.id.inspection_create_date, (row.getString("create_date")));
-        OControls.setText(view, R.id.inspection_state, (row.getString("state")));
+        OControls.setText(view, R.id.inspection_origin, (row.getString("origin").equals("/")) ? "Илгээгдээгүй" : row.getString("origin"));
+        OControls.setText(view, R.id.technic_name, row.getString("technic_name"));
+        OControls.setText(view, R.id.inspection_respondent_name, row.getString("inspection_respondent_name"));
+        OControls.setText(view, R.id.inspection_create_date, row.getString("inspection_date"));
+        OControls.setText(view, R.id.inspection_type, row.getString("inspection_type_name"));
+        if (row.getString("state").equals("done")) {
+            OControls.setTextColor(view, R.id.inspection_origin, Color.GREEN);
+            OControls.setTextColor(view, R.id.technic_name, Color.GREEN);
+            OControls.setTextColor(view, R.id.inspection_respondent_name, Color.GREEN);
+            OControls.setTextColor(view, R.id.inspection_create_date, Color.GREEN);
+            OControls.setTextColor(view, R.id.inspection_state, Color.GREEN);
+            OControls.setTextColor(view, R.id.inspection_type, Color.GREEN);
+            OControls.setText(view, R.id.inspection_state, ("Дууссан"));
+        } else if (row.getString("state").equals("draft")) {
+            OControls.setText(view, R.id.inspection_state, ("Ноорог"));
+        }
     }
 
     @Override
@@ -100,7 +117,8 @@ public class TechnicsInspection extends BaseFragment implements LoaderManager.Lo
         List<String> args = new ArrayList<>();
 
         if (mCurFilter != null) {
-            where += " origin like ? ";
+            where += " origin like ? or technic_name like ?";
+            args.add("%" + mCurFilter + "%");
             args.add("%" + mCurFilter + "%");
             order_by = "origin ASC";
         }
@@ -148,10 +166,42 @@ public class TechnicsInspection extends BaseFragment implements LoaderManager.Lo
     public void onRefresh() {
         if (inNetwork()) {
             parent().sync().requestSync(TechnicsInspectionModel.AUTHORITY);
+            OnTechnicInspectionChangeUpdate onTechnicInspectionChangeUpdate = new OnTechnicInspectionChangeUpdate();
+            ODomain d = new ODomain();
+            /*swipe хийхэд бүх үзлэгийг update хйих*/
+            onTechnicInspectionChangeUpdate.execute(d);
             setSwipeRefreshing(true);
+
         } else {
             hideRefreshingProgress();
             Toast.makeText(getActivity(), _s(R.string.toast_network_required), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private class OnTechnicInspectionChangeUpdate extends AsyncTask<ODomain, Void, Void> {
+        private ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(mContext);
+            progressDialog.setCancelable(false);
+            progressDialog.setTitle(R.string.title_please_wait);
+            progressDialog.setMessage("Update");
+            progressDialog.hide();
+        }
+
+        @Override
+        protected Void doInBackground(ODomain... params) {
+            ODomain domain = params[0];
+            techInspection.quickSyncRecords(domain);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            progressDialog.dismiss();
         }
     }
 
@@ -201,6 +251,10 @@ public class TechnicsInspection extends BaseFragment implements LoaderManager.Lo
             data = row.getPrimaryBundleData();
         }
         IntentUtils.startActivity(getActivity(), TechnicsInspectionDetails.class, data);
+        /*Дэлгэрэнгүйг харуулахдаа sync хийх.*/
+//        ODomain aa = new ODomain();
+//        aa.put("id","=",id)
+//        techInspection.quickSyncRecords(aa);
     }
 
     @Override

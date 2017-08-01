@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="?android:attr/dividerHorizontal"
+        android:orientation="horizontal"
+        android:padding="@dimen/default_8dp"
+        android:showDividers="middle">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <odoo.controls.BezelImageView
+                android:id="@+id/employeeImageSmall"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                app:maskDrawable="@drawable/circle_mask" />
+
+            <TextView
+                android:id="@+id/employeeName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:fontFamily="@string/font_normal"
+                android:gravity="left"
+                android:padding="2dp"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textColor="@color/body_text_1" />
+
+            <TextView
+                android:id="@+id/employeeLname"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:fontFamily="@string/font_normal"
+                android:gravity="left"
+                android:padding="2dp"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textColor="@color/body_text_1" />
+
+            <TextView
+                android:id="@+id/employeeSSIND"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:fontFamily="@string/font_normal"
+                android:gravity="left"
+                android:padding="2dp"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textColor="@color/body_text_1" />
+
+            <TextView
+                android:id="@+id/employeeCompany"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:fontFamily="@string/font_normal"
+                android:gravity="left"
+                android:padding="2dp"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textColor="@color/body_text_1" />
+
+            <TextView
+                android:id="@+id/employeeJob"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:fontFamily="@string/font_normal"
+                android:gravity="left"
+                android:padding="2dp"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textColor="@color/body_text_1" />
+
+            <TextView
+                android:id="@+id/employeePhone"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:fontFamily="@string/font_normal"
+                android:gravity="left"
+                android:padding="2dp"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textColor="@color/body_text_1" />
+
+            <TextView
+                android:id="@+id/employeeDepartment"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:fontFamily="@string/font_normal"
+                android:gravity="left"
+                android:padding="2dp"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textColor="@color/body_text_1" />
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
+

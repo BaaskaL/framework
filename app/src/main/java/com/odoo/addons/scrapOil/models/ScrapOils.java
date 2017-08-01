@@ -38,7 +38,7 @@ public class ScrapOils extends OModel {
 
     OColumn origin = new OColumn("Актын дугаар", OVarchar.class);
     OColumn technic_id = new OColumn("Техник", TechnicsModel.class, OColumn.RelationType.ManyToOne);
-    OColumn oil_ids = new OColumn("ШТМ", TechnicOil.class, OColumn.RelationType.OneToMany);
+    OColumn oil_ids = new OColumn("ШТМ", TechnicOil.class, OColumn.RelationType.OneToMany).setRelatedColumn("scrap_id");
     OColumn is_payable = new OColumn("Төлбөртэй эсэх", OBoolean.class);
     OColumn date = new OColumn("Огноо", ODateTime.class);
     OColumn description = new OColumn("Тайлбар", OVarchar.class);
@@ -46,7 +46,6 @@ public class ScrapOils extends OModel {
 
     @Odoo.Functional(store = true, depends = {"technic_id"}, method = "storeTechnicName")
     OColumn technic_name = new OColumn("Техник", OVarchar.class).setLocalColumn();
-
 
     public ScrapOils(Context context, OUser user) {
         super(context, "oil.scrap", user);

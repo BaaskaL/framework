@@ -154,6 +154,7 @@ public class ScrapTire extends BaseFragment implements LoaderManager.LoaderCallb
             parent().sync().requestSync(ScrapTires.AUTHORITY);
             OnTireScrapChangeUpdate onTireScrapChangeUpdate = new OnTireScrapChangeUpdate();
             ODomain d = new ODomain();
+            /*swipe хийхэд бүх үзлэгийг update хйих*/
             onTireScrapChangeUpdate.execute(d);
             setSwipeRefreshing(true);
         } else {
@@ -234,8 +235,9 @@ public class ScrapTire extends BaseFragment implements LoaderManager.LoaderCallb
             data = row.getPrimaryBundleData();
         }
         IntentUtils.startActivity(getActivity(), ScrapTireDetails.class, data);
+        /*Дэлгэрэнгүйг харуулахдаа sync хийх.*/
 //        ODomain aa = new ODomain();
-//        parent().sync().requestSync(ScrapTires.AUTHORITY);
+//        aa.put("id","=",id)
 //        ScrapTires.quickSyncRecords(aa);
     }
 

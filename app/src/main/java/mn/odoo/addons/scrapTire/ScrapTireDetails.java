@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -78,6 +77,7 @@ public class ScrapTireDetails extends OdooCompatActivity implements OField.IOnFi
         toolbar = (Toolbar) findViewById(R.id.toolbarScrapTire);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         mEditMode = (!hasRecordInExtra() ? true : false);
         technic = new TechnicsModel(this, null);
         scrapTires = new ScrapTires(this, null);
@@ -126,17 +126,16 @@ public class ScrapTireDetails extends OdooCompatActivity implements OField.IOnFi
             mForm.setEditable(mEditMode);
             mForm.initForm(null);
             ((OField) mForm.findViewById(R.id.DateTireScrap)).setValue(ODateUtils.getDate());
-            setMode(mEditMode);
         } else {
             setTitle("Дугуйн акт дэлгэрэнгүй");
             int ScrapId = extra.getInt(OColumn.ROW_ID);
             record = scrapTires.browse(ScrapId);
             mForm.initForm(record);
             mForm.setEditable(mEditMode);
-            setMode(mEditMode);
             tireLines = record.getO2MRecord("tire_ids").browseEach();
             setTireImage(tireLines);
         }
+        setMode(mEditMode);
     }
 
     private void setTireImage(List<ODataRow> lines) {
@@ -357,7 +356,7 @@ public class ScrapTireDetails extends OdooCompatActivity implements OField.IOnFi
 
     private void getTire() {
         if (tireLines != null) {
-            final int template = R.layout.technic_inspection_tire_row;
+            final int template = R.layout.technic_inspection_tire_item;
             mAdapter = mList.getAdapter(template, TireObjects,
                     new ExpandableListControl.ExpandableListAdapterGetViewListener() {
                         @Override
@@ -385,7 +384,6 @@ public class ScrapTireDetails extends OdooCompatActivity implements OField.IOnFi
                             captureImageTire.setVisibility(mEditMode ? View.VISIBLE : View.GONE);
 
                             final ODataRow row = (ODataRow) mAdapter.getItem(position);
-                            Log.i("row====ss", row.toString());
                             TireLocalId = row.getInt("_id");
                             name.setText((position + 1) + ". " + row.getString("name"));
                             date_record.setText(row.getString("date_record"));

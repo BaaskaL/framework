@@ -57,16 +57,6 @@ public class TechnicInspectionSyncService extends OSyncService implements ISyncF
                 isnpectionItem.quickCreateRecord(row);
             }
         }
-
-        TechnicsInspectionModel model = new TechnicsInspectionModel(getApplicationContext(), user);
-        List<ODataRow> inspectionRows = model.select();
-        for (ODataRow row : inspectionRows) {
-            if (row.getString("origin").equals("/")) {
-                Log.i("created inspection row=", row.toString());
-                model.quickCreateRecord(row);
-            }
-        }
-
         return null;
     }
 }

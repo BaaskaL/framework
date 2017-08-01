@@ -55,7 +55,6 @@ public class ScrapTires extends OModel {
     @Odoo.Functional(store = true, depends = {"technic_id"}, method = "storeTechnicName")
     OColumn technic_name = new OColumn("Техник", OVarchar.class).setLocalColumn();
 
-
     public ScrapTires(Context context, OUser user) {
         super(context, "tire.scrap", user);
     }

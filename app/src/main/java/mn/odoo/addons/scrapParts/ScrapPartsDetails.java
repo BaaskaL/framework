@@ -126,6 +126,7 @@ public class ScrapPartsDetails extends OdooCompatActivity implements OField.IOnF
 
         fileManager = new OFileManager(this);
 
+
         OAppBarUtils.setAppBar(this, true);
         if (savedInstanceState != null) {
             mEditMode = savedInstanceState.getBoolean(KEY_MODE);
@@ -192,23 +193,23 @@ public class ScrapPartsDetails extends OdooCompatActivity implements OField.IOnF
             mMenu.findItem(R.id.menu_technic_cancel).setVisible(edit);
         }
         if (edit) {
-            mForm = (OForm) findViewById(R.id.technic_inspection_edit_form);
-            findViewById(R.id.technic_inspection_view_layout).setVisibility(View.GONE);
-            findViewById(R.id.technic_inspection_edit_layout).setVisibility(View.VISIBLE);
+//            mForm = (OForm) findViewById(R.id.technic_inspection_edit_form);
+//            findViewById(R.id.technic_inspection_view_layout).setVisibility(View.GONE);
+//            findViewById(R.id.technic_inspection_edit_layout).setVisibility(View.VISIBLE);
             OField technicField = (OField) findViewById(R.id.inspection_technic_id);
-            mList = (ExpandableListControl) findViewById(R.id.expListOrderLineEdit);
+//            mList = (ExpandableListControl) findViewById(R.id.expListOrderLineEdit);
             mList.setVisibility(View.VISIBLE);
-            mUsageList = (ExpandableListControl) findViewById(R.id.expListUsageUomEdit);
+//            mUsageList = (ExpandableListControl) findViewById(R.id.expListUsageUomEdit);
             mUsageList.setVisibility(View.VISIBLE);
-            mTireList = (ExpandableListControl) findViewById(R.id.expListTireEdit);
+//            mTireList = (ExpandableListControl) findViewById(R.id.expListTireEdit);
             mTireList.setVisibility(View.VISIBLE);
             technicField.setOnValueChangeListener(this);
             typeField.setOnValueChangeListener(this);
         } else {
-            mForm = (OForm) findViewById(R.id.technic_inspection_form);
-            findViewById(R.id.technic_inspection_edit_layout).setVisibility(View.GONE);
-            findViewById(R.id.technic_inspection_view_layout).setVisibility(View.VISIBLE);
-            mList = (ExpandableListControl) findViewById(R.id.expListOrderLine);
+//            mForm = (OForm) findViewById(R.id.technic_inspection_form);
+//            findViewById(R.id.technic_inspection_edit_layout).setVisibility(View.GONE);
+//            findViewById(R.id.technic_inspection_view_layout).setVisibility(View.VISIBLE);
+//            mList = (ExpandableListControl) findViewById(R.id.expListOrderLine);
             mList.setVisibility(View.VISIBLE);
             mUsageList = (ExpandableListControl) findViewById(R.id.expListUsageUom);
             mUsageList.setVisibility(View.VISIBLE);
@@ -224,12 +225,12 @@ public class ScrapPartsDetails extends OdooCompatActivity implements OField.IOnF
         if (lines != null) {
             objects.clear();
             objects.addAll(lines);
-            mAdapter = mList.getAdapter(R.layout.sale_order_line_item, objects,
+            mAdapter = mList.getAdapter(R.layout.technic_inspection_line_item, objects,
                     new ExpandableListControl.ExpandableListAdapterGetViewListener() {
                         @Override
                         public View getView(final int position, View mView, ViewGroup parent) {
                             if (mView == null) {
-                                mView = getLayoutInflater().inflate(R.layout.sale_order_line_item, parent, false);
+                                mView = getLayoutInflater().inflate(R.layout.technic_inspection_line_item, parent, false);
                             }
                             final EditText description = (EditText) mView.findViewById(R.id.edtDescription);
                             RadioGroup radioGroup = (RadioGroup) mView.findViewById(R.id.edtRadioGroup);
@@ -553,7 +554,7 @@ public class ScrapPartsDetails extends OdooCompatActivity implements OField.IOnF
             UsageObjects.clear();
             UsageObjects.addAll(linesUom);
 
-            final int template = R.layout.technic_inspection_usage_uom_row;
+            final int template = R.layout.technic_inspection_usage_uom_item;
 
             mUsageAdapter = mUsageList.getAdapter(template, UsageObjects,
                     new ExpandableListControl.ExpandableListAdapterGetViewListener() {
@@ -613,7 +614,7 @@ public class ScrapPartsDetails extends OdooCompatActivity implements OField.IOnF
             TireObjects.clear();
             TireObjects.addAll(tireLines);
 
-            final int template = R.layout.technic_inspection_tire_row;
+            final int template = R.layout.technic_inspection_tire_item;
 
             mTireAdapter = mTireList.getAdapter(template, TireObjects,
                     new ExpandableListControl.ExpandableListAdapterGetViewListener() {
@@ -673,7 +674,7 @@ public class ScrapPartsDetails extends OdooCompatActivity implements OField.IOnF
                     ODataRow newRow = new ODataRow();
                     newRow.put("name", row.getString("name"));
                     newRow.put("date_record", row.getString("date_record"));
-                    newRow.put("securrent_positionrial", row.getString("current_position"));
+                    newRow.put("current_position", row.getString("current_position"));
                     newRow.put("serial", row.getString("serial"));
                     tireLines.add(newRow);
                 }

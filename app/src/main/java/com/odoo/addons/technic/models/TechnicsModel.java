@@ -20,7 +20,6 @@
 package com.odoo.addons.technic.models;
 
 import android.content.Context;
-import android.net.Uri;
 import android.util.Log;
 
 import com.odoo.BuildConfig;
@@ -101,12 +100,6 @@ public class TechnicsModel extends OModel {
         super(context, "technic", user);
         projectObj = new ProjectProject(context, user);
         userObj = user;
-//        setDefaultNameColumn("technic_name");
-    }
-
-    @Override
-    public Uri uri() {
-        return buildURI(AUTHORITY);
     }
 
     public String storeTechnicName(OValues row) {

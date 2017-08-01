@@ -750,9 +750,12 @@ public class OModel implements ISyncServiceListener {
     public int insertOrUpdate(int serverId, OValues values) {
         if (hasServerRecord(serverId)) {
             int row_id = selectRowId(serverId);
+            Log.i("server_id===update", row_id + "");
+            Log.i("vals========", values.toString());
             update(row_id, values);
             return row_id;
         } else {
+            Log.i("inserted_vals====", values.toString());
             return insert(values);
         }
     }
@@ -951,7 +954,8 @@ public class OModel implements ISyncServiceListener {
             Log.i(TAG, String.format("#%d references removed " + relModel.getModelName(), count));
         }
         for (Object rowObj : values.get(commands)) {
-            Log.i("o2m_value_inser====", rowObj.toString());
+            Log.i("o2m_value_inser====1", rowObj.toString());
+            Log.i("commands_relation==", commands.toString());
             switch (commands) {
                 case Append:
                     OValues value;
@@ -973,11 +977,13 @@ public class OModel implements ISyncServiceListener {
                         value = (OValues) rowObj;
                         value.put(column.getRelatedColumn(), record_id);
                         relModel.insert(value);
+                        Log.i("inserted====", value.toString());
                     } else {
                         int rec_id = (int) rowObj;
                         value = new OValues();
                         value.put(column.getRelatedColumn(), record_id);
                         relModel.update(rec_id, value);
+                        Log.i("update===========", value.toString() + "   record = " + rec_id + "");
                     }
                     break;
                 case Delete:

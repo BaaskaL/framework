@@ -48,7 +48,7 @@
                 android:layout_weight="1.1">
 
                 <TextView
-                    android:id="@+id/date_record"
+                    android:id="@+id/date"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:fontFamily="@string/font_normal"
@@ -66,7 +66,7 @@
                 android:layout_weight="0.4">
 
                 <TextView
-                    android:id="@+id/current_position"
+                    android:id="@+id/capacity"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:fontFamily="@string/font_normal"
@@ -101,11 +101,10 @@
                 android:layout_marginRight="10dp"
                 android:layout_weight="1.5">
 
-                <EditText
-                    android:id="@+id/serial"
+                <TextView
+                    android:id="@+id/product"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Сериал"
                     android:textColor="@color/body_text_1"
                     android:textSize="@dimen/text_size_medium" />
             </LinearLayout>
@@ -115,21 +114,22 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/default_16dp"
                 android:layout_weight="1.5"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/tireImage"
+                    android:id="@+id/oilImage"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="gone" />
 
                 <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/captureImageTire"
+                    android:id="@+id/captureImageOil"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_action_camera"
                     android:visibility="visible"
-                    app:layout_anchor="@id/tireImage"
+                    app:layout_anchor="@id/oilImage"
                     app:layout_anchorGravity="bottom|right|end" />
             </LinearLayout>
 

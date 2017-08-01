@@ -24,21 +24,31 @@ import android.content.Context;
 import com.odoo.addons.technic.models.TechnicsModel;
 import com.odoo.core.orm.OModel;
 import com.odoo.core.orm.fields.OColumn;
+import com.odoo.core.orm.fields.types.OBlob;
+import com.odoo.core.orm.fields.types.OBoolean;
 import com.odoo.core.orm.fields.types.ODateTime;
 import com.odoo.core.orm.fields.types.OFloat;
+import com.odoo.core.orm.fields.types.OSelection;
 import com.odoo.core.orm.fields.types.OVarchar;
 import com.odoo.core.support.OUser;
 
 public class TechnicOil extends OModel {
 
     OColumn name = new OColumn("Дугуйны нэр", OVarchar.class);
-    OColumn serial = new OColumn("Сериал", OVarchar.class);
     OColumn technic_id = new OColumn("Техникийн нэр", TechnicsModel.class, OColumn.RelationType.ManyToOne);
     OColumn product_id = new OColumn("Бараа", ProductProduct.class, OColumn.RelationType.ManyToOne);
     OColumn capacity = new OColumn("Хэмжээ", OFloat.class);
     OColumn date_record = new OColumn("Суурилуулсан огноо", ODateTime.class);
-    OColumn reason = new OColumn("Reason", TiresOilReason.class, OColumn.RelationType.ManyToOne);
-    OColumn state = new OColumn("State", OVarchar.class);
+    OColumn reason = new OColumn("Шалтгаан", TiresOilReason.class, OColumn.RelationType.ManyToOne);
+    OColumn state = new OColumn("Төлөв", OSelection.class)
+            .addSelection("draft", "Ноорог")
+            .addSelection("using", "Хэрэглэж буй")
+            .addSelection("inactive", "Нөөцөнд")
+            .addSelection("rejected", "Акталсан")
+            .setDefaultValue("draft");
+    OColumn scrap_id = new OColumn("Scrap id", ScrapOils.class, OColumn.RelationType.ManyToOne);
+    OColumn oil_image = new OColumn("Images", OBlob.class);
+    OColumn in_scrap = new OColumn("In scrap", OBoolean.class);
 
     public TechnicOil(Context context, OUser user) {
         super(context, "shtm.register", user);

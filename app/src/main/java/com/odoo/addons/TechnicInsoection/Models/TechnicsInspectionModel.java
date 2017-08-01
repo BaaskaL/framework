@@ -53,19 +53,21 @@ public class TechnicsInspectionModel extends OModel {
     OColumn origin = new OColumn("Үзлэгийн дугаар", OVarchar.class);
     OColumn inspection_date = new OColumn("Үзлэгийн огноо", ODateTime.class);
     @Odoo.onChange(method = "technicIdOnChange")
-    OColumn inspection_technic_id = new OColumn("Техникийн нэр", TechnicsModel.class, OColumn.RelationType.ManyToOne);
-    OColumn inspection_type_id = new OColumn("Үзлэгийн төрөл", TechnicInspectionType.class, OColumn.RelationType.ManyToOne);
+    OColumn inspection_technic_id = new OColumn("Техникийн нэр", TechnicsModel.class, OColumn.RelationType.ManyToOne).setRequired();
+    OColumn inspection_type_id = new OColumn("Үзлэгийн төрөл", TechnicInspectionType.class, OColumn.RelationType.ManyToOne).setRequired();
+    @Odoo.Functional(store = true, depends = {"inspection_type_id"}, method = "storeTypeName")
+    OColumn inspection_type_name = new OColumn("Үзлэгийн төрөл", OVarchar.class).setLocalColumn();
     OColumn technic_inspection_check_list_ids = new OColumn("Check lists", TechnicInspectionCheckList.class, OColumn.RelationType.OneToMany).setRelatedColumn("inspection_id");
     OColumn inspection_usage_ids = new OColumn("inspection_id", TechnicInspectionUsage.class, OColumn.RelationType.OneToMany).setRelatedColumn("inspection_id");
+    OColumn tire_ids = new OColumn("Дугуй", TechnicInspectionTires.class, OColumn.RelationType.OneToMany).setRelatedColumn("inspection_id");
+    OColumn ins_photo = new OColumn("Зураг", TechnicInspectionPhoto.class, OColumn.RelationType.OneToMany).setRelatedColumn("inspection_id");
     OColumn inspection_respondent_id = new OColumn("Жолооч/Хариуцагч", Employee.class, OColumn.RelationType.ManyToOne);
     OColumn inspection_registrar_id = new OColumn("Бүртгэгч", ResUsers.class, OColumn.RelationType.ManyToOne);
     @Odoo.Functional(store = true, depends = {"inspection_respondent_id"}, method = "storeInsName")
     OColumn inspection_respondent_name = new OColumn("Жолооч", OVarchar.class).setLocalColumn();
     OColumn ins_description = new OColumn("Тайлбар", OVarchar.class);
-
     @Odoo.Functional(store = true, depends = {"inspection_technic_id"}, method = "storeTechnicName")
     OColumn technic_name = new OColumn("Technic name", OVarchar.class).setLocalColumn();
-
     OColumn state = new OColumn("Төлөв", OSelection.class)
             .addSelection("draft", "Ноорог")
             .addSelection("done", "Дууссан").setDefaultValue("draft");
@@ -150,15 +152,27 @@ public class TechnicsInspectionModel extends OModel {
     }
 
     public String storeTechnicName(OValues row) {
-        Log.i("ROW====", row.toString());
         String name = "Хоосон";
         try {
             if (!row.getString("inspection_technic_id").equals(null)) {
-                Log.i("usage_uom_id====", row.getString("inspection_technic_id"));
                 String value = row.getString("inspection_technic_id");
                 String[] parts = value.split(",");
                 name = parts[1].substring(1, parts[1].length() - 1);
-                Log.i("name====", name);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return name;
+    }
+
+    public String storeTypeName(OValues row) {
+        String name = "Хоосон";
+        try {
+            if (!row.getString("inspection_type_id").equals(null)) {
+                String value = row.getString("inspection_type_id");
+                Log.i("value===", value.toString());
+                String[] parts = value.split(",");
+                name = parts[1].substring(1, parts[1].length() - 1);
             }
         } catch (Exception e) {
             e.printStackTrace();

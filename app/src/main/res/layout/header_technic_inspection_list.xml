@@ -1,93 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:orientation="horizontal"
-    android:layout_height="match_parent">
-    <LinearLayout
-        android:id="@+id/customerView"
-        android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:layout_height="match_parent">
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:background="#247648"
-            android:orientation="vertical"
-            android:layout_height="wrap_content">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/default_8dp"
-                android:paddingTop="@dimen/default_8dp"
-                android:paddingBottom="@dimen/default_8dp"
-                android:paddingRight="@dimen/default_16dp"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:id="@+id/origin"
-                    android:layout_weight="0.2"
-                    android:textAppearance="?android:textAppearanceSmall"
-                    android:text="Үзлэгийн дугаар"
-                    android:textStyle="bold"
-                    android:textColor="#ffffff"
-                    android:gravity="left"
-                    android:fontFamily="@string/font_normal"
-                    android:layout_gravity="center_vertical"
-                    android:layout_width="70dp"
-                    android:layout_height="wrap_content"></TextView>
-                <TextView
-                    android:id="@+id/name"
-                    android:layout_weight="0.3"
-                    android:textAppearance="?android:textAppearanceSmall"
-                    android:text="Техникийн нэр"
-                    android:textColor="#ffffff"
-                    android:textStyle="bold"
-                    android:gravity="left"
-                    android:fontFamily="@string/font_normal"
-                    android:layout_gravity="center_vertical"
-                    android:layout_width="120dp"
-                    android:layout_height="wrap_content"></TextView>
-                <TextView
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
 
-                    android:layout_weight="0.1"
-                    android:id="@+id/registrar"
-                    android:text="Жолооч"
-                    android:layout_marginLeft="5dp"
-                    android:textAppearance="?android:textAppearanceSmall"
-                    android:layout_gravity="center_vertical"
-                    android:textStyle="bold"
-                    android:textColor="#ffffff"
-                    android:gravity="left"
-                    android:fontFamily="@string/font_normal"
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"></TextView>
-                <TextView
-                    android:fontFamily="@string/font_normal"
-                    android:id="@+id/date"
-                    android:layout_weight="0.2"
-                    android:text="Бүртгэсэн огноо"
-                    android:layout_marginLeft="5dp"
-                    android:textAppearance="?android:textAppearanceSmall"
-                    android:layout_gravity="center_vertical"
-                    android:textStyle="bold"
-                    android:textColor="#ffffff"
-                    android:gravity="left"
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"></TextView>
-                <TextView
-                    android:fontFamily="@string/font_normal"
-                    android:id="@+id/type"
-                    android:text="Үзлэгийн төрөл"
-                    android:layout_weight="0.1"
-                    android:layout_marginLeft="5dp"
-                    android:textAppearance="?android:textAppearanceSmall"
-                    android:layout_gravity="center_vertical"
-                    android:textStyle="bold"
-                    android:textColor="#ffffff"
-                    android:gravity="left"
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"></TextView>
-            </LinearLayout>
-        </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#247648"
+        android:divider="?android:attr/dividerHorizontal"
+        android:orientation="horizontal"
+        android:padding="@dimen/default_8dp"
+        android:showDividers="middle">
+
+        <TextView
+            android:id="@+id/origin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.11"
+            android:fontFamily="@string/font_normal"
+            android:gravity="center"
+            android:padding="3dp"
+            android:text="Үзлэгийн дугаар"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:textColor="#ffffff"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.3"
+            android:fontFamily="@string/font_normal"
+            android:gravity="center"
+            android:padding="3dp"
+            android:text="Техникийн нэр"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:textColor="#ffffff"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/registrar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.13"
+            android:fontFamily="@string/font_normal"
+            android:gravity="center"
+            android:padding="3dp"
+            android:text="Жолооч"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:textColor="#ffffff"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.1"
+            android:fontFamily="@string/font_normal"
+            android:gravity="center"
+            android:padding="3dp"
+            android:text="Бүртгэсэн огноо"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:textColor="#ffffff"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/state"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.1"
+            android:fontFamily="@string/font_normal"
+            android:gravity="center"
+            android:padding="3dp"
+            android:text="Үзлэгийн төлөв"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:textColor="#ffffff"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/type"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.13"
+            android:fontFamily="@string/font_normal"
+            android:gravity="center"
+            android:padding="3dp"
+            android:text="Үзлэгийн төрөл"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:textColor="#ffffff"
+            android:textStyle="bold" />
     </LinearLayout>
+
 </LinearLayout>

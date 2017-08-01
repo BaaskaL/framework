@@ -345,8 +345,10 @@ public class OSyncAdapter extends AbstractThreadedSyncAdapter {
                  Need to check server id for record.
                  It is possible that record created on server by validating main record.
                  */
+                Log.i("relation_fields_done", " done done done");
                 if (model.selectServerId(record.getInt(OColumn.ROW_ID)) == 0) {
                     int id = createOnServer(model, OdooRecordUtils.createRecordValues(model, record));
+                    Log.i("Server_created===", "id==" + id + "==model==" + model.toString());
                     if (id != OModel.INVALID_ROW_ID) {
                         Log.i("new_id=====", id + "");
                         OValues values = new OValues();
@@ -444,6 +446,7 @@ public class OSyncAdapter extends AbstractThreadedSyncAdapter {
             if (values != null) {
                 Log.i("values====11", values.toString());
                 OdooResult result = mOdoo.createRecord(model.getModelName(), values);
+                Log.i("result====11", result.toString());
                 id = result.getInt("result");
             }
         } catch (Exception e) {

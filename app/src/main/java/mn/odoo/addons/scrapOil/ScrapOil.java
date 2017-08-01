@@ -1,7 +1,9 @@
 package mn.odoo.addons.scrapOil;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.LoaderManager;
@@ -21,6 +23,7 @@ import android.widget.Toast;
 import com.odoo.R;
 import com.odoo.addons.scrapOil.models.ScrapOils;
 import com.odoo.core.orm.ODataRow;
+import com.odoo.core.rpc.helper.ODomain;
 import com.odoo.core.support.addons.fragment.BaseFragment;
 import com.odoo.core.support.addons.fragment.IOnSearchViewChangeListener;
 import com.odoo.core.support.addons.fragment.ISyncStatusObserverListener;
@@ -46,6 +49,8 @@ public class ScrapOil extends BaseFragment implements LoaderManager.LoaderCallba
     private View mView;
     private OCursorListAdapter mAdapter = null;
     private boolean syncRequested = false;
+    private ScrapOils scrapOil;
+    private Context mContext;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -62,6 +67,8 @@ public class ScrapOil extends BaseFragment implements LoaderManager.LoaderCallba
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mView = view;
+        mContext = this.getContext();
+        scrapOil = new ScrapOils(mContext, null);
         ListView mListViewScrap = (ListView) mView.findViewById(R.id.listview_scrap);
         mAdapter = new OCursorListAdapter(getActivity(), null, R.layout.scrap_oil_row_item);
         mAdapter.setOnViewBindListener(this);
@@ -145,9 +152,41 @@ public class ScrapOil extends BaseFragment implements LoaderManager.LoaderCallba
         if (inNetwork()) {
             parent().sync().requestSync(ScrapOils.AUTHORITY);
             setSwipeRefreshing(true);
+            OnOilScrapChangeUpdate onTireScrapChangeUpdate = new OnOilScrapChangeUpdate();
+            ODomain d = new ODomain();
+            /*swipe хийхэд бүх үзлэгийг update хйих*/
+            onTireScrapChangeUpdate.execute(d);
+            setSwipeRefreshing(true);
         } else {
             hideRefreshingProgress();
             Toast.makeText(getActivity(), _s(R.string.toast_network_required), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private class OnOilScrapChangeUpdate extends AsyncTask<ODomain, Void, Void> {
+        private ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(mContext);
+            progressDialog.setCancelable(false);
+            progressDialog.setTitle(R.string.title_please_wait);
+            progressDialog.setMessage("Update");
+            progressDialog.hide();
+        }
+
+        @Override
+        protected Void doInBackground(ODomain... params) {
+            ODomain domain = params[0];
+            scrapOil.quickSyncRecords(domain);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            progressDialog.dismiss();
         }
     }
 
