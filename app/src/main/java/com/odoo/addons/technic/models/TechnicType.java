@@ -28,7 +28,7 @@ import com.odoo.core.support.OUser;
 
 public class TechnicType extends OModel {
 
-    OColumn name = new OColumn("Name", OVarchar.class);
+    OColumn name = new OColumn("Төрлийн нэр", OVarchar.class);
 
     public TechnicType(Context context, OUser user) {
         super(context, "technic.type", user);

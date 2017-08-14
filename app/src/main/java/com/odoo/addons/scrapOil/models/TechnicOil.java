@@ -23,8 +23,9 @@ import android.content.Context;
 
 import com.odoo.addons.technic.models.TechnicsModel;
 import com.odoo.core.orm.OModel;
+import com.odoo.core.orm.OValues;
+import com.odoo.core.orm.annotation.Odoo;
 import com.odoo.core.orm.fields.OColumn;
-import com.odoo.core.orm.fields.types.OBlob;
 import com.odoo.core.orm.fields.types.OBoolean;
 import com.odoo.core.orm.fields.types.ODateTime;
 import com.odoo.core.orm.fields.types.OFloat;
@@ -32,25 +33,55 @@ import com.odoo.core.orm.fields.types.OSelection;
 import com.odoo.core.orm.fields.types.OVarchar;
 import com.odoo.core.support.OUser;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TechnicOil extends OModel {
 
-    OColumn name = new OColumn("Дугуйны нэр", OVarchar.class);
-    OColumn technic_id = new OColumn("Техникийн нэр", TechnicsModel.class, OColumn.RelationType.ManyToOne);
+    OColumn name = new OColumn("ШТМ-ын нэр", OVarchar.class);
+    OColumn tech_id = new OColumn("Техникийн нэр", TechnicsModel.class, OColumn.RelationType.ManyToOne);
     OColumn product_id = new OColumn("Бараа", ProductProduct.class, OColumn.RelationType.ManyToOne);
     OColumn capacity = new OColumn("Хэмжээ", OFloat.class);
     OColumn date_record = new OColumn("Суурилуулсан огноо", ODateTime.class);
-    OColumn reason = new OColumn("Шалтгаан", TiresOilReason.class, OColumn.RelationType.ManyToOne);
+    OColumn reason = new OColumn("Шалтгаан", ScrapOilReason.class, OColumn.RelationType.ManyToOne);
     OColumn state = new OColumn("Төлөв", OSelection.class)
             .addSelection("draft", "Ноорог")
             .addSelection("using", "Хэрэглэж буй")
             .addSelection("inactive", "Нөөцөнд")
             .addSelection("rejected", "Акталсан")
             .setDefaultValue("draft");
-    OColumn scrap_id = new OColumn("Scrap id", ScrapOils.class, OColumn.RelationType.ManyToOne);
-    OColumn oil_image = new OColumn("Images", OBlob.class);
+    OColumn scrap_photos = new OColumn("Photos", ShTMScrapPhotos.class, OColumn.RelationType.OneToMany).setRelatedColumn("shtm_id");
     OColumn in_scrap = new OColumn("In scrap", OBoolean.class);
+    @Odoo.Functional(store = true, depends = {"product_id"}, method = "storeProductName")
+    OColumn product_name = new OColumn("Product name", OVarchar.class).setLocalColumn();
+    @Odoo.Functional(store = true, depends = {"reason"}, method = "storeReasonName")
+    OColumn reason_name = new OColumn("Reason name", OVarchar.class).setLocalColumn();
 
     public TechnicOil(Context context, OUser user) {
         super(context, "shtm.register", user);
+    }
+
+    public String storeProductName(OValues value) {
+        try {
+            if (!value.getString("product_id").equals("false")) {
+                List<Object> product_id = (ArrayList<Object>) value.get("product_id");
+                return product_id.get(1) + "";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public String storeReasonName(OValues value) {
+        try {
+            if (!value.getString("reason").equals("false")) {
+                List<Object> reason = (ArrayList<Object>) value.get("reason");
+                return reason.get(1) + "";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }

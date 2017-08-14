@@ -5,6 +5,9 @@
     <color name="gts_yellow">#F6B331</color>
     <color name="gts_green">#247648</color>
 
+    <color name="blue">#00abea</color>
+    <color name="white">#ffffff</color>
+
     <!-- Drawer Colors -->
     <color name="drawer_text_color">#282828</color>
     <color name="drawer_text_color_selected">#414141</color>

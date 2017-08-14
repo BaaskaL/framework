@@ -30,10 +30,6 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
                 Log.i("case_1====", position + "");
                 TabInspectionTire tab2 = new TabInspectionTire();
                 return tab2;
-            case 2:
-                Log.i("case_2====", position + "");
-                TabInspectionUsageUom tab3 = new TabInspectionUsageUom();
-                return tab3;
             default:
                 Log.i("case_default==", position + "");
                 return null;

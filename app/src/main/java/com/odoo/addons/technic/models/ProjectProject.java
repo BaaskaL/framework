@@ -22,16 +22,13 @@ package com.odoo.addons.technic.models;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.odoo.base.addons.res.ResUsers;
 import com.odoo.core.orm.ODataRow;
 import com.odoo.core.orm.OModel;
 import com.odoo.core.orm.fields.OColumn;
-import com.odoo.core.orm.fields.types.OInteger;
 import com.odoo.core.orm.fields.types.OVarchar;
 import com.odoo.core.support.OUser;
-import com.odoo.core.utils.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,8 +36,8 @@ import java.util.List;
 public class ProjectProject extends OModel {
 
 
-    OColumn name = new OColumn("Name", OVarchar.class);
-    OColumn members = new OColumn("Project members", ResUsers.class, OColumn.RelationType.ManyToMany);
+    OColumn name = new OColumn("Төсөл", OVarchar.class);
+    OColumn members = new OColumn("Төслийн гишүүд", ResUsers.class, OColumn.RelationType.ManyToMany);
 
     public ProjectProject(Context context, OUser user) {
         super(context, "project.project", user);

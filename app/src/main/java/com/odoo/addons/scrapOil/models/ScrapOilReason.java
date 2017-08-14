@@ -26,12 +26,12 @@ import com.odoo.core.orm.fields.OColumn;
 import com.odoo.core.orm.fields.types.OVarchar;
 import com.odoo.core.support.OUser;
 
-public class TiresOilReason extends OModel {
+public class ScrapOilReason extends OModel {
 
     OColumn name = new OColumn("Нэр", OVarchar.class);
     OColumn note = new OColumn("Тайлбар", OVarchar.class);
 
-    public TiresOilReason(Context context, OUser user) {
+    public ScrapOilReason(Context context, OUser user) {
         super(context, "oil.scrap.reason", user);
     }
 

@@ -28,7 +28,7 @@ import com.odoo.core.support.OUser;
 
 public class GTechnicColor extends OModel {
 
-    OColumn name = new OColumn("Name", OVarchar.class);
+    OColumn name = new OColumn("Өнгө", OVarchar.class);
 
     public GTechnicColor(Context context, OUser user) {
         super(context, "gtechnic.color", user);

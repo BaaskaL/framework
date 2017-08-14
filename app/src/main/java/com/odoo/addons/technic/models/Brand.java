@@ -28,7 +28,7 @@ import com.odoo.core.support.OUser;
 
 public class Brand extends OModel {
 
-    OColumn name = new OColumn("Name", OVarchar.class);
+    OColumn name = new OColumn("Брэндийн нэр", OVarchar.class);
 
     public Brand(Context context, OUser user) {
         super(context, "brand", user);

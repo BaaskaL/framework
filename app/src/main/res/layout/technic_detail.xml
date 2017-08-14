@@ -1,297 +1,38 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#fff"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/theme_primary"
-        android:minHeight="?attr/actionBarSize"
-        android:paddingRight="@dimen/default_8dp"
-        android:paddingTop="@dimen/statusBarHeight"
-        app:layout_collapseMode="pin"
-        app:popupTheme="@style/AppBar.Dark"
-        app:titleMarginStart="@dimen/default_16dp" />
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <odoo.controls.OForm
-            android:id="@+id/technicForm"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:modelName="technic">
+            android:background="#F6B331"
+            android:minHeight="?attr/actionBarSize"
+            android:paddingRight="@dimen/default_8dp"
+            android:paddingTop="@dimen/statusBarHeight"
+            app:layout_collapseMode="pin"
+            app:popupTheme="@style/AppBar.Dark"
+            app:titleMarginStart="@dimen/default_16dp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabGravity="fill"
+            app:tabMode="fixed" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Техник"
-                    android:textSize="20dp" />
+    </android.support.design.widget.AppBarLayout>
 
-                <LinearLayout
-                    android:id="@+id/technic_view_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-                    <odoo.controls.OField
-                        android:id="@+id/technic_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:fieldName="technic_name"
-                        app:fieldTextAppearance="?android:textAppearanceSmall"></odoo.controls.OField>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <odoo.controls.OField
-                        android:id="@+id/register_number"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:fieldName="register_number"
-                        app:fieldTextAppearance="?android:textAppearanceMedium"></odoo.controls.OField>
-
-
-                    <odoo.controls.OField
-                        android:id="@+id/last_km"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAlignment="center"
-                        app:fieldName="last_km"
-                        app:fieldTextAppearance="?android:textAppearanceMedium"></odoo.controls.OField>
-
-                    <odoo.controls.OField
-                        android:id="@+id/last_motohour"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:fieldName="last_motohour"
-                        app:fieldTextAppearance="?android:textAppearanceMedium"></odoo.controls.OField>
-
-                    <odoo.controls.OField
-                        android:id="@+id/state"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:fieldName="state"
-                        app:fieldTextAppearance="?android:textAppearanceSmall"
-                        app:fieldType="Selection"
-                        app:showLabel="true" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <View
-                style="@style/ViewSeparator"
-                android:layout_marginLeft="72dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Техникийн мэдээлэл"
-                    android:textSize="20dp" />
-
-                <odoo.controls.OField
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:fieldLabelColor="@color/theme_secondary"
-                    app:fieldName="technic_norm_id"
-                    app:fieldTextAppearance="?android:textAppearanceMedium"></odoo.controls.OField>
-
-                <odoo.controls.OField
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:fieldLabelColor="@color/theme_secondary"
-                    app:fieldName="technic_brand_id"
-                    app:fieldTextAppearance="?android:textAppearanceMedium"></odoo.controls.OField>
-
-                <odoo.controls.OField
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:fieldLabelColor="@color/theme_secondary"
-                    app:fieldName="technic_type_id"
-                    app:fieldTextAppearance="?android:textAppearanceMedium"></odoo.controls.OField>
-
-                <odoo.controls.OField
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:fieldLabelColor="@color/theme_secondary"
-                    app:fieldName="technic_model_id"
-                    app:fieldTextAppearance="?android:textAppearanceMedium"></odoo.controls.OField>
-
-                <odoo.controls.OField
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:fieldLabelColor="@color/theme_secondary"
-                    app:fieldName="specification_id"
-                    app:fieldTextAppearance="?android:textAppearanceMedium"></odoo.controls.OField>
-
-                <odoo.controls.OField
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:fieldLabelColor="@color/theme_secondary"
-                    app:fieldName="serial_vin_number"
-                    app:fieldTextAppearance="?android:textAppearanceMedium"></odoo.controls.OField>
-
-                <odoo.controls.OField
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:fieldLabelColor="@color/theme_secondary"
-                    app:fieldName="state_number"
-                    app:fieldTextAppearance="?android:textAppearanceMedium"></odoo.controls.OField>
-
-                <odoo.controls.OField
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:fieldLabelColor="@color/theme_secondary"
-                    app:fieldName="engine_number"
-                    app:fieldTextAppearance="?android:textAppearanceMedium"></odoo.controls.OField>
-
-                <odoo.controls.OField
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:fieldLabelColor="@color/theme_secondary"
-                    app:fieldName="technic_color"
-                    app:fieldTextAppearance="?android:textAppearanceMedium"></odoo.controls.OField>
-
-                <odoo.controls.OField
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:fieldLabelColor="@color/theme_secondary"
-                    app:fieldName="technic_number"
-                    app:fieldTextAppearance="?android:textAppearanceMedium"></odoo.controls.OField>
-
-                <odoo.controls.OField
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:fieldLabelColor="@color/theme_secondary"
-                    app:fieldName="manufacture_date"
-                    app:fieldTextAppearance="?android:textAppearanceMedium"></odoo.controls.OField>
-
-                <odoo.controls.OField
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:fieldLabelColor="@color/theme_secondary"
-                    app:fieldName="in_mongolia_date"
-                    app:fieldTextAppearance="?android:textAppearanceMedium"></odoo.controls.OField>
-
-                <odoo.controls.OField
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:fieldLabelColor="@color/theme_secondary"
-                    app:fieldName="registration_date"
-                    app:fieldTextAppearance="?android:textAppearanceMedium"></odoo.controls.OField>
-
-            </LinearLayout>
-
-            <View
-                style="@style/ViewSeparator"
-                android:layout_marginLeft="72dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Эзэмшлийн мэдээлэл"
-                    android:textSize="20dp" />
-
-                <odoo.controls.OField
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:fieldLabelColor="@color/theme_secondary"
-                    app:fieldName="project"
-                    app:fieldTextAppearance="?android:textAppearanceMedium"></odoo.controls.OField>
-
-                <odoo.controls.OField
-                    android:id="@+id/state"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:fieldName="ownership_type"
-                    app:fieldTextAppearance="?android:textAppearanceSmall"
-                    app:fieldType="Selection"
-                    app:showLabel="true" />
-
-                <odoo.controls.OField
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:fieldLabelColor="@color/theme_secondary"
-                    app:fieldName="account_asset_id"
-                    app:fieldTextAppearance="?android:textAppearanceMedium"></odoo.controls.OField>
-
-                <odoo.controls.OField
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:fieldLabelColor="@color/theme_secondary"
-                    app:fieldName="account_analytic_id"
-                    app:fieldTextAppearance="?android:textAppearanceMedium"></odoo.controls.OField>
-
-                <odoo.controls.OField
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:fieldLabelColor="@color/theme_secondary"
-                    app:fieldName="ownership_company_id"
-                    app:fieldTextAppearance="?android:textAppearanceMedium"></odoo.controls.OField>
-
-                <odoo.controls.OField
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:fieldLabelColor="@color/theme_secondary"
-                    app:fieldName="ownership_department_id"
-                    app:fieldTextAppearance="?android:textAppearanceMedium"></odoo.controls.OField>
-
-                <odoo.controls.OField
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:fieldLabelColor="@color/theme_secondary"
-                    app:fieldName="current_company_id"
-                    app:fieldTextAppearance="?android:textAppearanceMedium"></odoo.controls.OField>
-
-                <odoo.controls.OField
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:fieldLabelColor="@color/theme_secondary"
-                    app:fieldName="current_department_id"
-                    app:fieldTextAppearance="?android:textAppearanceMedium"></odoo.controls.OField>
-
-                <odoo.controls.OField
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:fieldLabelColor="@color/theme_secondary"
-                    app:fieldName="current_respondent_id"
-                    app:fieldTextAppearance="?android:textAppearanceMedium"></odoo.controls.OField>
-
-                <odoo.controls.OField
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:fieldLabelColor="@color/theme_secondary"
-                    app:fieldName="id_gps"
-                    app:fieldTextAppearance="?android:textAppearanceMedium"></odoo.controls.OField>
-
-            </LinearLayout>
-
-        </odoo.controls.OForm>
-    </ScrollView>
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

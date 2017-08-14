@@ -22,18 +22,17 @@ import com.odoo.R;
 import com.odoo.addons.TechnicInsoection.Models.TechnicsInspectionModel;
 import com.odoo.addons.employees.models.Employee;
 import com.odoo.core.orm.ODataRow;
-import com.odoo.core.support.OUser;
+import com.odoo.core.utils.OAlert;
 
 import java.io.ByteArrayOutputStream;
+import java.util.List;
 
 public class TechnicsInspectionSignature extends Activity {
     signature mSignature;
     private TechnicsInspectionModel technicIns;
-    Paint paint;
+    private Employee employee;
     LinearLayout mContent;
     Button clear, save;
-    private String confirmCode;
-    private OUser mUser;
     private EditText etxConfirmCode;
 
     @Override
@@ -41,16 +40,12 @@ public class TechnicsInspectionSignature extends Activity {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.technic_inspection_signature);
-        mUser = OUser.current(this);
         technicIns = new TechnicsInspectionModel(this, null);
+        employee = new Employee(this, null);
         save = (Button) findViewById(R.id.save);
-        save.setEnabled(false);
         clear = (Button) findViewById(R.id.clear);
         mContent = (LinearLayout) findViewById(R.id.mysignature);
         etxConfirmCode = (EditText) findViewById(R.id.et_confirm_code);
-        Employee employee = new Employee(this, null);
-        ODataRow employeeInfo = employee.select(null, "_id = ?", new String[]{"" + technicIns.myId()}).get(0);
-        confirmCode = employeeInfo.getString("confirm_code");
         mSignature = new signature(this, null);
         mContent.addView(mSignature);
 
@@ -66,10 +61,6 @@ public class TechnicsInspectionSignature extends Activity {
                 mSignature.clear();
             } else if (v == save) {
                 mSignature.save();
-//                if(!etxConfirmCode.getText().toString().equals("") && confirmCode.equals(etxConfirmCode.getText().toString()))
-//                    mSignature.save();
-//                else
-//                    Toast.makeText(CaptureSignature.this, R.string.warning_confirm_code, Toast.LENGTH_LONG).show();
             }
         }
     };
@@ -114,8 +105,16 @@ public class TechnicsInspectionSignature extends Activity {
             returnedBitmap.compress(Bitmap.CompressFormat.PNG, 50, bs);
             Intent intent = new Intent();
             intent.putExtra("byteArray", bs.toByteArray());
-            setResult(1, intent);
-            finish();
+            List<ODataRow> emp = employee.select(null, "user_id = ?", new String[]{technicIns.myId().toString()});
+            if (emp.size() > 0) {
+                ODataRow employ = emp.get(0);
+                if (employ.getString("confirm_code").equals(etxConfirmCode.getText().toString())) {
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
+            } else {
+                OAlert.showError(TechnicsInspectionSignature.this, "Нүүц үг буруу байна.!!!");
+            }
         }
 
         @Override

@@ -34,7 +34,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#ffffff"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                app:modelName="oil.scrap">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -99,6 +100,36 @@
                 <View
                     style="@style/ViewSeparator"
                     android:layout_marginLeft="72dp" />
+
+                <LinearLayout
+                    android:id="@+id/layoutAddItem"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:paddingBottom="@dimen/default_8dp"
+                    android:paddingLeft="@dimen/default_16dp"
+                    android:paddingRight="@dimen/default_16dp"
+                    android:paddingTop="@dimen/default_8dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:padding="2dp"
+                        android:src="@drawable/ic_action_edit"
+                        android:tint="@color/android_orange_dark" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:text="Manage oil lines"
+                        android:textAllCaps="true"
+                        android:textAppearance="?android:textAppearanceSmall"
+                        android:textColor="@color/android_orange_dark"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
 
                 <RelativeLayout
                     android:layout_width="match_parent"

@@ -1,5 +1,6 @@
 package mn.odoo.addons.technic;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -9,6 +10,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.LoaderManager;
@@ -16,7 +18,6 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextPaint;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,23 +26,23 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.odoo.R;
+import com.odoo.addons.technic.models.TechnicDocument;
 import com.odoo.addons.technic.models.TechnicsModel;
 import com.odoo.core.orm.ODataRow;
+import com.odoo.core.rpc.helper.ODomain;
 import com.odoo.core.support.addons.fragment.BaseFragment;
 import com.odoo.core.support.addons.fragment.IOnSearchViewChangeListener;
 import com.odoo.core.support.addons.fragment.ISyncStatusObserverListener;
 import com.odoo.core.support.drawer.ODrawerItem;
 import com.odoo.core.support.list.OCursorListAdapter;
-import com.odoo.core.utils.BitmapUtils;
 import com.odoo.core.utils.IntentUtils;
 import com.odoo.core.utils.OControls;
+import com.odoo.core.utils.OCursorUtils;
+import com.odoo.core.utils.OStringColorUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.odoo.R;
-import com.odoo.core.utils.OCursorUtils;
-import com.odoo.core.utils.OStringColorUtil;
 
 import odoo.controls.OControlHelper;
 
@@ -59,6 +60,9 @@ public class Technics extends BaseFragment implements LoaderManager.LoaderCallba
 
     private View mView;
     private OCursorListAdapter mAdapter = null;
+    private Context mContext;
+    private TechnicsModel technicsModel;
+    private TechnicDocument technicDocument;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -80,6 +84,9 @@ public class Technics extends BaseFragment implements LoaderManager.LoaderCallba
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mView = view;
+        mContext = this.getContext();
+        technicsModel = new TechnicsModel(mContext, null);
+        technicDocument = new TechnicDocument(mContext, null);
         ListView mTechnicList = (ListView) view.findViewById(R.id.listview_technic);
         mAdapter = new OCursorListAdapter(getActivity(), null, R.layout.technic_row_item);
 
@@ -190,7 +197,40 @@ public class Technics extends BaseFragment implements LoaderManager.LoaderCallba
     @Override
     public void onRefresh() {
         if (inNetwork()) {
+            OnTechnicChangeUpdate onTechnicChangeUpdate = new OnTechnicChangeUpdate();
+            ODomain d = new ODomain();
+            /*swipe хийхэд бүх өгөгдлийг update хйих*/
+            onTechnicChangeUpdate.execute(d);
+            setSwipeRefreshing(true);
             parent().sync().requestSync(TechnicsModel.AUTHORITY);
+        }
+    }
+
+    private class OnTechnicChangeUpdate extends AsyncTask<ODomain, Void, Void> {
+        private ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(mContext);
+            progressDialog.setCancelable(false);
+            progressDialog.setTitle(R.string.title_please_wait);
+            progressDialog.setMessage("Update");
+            progressDialog.hide();
+        }
+
+        @Override
+        protected Void doInBackground(ODomain... params) {
+            ODomain domain = params[0];
+            technicsModel.quickSyncRecords(domain);
+//            technicDocument.quickSyncRecords(domain);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            progressDialog.dismiss();
         }
     }
 

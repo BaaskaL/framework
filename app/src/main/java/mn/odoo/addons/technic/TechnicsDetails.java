@@ -1,9 +1,13 @@
 package mn.odoo.addons.technic;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.odoo.R;
 import com.odoo.addons.technic.models.TechnicNorm;
@@ -12,15 +16,21 @@ import com.odoo.core.orm.ODataRow;
 import com.odoo.core.orm.fields.OColumn;
 import com.odoo.core.support.OdooCompatActivity;
 
-import odoo.controls.OField;
+import java.util.ArrayList;
+import java.util.List;
+
+import mn.odoo.addons.technic.tabs.TechnicDocuments;
+import mn.odoo.addons.technic.tabs.TechnicInfo;
+import mn.odoo.addons.technic.tabs.TechnicNorms;
+import mn.odoo.addons.technic.tabs.TechnicStateStorys;
+import mn.odoo.addons.technic.tabs.TechnicUsages;
 import odoo.controls.OForm;
 
 /**
  * Created by baaska on 5/30/17.
  */
 
-public class TechnicsDetails extends OdooCompatActivity
-        implements View.OnClickListener, OField.IOnFieldValueChangeListener {
+public class TechnicsDetails extends OdooCompatActivity {
 
     public static final String TAG = TechnicsDetails.class.getSimpleName();
 
@@ -30,35 +40,66 @@ public class TechnicsDetails extends OdooCompatActivity
     private ODataRow record = null;
     private Toolbar toolbar;
     private TechnicNorm technic_norm;
+    private ViewPager viewPager;
+    private TabLayout tabLayout;
+    private int TechnicId;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.technic_detail);
+        extras = getIntent().getExtras();
+        TechnicId = extras.getInt(OColumn.ROW_ID);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Technic detail");
+        toolbar.setTitle("Техникийн дэлгэрэнгүй");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        extras = getIntent().getExtras();
-        technic = new TechnicsModel(this, null);
-        technic_norm = new TechnicNorm(this, null);
-        mForm = (OForm) findViewById(R.id.technicForm);
-        int rowId = extras.getInt(OColumn.ROW_ID);
-        record = technic.browse(rowId);
-        mForm.initForm(record);
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        setupViewPager(viewPager);
 
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
     }
 
-    @Override
-    public void onClick(View v) {
-
+    private void setupViewPager(ViewPager viewPager) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(new TechnicInfo(TechnicId), "Техник");
+        adapter.addFragment(new TechnicUsages(TechnicId), "Ашиглалтын түүх");
+        adapter.addFragment(new TechnicDocuments(TechnicId), "Бичиг баримт");
+        adapter.addFragment(new TechnicNorms(TechnicId), "Норм");
+        adapter.addFragment(new TechnicStateStorys(TechnicId), "Төлвийн түүх");
+        viewPager.setAdapter(adapter);
     }
 
-    @Override
-    public void onFieldValueChange(OField field, Object value) {
+    class ViewPagerAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
 
+        public ViewPagerAdapter(FragmentManager manager) {
+            super(manager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+        public void addFragment(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitleList.get(position);
+        }
     }
 
     @Override

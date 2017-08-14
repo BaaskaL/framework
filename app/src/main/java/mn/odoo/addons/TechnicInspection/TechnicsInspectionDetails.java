@@ -1,17 +1,18 @@
 package mn.odoo.addons.TechnicInspection;
 
+import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -52,6 +53,7 @@ import com.odoo.core.utils.ODateUtils;
 import com.odoo.core.utils.OResource;
 import com.odoo.core.utils.OStringColorUtil;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -102,7 +104,7 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
     private Menu mMenu;
     private OField typeField;
 
-    private int myId;
+    public int myId;
     private Uri mCapturedImageURI;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private ImageView userImage = null;
@@ -120,6 +122,8 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
     private List<TextSliderView> textSlider = new ArrayList<>();
     private List<String> indicator = new ArrayList<>();
     private ImageView image;
+    public static final int REQUEST_ADD_ITEMS = 323;
+    private Boolean saveData = false;
     App app;
 
     @Override
@@ -162,7 +166,7 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText("Техникийн үзлэгийн зүйлc"));
         tabLayout.addTab(tabLayout.newTab().setText("Дугуйн үзлэг"));
-        tabLayout.addTab(tabLayout.newTab().setText("Ашиглалт"));
+//        tabLayout.addTab(tabLayout.newTab().setText("Ашиглалт"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         adapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
@@ -385,41 +389,8 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.captureImage:
-// gej bolh uuuuuuu
-//
-//                Intent intent = new Intent(Intent.ACTION_PICK,
-//                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//                startActivityForResult(intent, 1);
-//
-//                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//                intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(destination));
-//                startActivityForResult(intent, REQUEST_IMAGE);
-
                 fileManager.requestForFile(OFileManager.RequestType.IMAGE_OR_CAPTURE_IMAGE);
-//                Intent takePictureIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-//
-//                String fileName = "temp.jpg";
-//                ContentValues values = new ContentValues();
-//                values.put(MediaStore.Images.Media.TITLE, fileName);
-//                mCapturedImageURI = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-//                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mCapturedImageURI);
-//                startActivityForResult(takePictureIntent, 2);
-//
-//                Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//                startActivityForResult(intent, 1);
-
-//                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-//                    String fileName = "technic_inspection_01.jpg";
-//                    ContentValues values = new ContentValues();
-//                    values.put(MediaStore.Images.ImageColumns.TITLE, fileName);
-//                    mCapturedImageURI = getContentResolver()
-//                            .insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-//                    takePictureIntent
-//                            .putExtra(MediaStore.EXTRA_OUTPUT, mCapturedImageURI);
-//                    startActivityForResult(takePictureIntent, 2);
-//                }
-//                break;
+                break;
         }
     }
 
@@ -460,13 +431,28 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
                 finish();
                 break;
             case R.id.menu_technic_save:
+                if (!saveData) {
+                    Intent intent = new Intent(this, TechnicsInspectionSignature.class);
+                    startActivityForResult(intent, REQUEST_ADD_ITEMS);
+                }
                 OValues values = mForm.getValues();
-                if (values != null) {
+                if (values != null && saveData) {
                     List<Integer> inspectionItemIds = new ArrayList<>();
                     List<Integer> uoomIds = new ArrayList<>();
                     List<Integer> tireIds = new ArrayList<>();
                     List<Integer> photoIds = new ArrayList<>();
                     if (record != null) {
+                        for (ODataRow row : inspectionItemLines) {
+                            OValues insNewVal = new OValues();
+//                            insNewVal.put("technic_inspection_category_id", row.getInt("technic_inspection_category_id"));
+//                            insNewVal.put("technic_inspection_item_id", row.getInt("technic_inspection_item_id"));
+                            insNewVal.put("inspection_isitnormal", row.getBoolean("inspection_isitnormal"));
+                            insNewVal.put("inspection_check", row.getBoolean("inspection_check"));
+                            if (!row.getString("description").equals("false")) {
+                                insNewVal.put("description", row.getString("description"));
+                            }
+                            inspectionLines.update(row.getInt(OColumn.ROW_ID), insNewVal);
+                        }
                         technicIns.update(record.getInt(OColumn.ROW_ID), values);
                         Toast.makeText(this, R.string.toast_information_saved, Toast.LENGTH_LONG).show();
                         mEditMode = !mEditMode;
@@ -574,15 +560,12 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
     }
 
     private class OnTechnicSync extends AsyncTask<List<Object>, Void, Void> {
-//        private String technicId;
-
         @Override
         protected Void doInBackground(List<Object>... params) {
             if (app.inNetwork()) {
                 List parameter = params[0];
                 ODomain domain = (ODomain) parameter.get(0);
                 technic.quickSyncRecords(domain);
-//                technicId = parameter.get(1).toString();
             }
             return null;
         }
@@ -661,84 +644,73 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
 
     }
 
+    public String BitMapToString(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] b = baos.toByteArray();
+        String temp = Base64.encodeToString(b, Base64.DEFAULT);
+        return temp;
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-//        Uri uri = data.getData();
-//        String uriString = uri.toString();
-//        File file = null;
 
-        OValues values = fileManager.handleResult(requestCode, resultCode, data);
-        if (values != null && !values.contains("size_limit_exceed")) {
-            newImage = values.getString("datas");
-//            Uri targetUri = data.getData();
-            ODataRow aa = new ODataRow();
-            aa.put("photo", newImage);
-            recInsImages.add(aa);
-//            ImageView userImages = null;
-////            userImages.setScaleType(ImageView.ScaleType.CENTER_CROP);
-//            userImages.setColorFilter(null);
-//            userImages.setImageBitmap(BitmapUtils.getBitmapImage(this, newImage));
+        if (requestCode == REQUEST_ADD_ITEMS && resultCode == Activity.RESULT_OK) {
+            saveData = true;
+            MenuItem item = mMenu.findItem(R.id.menu_technic_save);
+            onOptionsItemSelected(item);
 
-//            Uri aa = userImages.getim;
-            Bitmap img = BitmapUtils.getBitmapImage(this, newImage);
-//            Matrix matrix = new Matrix();
-//            matrix.postRotate(90);
-//            x + width must be <= bitmap.width()
-//            Bitmap b = BitmapFactory.decodeByteArray(data.getByteArrayExtra("byteArray"), 0, data.getByteArrayExtra("byteArray").length);
-//            Bitmap rotatedImg = Bitmap.createBitmap(img, 0, 0, img.getWidth(), img.getHeight(), matrix, false);
-            Bitmap scaledBitmap = Bitmap.createScaledBitmap(img, 2560, 1600, true);//screen resolution 16:10
+            Bitmap img = BitmapFactory.decodeByteArray(
+                    data.getByteArrayExtra("byteArray"), 0,
+                    data.getByteArrayExtra("byteArray").length);
+
+            String newImage = BitMapToString(img);
+            ODataRow image = new ODataRow();
+            image.put("photo", newImage);
+            recInsImages.add(image);
+
             String path = MediaStore.Images.Media.insertImage(getApplicationContext().getContentResolver(), img, "Title", null);
-            Log.i("path====", path);
             Uri tempUri = Uri.parse(path);
-            Log.i("tempUri====", tempUri.toString());
-//            profileImage.setImageBitmap(Bitmap.createScaledBitmap(b, 120, 120, false));
-            Cursor cursor = getContentResolver().query(tempUri, null, null, null, null);
-            cursor.moveToFirst();
-            int idx = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
-            File finalFile = new File(cursor.getString(idx));
-            file_maps.put(finalFile.getName(), finalFile);
-            mDemoSlider.removeAllSliders();
-            for (String name : file_maps.keySet()) {
+            TextSliderView textSliderView = new TextSliderView(this);
+            textSliderView.description("aa")
+                    .image(tempUri)
+                    .setScaleType(BaseSliderView.ScaleType.CenterInside)
+                    .setOnSliderClickListener(this);
+            textSliderView.bundle(new Bundle());
+            mDemoSlider.addSlider(textSliderView);
+            mDemoSlider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
+
+        } else {
+            OValues values = fileManager.handleResult(requestCode, resultCode, data);
+            if (values != null && !values.contains("size_limit_exceed")) {
+                String newImage = values.getString("datas");
+                ODataRow image = new ODataRow();
+                image.put("photo", newImage);
+                recInsImages.add(image);
+                Bitmap img = BitmapUtils.getBitmapImage(this, newImage);
+                Bitmap scaledBitmap = Bitmap.createScaledBitmap(img, 2560, 1600, true);//screen resolution 16:10
+                String path = MediaStore.Images.Media.insertImage(getApplicationContext().getContentResolver(), img, "Title", null);
+                Uri tempUri = Uri.parse(path);
                 TextSliderView textSliderView = new TextSliderView(this);
-                textSliderView.description(name).image(file_maps.get(name))
+                textSliderView.description("aa")
+                        .image(tempUri)
                         .setScaleType(BaseSliderView.ScaleType.CenterInside)
                         .setOnSliderClickListener(this);
                 textSliderView.bundle(new Bundle());
-                textSliderView.getBundle().putString("extra", name);
+                if (mDemoSlider.getCurrentSlider().getDescription().equals("Default")) {
+                    mDemoSlider.removeSliderAt(0);
+                }
                 mDemoSlider.addSlider(textSliderView);
+                mDemoSlider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
+                mDemoSlider.startAutoCycle();
+            } else if (values != null) {
+                Toast.makeText(this, R.string.toast_image_size_too_large, Toast.LENGTH_LONG).show();
             }
-        } else if (values != null) {
-            Toast.makeText(this, R.string.toast_image_size_too_large, Toast.LENGTH_LONG).show();
         }
-
-//        if (requestCode == 2 && resultCode == RESULT_OK) {
-//            String[] projection = {MediaStore.Images.Media.DATA};
-//            Cursor cursor = getContentResolver().query(mCapturedImageURI, projection, null, null, null);
-//            int column_index_data = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-//            cursor.moveToFirst();
-//            String picturePath = cursor.getString(column_index_data);
-//            Log.i("picturePath====", picturePath);
-//            file = new File(picturePath);
-//            url_maps.put("aaaaaaaaa", "dd");
-//            for (String name : url_maps.keySet()) {
-//                TextSliderView textSliderView = new TextSliderView(this);
-//                // initialize a SliderLayout
-//                textSliderView.description(name).image(file)
-//                        .setScaleType(BaseSliderView.ScaleType.Fit)
-//                        .setOnSliderClickListener(this);
-//                textSliderView.bundle(new Bundle());
-//                textSliderView.getBundle()
-//                        .putString("extra", name);
-//                mDemoSlider.addSlider(textSliderView);
-//            }
-//
-//        }
-
     }
 
     private class OnInspectionImageSync extends AsyncTask<List<ODataRow>, Void, Void> {
-//        HashMap<String, String> business = new HashMap<>();
 
         @Override
         protected void onPreExecute() {
@@ -748,56 +720,17 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
         @Override
         protected Void doInBackground(List<ODataRow>... params) {
             try {
-                file_maps.clear();
                 for (ODataRow row : params[0]) {
                     Bitmap img = BitmapUtils.getBitmapImage(TechnicsInspectionDetails.this, row.getString("photo"));
                     Bitmap scaledBitmap = Bitmap.createScaledBitmap(img, 2560, 1600, true);//screen resolution 16:10
-
                     String path = MediaStore.Images.Media.insertImage(getApplicationContext().getContentResolver(), scaledBitmap, "Title", null);
                     Uri tempUri = Uri.parse(path);
-                    String aaaaaa = Environment.getExternalStorageDirectory().toString() + "Pictures/1501385646043.jpg";
-
-                    Log.i("ExternalStorageDirect", aaaaaa);
-                    Log.i("tempUri====", tempUri.toString());
-//                    captureImage8.setImageBitmap(BitmapUtils.getBitmapImage(this, row.getString("photo"));
-                    Cursor cursor = getContentResolver().query(tempUri, null, null, null, null);
-                    cursor.moveToFirst();
-                    int idx = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
-                    File finalFile = new File(cursor.getString(idx));
-                    cursor.close();
-
-//                    file_maps.put(finalFile.getName(), finalFile);
-//                    ContextWrapper cw = new ContextWrapper(getApplicationContext());
-//                    File directory = cw.getDir("imageDir", getApplicationContext().MODE_PRIVATE);
-//                    // Create imageDir
-//                    File mypath = new File(directory, "profile.jpg");
-//                    FileOutputStream fos = null;
-//
-//                    try {
-//                        fos = new FileOutputStream(mypath);
-//                        // Use the compress method on the BitMap object to write image to the OutputStream
-//                        scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    } finally {
-//                        try {
-//                            fos.close();
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                    Log.i(directory.getAbsolutePath(), "========");
-//                    Uri tempUri = Uri.parse(directory.getAbsolutePath());
-
                     TextSliderView textSliderView = new TextSliderView(TechnicsInspectionDetails.this);
                     textSliderView.description("ZZZZZ")
                             .image(tempUri)
                             .setScaleType(BaseSliderView.ScaleType.CenterInside)
                             .setOnSliderClickListener(TechnicsInspectionDetails.this);
                     textSlider.add(textSliderView);
-                    Log.i("path=====", path.toString());
-                    File fdelete = new File(path);
-//                    finalFile.delete();
                 }
             } catch (Exception e) {
 
@@ -808,12 +741,7 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-
-//            String strLogoURL = business.get("aaa");
-//            image.setMaxHeight(20);
-//            image.setMaxWidth(20);
             mDemoSlider.removeAllSliders();
-//            Picasso.with(getApplicationContext()).load(strLogoURL).into(image);
             for (TextSliderView slide : textSlider) {
                 mDemoSlider.addSlider(slide);
             }

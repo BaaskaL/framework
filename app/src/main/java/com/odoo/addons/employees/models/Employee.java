@@ -23,6 +23,7 @@ import android.content.Context;
 
 import com.odoo.BuildConfig;
 import com.odoo.base.addons.res.ResCompany;
+import com.odoo.base.addons.res.ResUsers;
 import com.odoo.core.orm.OModel;
 import com.odoo.core.orm.OValues;
 import com.odoo.core.orm.annotation.Odoo;
@@ -46,6 +47,7 @@ public class Employee extends OModel {
     OColumn company_id = new OColumn("Компани", ResCompany.class, OColumn.RelationType.ManyToOne).setRequired();
     OColumn job_id = new OColumn("Ажлын нэр", HrJob.class, OColumn.RelationType.ManyToOne).setRequired();
     OColumn department_id = new OColumn("Хэлтэс", HrDepartment.class, OColumn.RelationType.ManyToOne).setRequired();
+    OColumn user_id = new OColumn("Хэрэглэгч", ResUsers.class, OColumn.RelationType.ManyToOne);
     OColumn image_small = new OColumn("Image small", OVarchar.class);
     OColumn image_medium = new OColumn("Image medium", OVarchar.class);
 
@@ -95,4 +97,10 @@ public class Employee extends OModel {
         }
         return "";
     }
+
+//    public static int myId(Context context) {
+//        Employee employ = new Employee(context, null);
+//        Log.i("ssss======", employ.selectRowId(employ.getUser().getUserId()) + "");
+//        return employ.selectRowId(employ.getUser().getUserId());
+//    }
 }

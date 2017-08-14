@@ -3,6 +3,7 @@ package mn.odoo.addons.employees;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.LoaderManager;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 import com.odoo.R;
 import com.odoo.addons.employees.models.Employee;
 import com.odoo.core.orm.ODataRow;
+import com.odoo.core.rpc.helper.ODomain;
 import com.odoo.core.support.addons.fragment.BaseFragment;
 import com.odoo.core.support.addons.fragment.IOnSearchViewChangeListener;
 import com.odoo.core.support.addons.fragment.ISyncStatusObserverListener;
@@ -45,6 +47,7 @@ public class Employees extends BaseFragment implements LoaderManager.LoaderCallb
 
     public static final String KEY = Employees.class.getSimpleName();
     private String mCurFilter = null;
+    private Employee employee;
     private View mView;
     private OCursorListAdapter mAdapter = null;
     private boolean syncRequested = false;
@@ -53,6 +56,7 @@ public class Employees extends BaseFragment implements LoaderManager.LoaderCallb
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         setHasSyncStatusObserver(KEY, this, db());
+        employee = new Employee(getContext(), null);
         mView = inflater.inflate(R.layout.employee_listview, container, false);
         LinearLayout HeaderContainer = (LinearLayout) mView.findViewById(R.id.employee_header_container);
         LinearLayout Header = (LinearLayout) inflater.inflate(R.layout.header_employee_list, container, false);
@@ -167,10 +171,24 @@ public class Employees extends BaseFragment implements LoaderManager.LoaderCallb
     public void onRefresh() {
         if (inNetwork()) {
             parent().sync().requestSync(Employee.AUTHORITY);
+            OnEmployeeChangeUpdate onEmployeeChangeUpdate = new OnEmployeeChangeUpdate();
+            ODomain d = new ODomain();
+            /*swipe хийхэд бүх ажилтанг update хйих*/
+            onEmployeeChangeUpdate.execute(d);
             setSwipeRefreshing(true);
         } else {
             hideRefreshingProgress();
             Toast.makeText(getActivity(), _s(R.string.toast_network_required), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private class OnEmployeeChangeUpdate extends AsyncTask<ODomain, Void, Void> {
+        @Override
+        protected Void doInBackground(ODomain... params) {
+            ODomain domain = params[0];
+            employee.quickSyncRecords(domain);
+            employee.quickSyncRecords(domain);
+            return null;
         }
     }
 

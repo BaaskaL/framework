@@ -28,7 +28,7 @@ import com.odoo.core.support.OUser;
 
 public class TechnicModel extends OModel {
 
-    OColumn name = new OColumn("Name", OVarchar.class);
+    OColumn name = new OColumn("Загварын нэр", OVarchar.class);
 
     public TechnicModel(Context context, OUser user) {
         super(context, "technic.model", user);

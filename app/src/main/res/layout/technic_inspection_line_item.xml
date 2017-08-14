@@ -114,6 +114,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="left"
                         android:hint="Тайлбар"
+                        android:paddingLeft="5dp"
                         android:textColor="@color/body_text_1"
                         android:textSize="@dimen/text_size_medium" />
                 </LinearLayout>

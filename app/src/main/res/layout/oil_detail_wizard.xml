@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbarOilWizard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/theme_toolbar"
+        android:minHeight="?attr/actionBarSize"
+        android:paddingTop="@dimen/statusBarHeight"
+        app:layout_collapseMode="pin"
+        app:theme="@style/ToolBarBackTheme"
+        app:titleMarginStart="@dimen/default_8dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:paddingTop="@dimen/statusBarHeight">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <odoo.controls.OForm
+                android:id="@+id/OFormOilScrapWizard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#ffffff"
+                android:orientation="vertical"
+                app:modelName="shtm.register">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <odoo.controls.OField
+                        android:id="@+id/oilName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:defaultFieldValue="-"
+                        app:fieldName="name"
+                        app:fieldTextAppearance="?android:textAppearanceLarge" />
+
+                    <odoo.controls.OField
+                        android:id="@+id/oilProductId"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:fieldLabelColor="@color/theme_secondary"
+                        app:fieldName="product_id"
+                        app:fieldTextAppearance="?android:textAppearanceSmall"
+                        app:iconResource="@drawable/ic_action_time_clock" />
+
+                    <odoo.controls.OField
+                        android:id="@+id/oilCapacity"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:fieldLabelColor="@color/theme_secondary"
+                        app:fieldName="capacity"
+                        app:fieldTextAppearance="?android:textAppearanceSmall"
+                        app:widgetType="SearchableLive" />
+
+                    <odoo.controls.OField
+                        android:id="@+id/oilDateRecord"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:fieldLabelColor="@color/theme_secondary"
+                        app:fieldName="date_record"
+                        app:fieldTextAppearance="?android:textAppearanceMedium" />
+
+                    <odoo.controls.OField
+                        android:id="@+id/oilReason"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:fieldLabelColor="@color/theme_secondary"
+                        app:fieldName="reason"
+                        app:fieldTextAppearance="?android:textAppearanceMedium" />
+
+                    <odoo.controls.OField
+                        android:id="@+id/oilState"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:defaultFieldValue="request"
+                        app:fieldLabelColor="@color/theme_secondary"
+                        app:fieldName="state"
+                        app:fieldTextAppearance="?android:textAppearanceMedium" />
+
+                </LinearLayout>
+
+                <View
+                    style="@style/ViewSeparator"
+                    android:layout_marginLeft="72dp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/takePicture"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Take Picture" />
+                </LinearLayout>
+
+                <GridView
+                    android:id="@+id/gridViewOilImage"
+                    android:layout_width="fill_parent"
+                    android:layout_height="600dp"
+                    android:layout_margin="5dp"
+                    android:clickable="true"
+                    android:columnWidth="150dp"
+                    android:drawSelectorOnTop="true"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:numColumns="auto_fit"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:stretchMode="columnWidth"
+                    android:verticalSpacing="5dp" />
+
+            </odoo.controls.OForm>
+        </ScrollView>
+    </LinearLayout>
+</LinearLayout>

@@ -1,5 +1,6 @@
 package mn.odoo.addons.scrapOil;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -15,12 +16,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.odoo.App;
 import com.odoo.R;
 import com.odoo.addons.scrapOil.models.ScrapOils;
+import com.odoo.addons.scrapOil.models.ShTMScrapPhotos;
 import com.odoo.addons.scrapOil.models.TechnicOil;
 import com.odoo.addons.technic.models.TechnicsModel;
 import com.odoo.base.addons.ir.feature.OFileManager;
@@ -31,6 +34,7 @@ import com.odoo.core.rpc.helper.ODomain;
 import com.odoo.core.support.OdooCompatActivity;
 import com.odoo.core.utils.BitmapUtils;
 import com.odoo.core.utils.OAlert;
+import com.odoo.core.utils.OControls;
 import com.odoo.core.utils.ODateUtils;
 import com.odoo.core.utils.OResource;
 
@@ -38,6 +42,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import mn.odoo.addons.otherClass.AddItemLineWizard;
+import mn.odoo.addons.otherClass.OilDetailsWizard;
 import odoo.controls.ExpandableListControl;
 import odoo.controls.OField;
 import odoo.controls.OForm;
@@ -46,7 +52,7 @@ import odoo.controls.OForm;
  * Created by baaska on 5/30/17.
  */
 
-public class ScrapOilDetails extends OdooCompatActivity implements OField.IOnFieldValueChangeListener {
+public class ScrapOilDetails extends OdooCompatActivity implements OField.IOnFieldValueChangeListener, View.OnClickListener {
 
     public static final String TAG = ScrapOilDetails.class.getSimpleName();
     private Bundle extra;
@@ -57,16 +63,25 @@ public class ScrapOilDetails extends OdooCompatActivity implements OField.IOnFie
     private Menu mMenu;
     private TechnicsModel technic;
     private TechnicOil technicOil;
+    private ShTMScrapPhotos shTMScrapPhotos;
     private ScrapOils scrapOil;
     private ExpandableListControl mList;
     private ExpandableListControl.ExpandableListAdapter mAdapter;
     private List<Object> oilObjects = new ArrayList<>();
     private List<ODataRow> oilLines = new ArrayList<>();
+    private List<ODataRow> technicOilLine = new ArrayList<>();
     private List<ODataRow> oilRow = new ArrayList<>();
     private Toolbar toolbar;
     private OFileManager fileManager;
     private HashMap<Integer, String> oilImages = new HashMap<>();
+    private LinearLayout layoutAddItem = null;
     private int oilLocalId;
+    /*Зүйлс оруулж ирэх*/
+    private HashMap<String, Boolean> lineValues = new HashMap<>();
+    private HashMap<String, Integer> lineIds = new HashMap<>();
+    private List<Object> objects = new ArrayList<>();
+    public static final int REQUEST_ADD_ITEMS = 323;
+//    private HashMap<String, Float> lineValues = new HashMap<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -81,19 +96,25 @@ public class ScrapOilDetails extends OdooCompatActivity implements OField.IOnFie
         mEditMode = (!hasRecordInExtra() ? true : false);
         technic = new TechnicsModel(this, null);
         technicOil = new TechnicOil(this, null);
+        shTMScrapPhotos = new ShTMScrapPhotos(this, null);
         scrapOil = new ScrapOils(this, null);
         fileManager = new OFileManager(this);
 
         mList = (ExpandableListControl) findViewById(R.id.ExpandListOilLine);
+        mList.setOnClickListener(this);
         mForm = (OForm) findViewById(R.id.OFormOilScrap);
-        mForm.setModel("oil.scrap");
 
         oState = (OField) mForm.findViewById(R.id.StateOilScrap);
         oOrigin = (OField) mForm.findViewById(R.id.OriginOilScrap);
         date = (OField) mForm.findViewById(R.id.DateOilScrap);
         technicId = (OField) mForm.findViewById(R.id.TechnicOilScrap);
         isPaybale = (OField) mForm.findViewById(R.id.IsPayableOilScrap);
+
+        layoutAddItem = (LinearLayout) findViewById(R.id.layoutAddItem);
+        layoutAddItem.setOnClickListener(this);
+
         setupToolbar();
+        initAdapter();
     }
 
     private void ToolbarMenuSetVisibl(Boolean Visibility) {
@@ -132,16 +153,69 @@ public class ScrapOilDetails extends OdooCompatActivity implements OField.IOnFie
             record = scrapOil.browse(ScrapId);
             mForm.initForm(record);
             mForm.setEditable(mEditMode);
-            oilLines = record.getO2MRecord("oil_ids").browseEach();
+//            oilLines = record.getO2MRecord("oil_photos").browseEach();
+            int technic_id = record.getInt("technic_id");
+            ODataRow techRecord = technic.browse(technic_id);
+            technicOilLine = techRecord.getO2MRecord("oils").browseEach();
+            oilLines = record.getM2MRecord("oil_ids").browseEach();
             setOilImage(oilLines);
         }
         setMode(mEditMode);
     }
 
+    private void initAdapter() {
+        if (extra != null && record != null) {
+            for (ODataRow line : technicOilLine) {
+                lineValues.put(line.getString("_id"), false);
+            }
+            Log.i("lineValues==", lineValues.toString());
+            for (ODataRow line : oilLines) {
+                if (lineValues.containsKey(line.getString("_id"))) {
+                    lineValues.put(line.getString("_id"), true);
+                }
+            }
+            Log.i("lineValues==2222", lineValues.toString());
+        }
+        Log.i("oilLines==2222", oilLines.toString());
+        objects.clear();
+        objects.addAll(oilLines);
+        mAdapter = mList.getAdapter(R.layout.scrap_oil_oil_item, objects,
+                new ExpandableListControl.ExpandableListAdapterGetViewListener() {
+                    @Override
+                    public View getView(final int position, View mView, ViewGroup parent) {
+                        ODataRow row = (ODataRow) mAdapter.getItem(position);
+                        OControls.setText(mView, R.id.name, (position + 1) + ". " + row.getString("name"));
+                        OControls.setText(mView, R.id.date, row.getString("date"));
+                        if (row.getString("date").equals("false"))
+                            OControls.setText(mView, R.id.date, "Огноо");
+                        OControls.setText(mView, R.id.capacity, row.getString("capacity"));
+                        OControls.setText(mView, R.id.product, row.getString("product_name"));
+                        OControls.setText(mView, R.id.reason, row.getString("reason_name"));
+                        if (row.getString("state").equals("draft"))
+                            OControls.setText(mView, R.id.state, "Ноорог");
+                        else if (row.getString("state").equals("using"))
+                            OControls.setText(mView, R.id.state, "Хэрэглэж буй");
+                        else if (row.getString("state").equals("inactive"))
+                            OControls.setText(mView, R.id.state, "Нөөцөнд");
+                        else OControls.setText(mView, R.id.state, "Акталсан");
+
+                        mView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                ODataRow row = (ODataRow) mAdapter.getItem(position);
+                                loadActivity(row);
+                            }
+                        });
+                        return mView;
+                    }
+                });
+        mAdapter.notifyDataSetChanged(objects);
+    }
+
     private void setOilImage(List<ODataRow> lines) {
         for (ODataRow row : lines) {
-            if (!row.getString("oil_image").equals("false")) {
-                oilImages.put(row.getInt("_id"), row.getString("oil_image"));
+            if (!row.getString("photo").equals("false")) {
+                oilImages.put(row.getInt("shtm_id"), row.getString("photo"));
             }
         }
         getOil();
@@ -261,6 +335,48 @@ public class ScrapOilDetails extends OdooCompatActivity implements OField.IOnFie
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.layoutAddItem:
+                if (mForm.getValues() != null) {
+                    Intent intent = new Intent(this, AddItemLineWizard.class);
+                    Bundle extra = new Bundle();
+                    for (String key : lineValues.keySet()) {
+                        extra.putBoolean(key, lineValues.get(key));
+                        AddItemLineWizard.mModel = technicOil;
+                    }
+                    intent.putExtras(extra);
+                    startActivityForResult(intent, REQUEST_ADD_ITEMS);
+                }
+                break;
+            case R.id.gridViewOilImage:
+
+//            case R.id.ExpandListOilLine:
+//                if (mForm.getValues() != null) {
+//                    Intent intent = new Intent(this, OilDetailsWizard.class);
+//                    Bundle extra = new Bundle();
+//                    for (String key : lineValues.keySet()) {
+//                        extra.putBoolean(key, lineValues.get(key));
+//                    }
+//                    intent.putExtras(extra);
+//                    startActivityForResult(intent, REQUEST_ADD_ITEMS);
+//
+//                }
+//                break;
+        }
+    }
+
+    private void loadActivity(ODataRow row) {
+        Intent intent = new Intent(this, OilDetailsWizard.class);
+        Bundle extra = new Bundle();
+        if (row != null) {
+            extra = row.getPrimaryBundleData();
+        }
+        intent.putExtras(extra);
+        startActivityForResult(intent, REQUEST_ADD_ITEMS);
     }
 
     private class OnOilScrapChangeUpdate extends AsyncTask<ODomain, Void, Void> {
@@ -496,15 +612,28 @@ public class ScrapOilDetails extends OdooCompatActivity implements OField.IOnFie
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        OValues values = fileManager.handleResult(requestCode, resultCode, data);
-        if (values != null && !values.contains("size_limit_exceed")) {
-            String CapturedImage = values.getString(("datas"));
-            ODataRow row = new ODataRow();
-            row.put("_id", oilLocalId);
-            row.put("oil_image", CapturedImage);
-            setOilImage(row);
-        } else if (values != null) {
-            Toast.makeText(this, R.string.toast_image_size_too_large, Toast.LENGTH_LONG).show();
+
+        if (requestCode == REQUEST_ADD_ITEMS && resultCode == Activity.RESULT_OK) {
+            oilLines.clear();
+            for (String key : data.getExtras().keySet()) {
+                Log.i("key===", key);
+                Log.i("VAL===", "" + data.getExtras().getBoolean(key));
+                if (data.getExtras().getBoolean(key)) {
+                    oilLines.add(technicOil.select(null, "_id = ?", new String[]{key}).get(0));
+                }
+            }
+            Log.i("oilLines===111", oilLines.toString());
+            initAdapter();
         }
+//        OValues values = fileManager.handleResult(requestCode, resultCode, data);
+//        if (values != null && !values.contains("size_limit_exceed")) {
+//            String CapturedImage = values.getString(("datas"));
+//            ODataRow row = new ODataRow();
+//            row.put("_id", oilLocalId);
+//            row.put("oil_image", CapturedImage);
+//            setOilImage(row);
+//        } else if (values != null) {
+//            Toast.makeText(this, R.string.toast_image_size_too_large, Toast.LENGTH_LONG).show();
+//        }
     }
 }

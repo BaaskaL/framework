@@ -129,7 +129,7 @@ public class TechnicsInspectionModel extends OModel {
     }
 
     public Integer myId() {
-        return myId = ResUsers.myId(mContext);
+        return myId = resUser.myId(mContext);
     }
 
     @Override

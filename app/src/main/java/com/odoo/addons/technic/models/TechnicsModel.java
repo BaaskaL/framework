@@ -24,6 +24,7 @@ import android.util.Log;
 
 import com.odoo.BuildConfig;
 import com.odoo.addons.employees.models.Employee;
+import com.odoo.addons.scrapOil.models.TechnicOil;
 import com.odoo.addons.scrapTire.models.TechnicTire;
 import com.odoo.base.addons.res.ResCompany;
 import com.odoo.core.orm.OModel;
@@ -46,45 +47,49 @@ public class TechnicsModel extends OModel {
     private ProjectProject projectObj;
     private static OUser userObj;
 
-    OColumn technic_name = new OColumn("Name", OVarchar.class);
-    OColumn register_number = new OColumn("Register number", OVarchar.class);
+    OColumn technic_name = new OColumn("Техникийн нэр", OVarchar.class);
+    OColumn register_number = new OColumn("Техникийн дугаар", OVarchar.class);
     OColumn last_km = new OColumn("km", OFloat.class);
     @Odoo.Functional(store = true, depends = {"technic_name"}, method = "storeTechnicName")
     OColumn name = new OColumn("name local", OVarchar.class).setLocalColumn();
-    OColumn last_motohour = new OColumn("motohour", OFloat.class);
-    OColumn technic_norm_id = new OColumn("Technic norm", TechnicNorm.class, OColumn.RelationType.ManyToOne);
-    OColumn technic_brand_id = new OColumn("Technic brand", Brand.class, OColumn.RelationType.ManyToOne);
-    OColumn technic_type_id = new OColumn("Technic brand", TechnicType.class, OColumn.RelationType.ManyToOne);
-    OColumn technic_model_id = new OColumn("Technic model", TechnicModel.class, OColumn.RelationType.ManyToOne);
-    OColumn specification_id = new OColumn("Technic specification", TechnicSpecification.class, OColumn.RelationType.ManyToOne);
-    OColumn serial_vin_number = new OColumn("Serial/VIN number", OVarchar.class);
-    OColumn state_number = new OColumn("State number", OVarchar.class);
-    OColumn engine_number = new OColumn("Engine number", OVarchar.class);
-    OColumn technic_color = new OColumn("Technic color", GTechnicColor.class, OColumn.RelationType.ManyToOne);
-    OColumn technic_number = new OColumn("Technic number", OVarchar.class);
-    OColumn manufacture_date = new OColumn("Manufacture date", OVarchar.class);
-    OColumn in_mongolia_date = new OColumn("In Mongolia date", OVarchar.class);
-    OColumn registration_date = new OColumn("Registration date", ODateTime.class);
+    OColumn last_motohour = new OColumn("Мото/ц", OFloat.class);
+    OColumn technic_norm_id = new OColumn("Техникийн норм, тохиргоо", TechnicNorm.class, OColumn.RelationType.ManyToOne);
+    OColumn technic_brand_id = new OColumn("Техникийн брэнд", Brand.class, OColumn.RelationType.ManyToOne);
+    OColumn technic_type_id = new OColumn("Техникийн төрөл", TechnicType.class, OColumn.RelationType.ManyToOne);
+    OColumn technic_model_id = new OColumn("Техникийн загвар", TechnicModel.class, OColumn.RelationType.ManyToOne);
+    OColumn specification_id = new OColumn("Техникийн зориулалт", TechnicSpecification.class, OColumn.RelationType.ManyToOne);
+    OColumn serial_vin_number = new OColumn("Сериал/Арлын дугаар", OVarchar.class);
+    OColumn state_number = new OColumn("Улсын дугаар", OVarchar.class);
+    OColumn engine_number = new OColumn("Хөдөлгүүрийн дугаар", OVarchar.class);
+    OColumn technic_color = new OColumn("Өнгө", GTechnicColor.class, OColumn.RelationType.ManyToOne);
+    OColumn technic_number = new OColumn("Дугаарлалт", OVarchar.class);
+    OColumn manufacture_date = new OColumn("Үйлдвэрлэсэн огноо", OVarchar.class);
+    OColumn in_mongolia_date = new OColumn("МУ-д орж ирсэн он", OVarchar.class);
+    OColumn registration_date = new OColumn("Бүртгэгдсэн огноо", ODateTime.class);
 
-    OColumn project = new OColumn("Project", ProjectProject.class, OColumn.RelationType.ManyToOne);
+    OColumn project = new OColumn("Төсөл", ProjectProject.class, OColumn.RelationType.ManyToOne);
 
-    OColumn ownership_type = new OColumn("Ownership type", OSelection.class)
+    OColumn ownership_type = new OColumn("Эзэмшлийн төрөл", OSelection.class)
             .addSelection("own", "Өөрийн")
             .addSelection("leasing", "Лизнг")
             .addSelection("partner", "Харилцагч")
             .addSelection("rental", "Түрээсийн");
 
-    OColumn account_asset_id = new OColumn("Account asset", AccountAssetAsset.class, OColumn.RelationType.ManyToOne);
-    OColumn account_analytic_id = new OColumn("Analytic account", AccountAnalyticAccount.class, OColumn.RelationType.ManyToOne);
-    OColumn ownership_company_id = new OColumn("Ownership company", ResCompany.class, OColumn.RelationType.ManyToOne);
-    OColumn ownership_department_id = new OColumn("Ownership department", HrDepartment.class, OColumn.RelationType.ManyToOne);
-    OColumn current_company_id = new OColumn("Current company", ResCompany.class, OColumn.RelationType.ManyToOne);
-    OColumn current_department_id = new OColumn("Current department", HrDepartment.class, OColumn.RelationType.ManyToOne);
-    OColumn current_respondent_id = new OColumn("Current respondent", Employee.class, OColumn.RelationType.ManyToOne);
-    OColumn id_gps = new OColumn("Gps", OInteger.class);
-    OColumn tires = new OColumn("Tires", TechnicTire.class, OColumn.RelationType.OneToMany).setRelatedColumn("technic_id");
+    OColumn account_asset_id = new OColumn("Хөрөнгийн нэр", AccountAssetAsset.class, OColumn.RelationType.ManyToOne);
+    OColumn account_analytic_id = new OColumn("Шинжилгээний данс", AccountAnalyticAccount.class, OColumn.RelationType.ManyToOne);
+    OColumn ownership_company_id = new OColumn("Эзэмшигч компани", ResCompany.class, OColumn.RelationType.ManyToOne);
+    OColumn ownership_department_id = new OColumn("Эзэмшигч хэлтэс", HrDepartment.class, OColumn.RelationType.ManyToOne);
+    OColumn current_company_id = new OColumn("Ажиллаж буй компани", ResCompany.class, OColumn.RelationType.ManyToOne);
+    OColumn current_department_id = new OColumn("Ажиллаж буй хэлтэс", HrDepartment.class, OColumn.RelationType.ManyToOne);
+    OColumn current_respondent_id = new OColumn("Эзэмшигч", Employee.class, OColumn.RelationType.ManyToOne);
+    OColumn id_gps = new OColumn("Техникийн дугаар /GPS/", OInteger.class);
+    OColumn tires = new OColumn("Дугуй", TechnicTire.class, OColumn.RelationType.OneToMany).setRelatedColumn("technic_id");
+    OColumn oils = new OColumn("ШТМ", TechnicOil.class, OColumn.RelationType.OneToMany).setRelatedColumn("tech_id");
+    OColumn technic_document_ids = new OColumn("Document", TechnicDocument.class, OColumn.RelationType.OneToMany).setRelatedColumn("technic_id");
+    OColumn technic_usage_history_ids = new OColumn("Usage history", TechnicUsageHistory.class, OColumn.RelationType.OneToMany).setRelatedColumn("technic_id");
+    OColumn technic_state_history_ids = new OColumn("State history", TechnicStateHistory.class, OColumn.RelationType.OneToMany).setRelatedColumn("technic_id");
 
-    OColumn state = new OColumn("status", OSelection.class)
+    OColumn state = new OColumn("Төлөв", OSelection.class)
             .addSelection("draft", "Ноорог")
             .addSelection("ready", "Бэлэн")
             .addSelection("waiting_to_approve", "Ажил хүлээж буй")
