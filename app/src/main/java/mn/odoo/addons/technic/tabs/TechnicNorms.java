@@ -22,10 +22,10 @@ public class TechnicNorms extends Fragment {
     private OForm mForm;
     private Context mContext;
     private int TechnicId;
+    private ODataRow record = null;
 
     public TechnicNorms(int TechnicId) {
         this.TechnicId = TechnicId;
-
     }
 
     @Override
@@ -39,8 +39,8 @@ public class TechnicNorms extends Fragment {
         View mView = inflater.inflate(R.layout.technic_norm, container, false);
         mForm = (OForm) mView.findViewById(R.id.technicNormForm);
         technicsModel = new TechnicsModel(mContext, null);
-        ODataRow row = technicsModel.browse(TechnicId).getM2ORecord("technic_norm_id").browse();
-        mForm.initForm(row);
+        record = technicsModel.browse(TechnicId);
+        mForm.initForm(record);
         return mView;
     }
 }

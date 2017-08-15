@@ -66,9 +66,9 @@ public class TechnicsDetails extends OdooCompatActivity {
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new TechnicInfo(TechnicId), "Техник");
+        adapter.addFragment(new TechnicNorms(TechnicId), "Эзэмшлийн мэдээлэл");
         adapter.addFragment(new TechnicUsages(TechnicId), "Ашиглалтын түүх");
         adapter.addFragment(new TechnicDocuments(TechnicId), "Бичиг баримт");
-        adapter.addFragment(new TechnicNorms(TechnicId), "Норм");
         adapter.addFragment(new TechnicStateStorys(TechnicId), "Төлвийн түүх");
         viewPager.setAdapter(adapter);
     }

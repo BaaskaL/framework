@@ -655,12 +655,9 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == REQUEST_ADD_ITEMS && resultCode == Activity.RESULT_OK) {
             saveData = true;
             MenuItem item = mMenu.findItem(R.id.menu_technic_save);
-            onOptionsItemSelected(item);
-
             Bitmap img = BitmapFactory.decodeByteArray(
                     data.getByteArrayExtra("byteArray"), 0,
                     data.getByteArrayExtra("byteArray").length);
@@ -670,16 +667,8 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
             image.put("photo", newImage);
             recInsImages.add(image);
 
-            String path = MediaStore.Images.Media.insertImage(getApplicationContext().getContentResolver(), img, "Title", null);
-            Uri tempUri = Uri.parse(path);
-            TextSliderView textSliderView = new TextSliderView(this);
-            textSliderView.description("aa")
-                    .image(tempUri)
-                    .setScaleType(BaseSliderView.ScaleType.CenterInside)
-                    .setOnSliderClickListener(this);
-            textSliderView.bundle(new Bundle());
-            mDemoSlider.addSlider(textSliderView);
-            mDemoSlider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
+//
+            onOptionsItemSelected(item);
 
         } else {
             OValues values = fileManager.handleResult(requestCode, resultCode, data);

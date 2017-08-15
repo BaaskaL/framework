@@ -41,9 +41,9 @@ public class TechnicOil extends OModel {
     OColumn name = new OColumn("ШТМ-ын нэр", OVarchar.class);
     OColumn tech_id = new OColumn("Техникийн нэр", TechnicsModel.class, OColumn.RelationType.ManyToOne);
     OColumn product_id = new OColumn("Бараа", ProductProduct.class, OColumn.RelationType.ManyToOne);
-    OColumn capacity = new OColumn("Хэмжээ", OFloat.class);
-    OColumn date_record = new OColumn("Суурилуулсан огноо", ODateTime.class);
     OColumn reason = new OColumn("Шалтгаан", ScrapOilReason.class, OColumn.RelationType.ManyToOne);
+    OColumn capacity = new OColumn("Хэмжээ", OFloat.class);
+    OColumn date = new OColumn("Суурилуулсан огноо", ODateTime.class);
     OColumn state = new OColumn("Төлөв", OSelection.class)
             .addSelection("draft", "Ноорог")
             .addSelection("using", "Хэрэглэж буй")

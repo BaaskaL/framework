@@ -29,7 +29,6 @@ import com.odoo.core.support.OUser;
 public class ScrapOilReason extends OModel {
 
     OColumn name = new OColumn("Нэр", OVarchar.class);
-    OColumn note = new OColumn("Тайлбар", OVarchar.class);
 
     public ScrapOilReason(Context context, OUser user) {
         super(context, "oil.scrap.reason", user);

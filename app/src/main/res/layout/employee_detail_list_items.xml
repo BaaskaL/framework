@@ -192,14 +192,14 @@
                     app:fieldTextAppearance="?android:textAppearanceMedium"
                     app:iconResource="@drawable/ic_action_mobile" />
 
-                <!--                <odoo.controls.OField
-                                    android:id="@+id/confirm_code"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:inputType="textPassword"
-                                    app:fieldName="confirm_code"
-                                    app:fieldTextAppearance="?android:textAppearanceMedium"
-                                    app:iconResource="@drawable/ic_action_message" />-->
+                <odoo.controls.OField
+                    android:id="@+id/confirm_code"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    app:fieldName="confirm_code"
+                    app:fieldTextAppearance="?android:textAppearanceMedium"
+                    app:iconResource="@drawable/ic_action_message" />
 
                 <View
                     style="@style/ViewSeparator"

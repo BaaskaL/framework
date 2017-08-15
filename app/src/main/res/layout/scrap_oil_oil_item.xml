@@ -18,7 +18,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:divider="?android:attr/dividerHorizontal"
             android:gravity="center_vertical"
             android:orientation="horizontal"
@@ -63,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_weight="0.4">
+                android:layout_weight="1">
 
                 <TextView
                     android:id="@+id/capacity"
@@ -81,7 +81,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_weight="0.7">
+                android:layout_weight="1">
 
                 <TextView
                     android:id="@+id/product"
@@ -123,30 +123,6 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/body_text_1"
                     android:textSize="@dimen/text_size_medium" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/default_16dp"
-                android:layout_weight="1.5"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/oilImage"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone" />
-
-                <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/captureImageOil"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_action_camera"
-                    android:visibility="visible"
-                    app:layout_anchor="@id/oilImage"
-                    app:layout_anchorGravity="bottom|right|end" />
             </LinearLayout>
 
             <ImageButton

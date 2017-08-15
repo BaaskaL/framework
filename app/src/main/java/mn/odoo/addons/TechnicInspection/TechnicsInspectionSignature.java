@@ -111,9 +111,11 @@ public class TechnicsInspectionSignature extends Activity {
                 if (employ.getString("confirm_code").equals(etxConfirmCode.getText().toString())) {
                     setResult(RESULT_OK, intent);
                     finish();
+                } else {
+                    OAlert.showError(TechnicsInspectionSignature.this, "Нүүц үг буруу байна.!!!");
                 }
             } else {
-                OAlert.showError(TechnicsInspectionSignature.this, "Нүүц үг буруу байна.!!!");
+                OAlert.showError(TechnicsInspectionSignature.this, "Ажилтны мэдээлэл татна уу.!!!");
             }
         }
 

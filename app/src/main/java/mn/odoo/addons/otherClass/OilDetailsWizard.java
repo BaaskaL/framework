@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.odoo.R;
+import com.odoo.addons.scrapOil.models.ScrapOilReason;
 import com.odoo.addons.scrapOil.models.TechnicOil;
 import com.odoo.base.addons.ir.feature.OFileManager;
 import com.odoo.core.orm.ODataRow;
@@ -37,6 +39,7 @@ import odoo.controls.OForm;
 public class OilDetailsWizard extends OdooCompatActivity implements View.OnClickListener {
 
     private TechnicOil technicOil;
+    private ScrapOilReason scrapOilReason;
 
     private EditText edt_searchable_input;
     private ListView mList = null;
@@ -89,6 +92,9 @@ public class OilDetailsWizard extends OdooCompatActivity implements View.OnClick
         takePic = (Button) findViewById(R.id.takePicture);
         takePic.setOnClickListener(this);
         gridView = (GridView) findViewById(R.id.gridViewOilImage);
+
+        scrapOilReason = new ScrapOilReason(this, null);
+        Log.i("scrapOilReason======", scrapOilReason.select().toString());
 
         adaperRun();
 
@@ -200,16 +206,16 @@ public class OilDetailsWizard extends OdooCompatActivity implements View.OnClick
             case R.id.takePicture:
                 fileManager.requestForFile(OFileManager.RequestType.IMAGE_OR_CAPTURE_IMAGE);
                 break;
-            case R.id.done:
-                Bundle data = new Bundle();
-                for (String key : lineValues.keySet()) {
-                    data.putBoolean(key, lineValues.get(key));
-                }
-                Intent intent = new Intent();
-                intent.putExtras(data);
-                setResult(RESULT_OK, intent);
-                finish();
-                break;
+//            case R.id.done:
+//                Bundle data = new Bundle();
+//                for (String key : lineValues.keySet()) {
+//                    data.putBoolean(key, lineValues.get(key));
+//                }
+//                Intent intent = new Intent();
+//                intent.putExtras(data);
+//                setResult(RESULT_OK, intent);
+//                finish();
+//                break;
             default:
                 setResult(RESULT_CANCELED);
                 finish();

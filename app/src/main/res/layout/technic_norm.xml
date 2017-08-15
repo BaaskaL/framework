@@ -10,18 +10,92 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:modelName="technic.norm">
+        app:modelName="technic">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="Эзэмшлийн мэдээлэл"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
             <odoo.controls.OField
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:fieldLabelColor="@color/theme_secondary"
-                app:fieldName="name"
+                app:fieldName="project"
+                app:fieldTextAppearance="?android:textAppearanceMedium" />
+
+            <odoo.controls.OField
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fieldName="ownership_type"
+                app:fieldTextAppearance="?android:textAppearanceSmall"
+                app:fieldType="Selection"
+                app:showLabel="true" />
+
+            <odoo.controls.OField
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:fieldLabelColor="@color/theme_secondary"
+                app:fieldName="account_asset_id"
+                app:fieldTextAppearance="?android:textAppearanceMedium" />
+
+            <odoo.controls.OField
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:fieldLabelColor="@color/theme_secondary"
+                app:fieldName="account_analytic_id"
+                app:fieldTextAppearance="?android:textAppearanceMedium" />
+
+            <odoo.controls.OField
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:fieldLabelColor="@color/theme_secondary"
+                app:fieldName="ownership_company_id"
+                app:fieldTextAppearance="?android:textAppearanceMedium" />
+
+            <odoo.controls.OField
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:fieldLabelColor="@color/theme_secondary"
+                app:fieldName="ownership_department_id"
+                app:fieldTextAppearance="?android:textAppearanceMedium" />
+
+            <odoo.controls.OField
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:fieldLabelColor="@color/theme_secondary"
+                app:fieldName="current_company_id"
+                app:fieldTextAppearance="?android:textAppearanceMedium" />
+
+            <odoo.controls.OField
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:fieldLabelColor="@color/theme_secondary"
+                app:fieldName="current_department_id"
+                app:fieldTextAppearance="?android:textAppearanceMedium" />
+
+            <odoo.controls.OField
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:fieldLabelColor="@color/theme_secondary"
+                app:fieldName="current_respondent_id"
+                app:fieldTextAppearance="?android:textAppearanceMedium" />
+
+            <odoo.controls.OField
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:fieldLabelColor="@color/theme_secondary"
+                app:fieldName="id_gps"
                 app:fieldTextAppearance="?android:textAppearanceMedium" />
 
         </LinearLayout>

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -49,7 +48,7 @@ public class AddItemLineWizard extends ActionBarActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.item_add_base);
-        setResult(RESULT_CANCELED);
+//        setResult(RESULT_CANCELED);
 
         edt_searchable_input = (EditText) findViewById(R.id.edt_searchable_input);
         edt_searchable_input.addTextChangedListener(this);
@@ -58,41 +57,40 @@ public class AddItemLineWizard extends ActionBarActivity implements
         if (extra != null) {
             mList = (ListView) findViewById(R.id.searchable_items);
             mList.setOnItemClickListener(this);
-            mList.setOnItemLongClickListener(this);
             for (String key : extra.keySet()) {
                 lineValues.put(key, extra.getBoolean(key));//baigaa baraanuudiig haruulna
                 oilIds.add(key);
             }
-            Log.i("lineValues====", lineValues.toString());
             List<ODataRow> oilRows = mModel.select(null, "_id IN (" + StringUtils.repeat(" ?, ", oilIds.size() - 1) + " ?)", oilIds.toArray(new String[oilIds.size()]));
             objects.addAll(oilRows);
             mAdapter = new OListAdapter(this, R.layout.item_line_base, objects) {
                 @Override
                 public View getView(final int position, View convertView, ViewGroup parent) {
                     View v = convertView;
-                    if (v == null)
+                    if (v == null) {
                         v = getLayoutInflater().inflate(getResource(), parent, false);
-                    ODataRow row = (ODataRow) objects.get(position);
-                    OControls.setText(v, R.id.itemName, row.getString("name"));
-                    final CheckBox chBox = (CheckBox) v.findViewById(R.id.itemCheck);
-                    if (lineValues.get(row.getString("_id"))) {
-                        chBox.setChecked(true);
-                    }
-                    chBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                        @Override
-                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                            ODataRow row = (ODataRow) objects.get(position);
-                            if (!chBox.isChecked()) {
-                                lineValues.put(row.getString("_id"), false);
-                            } else {
-                                lineValues.put(row.getString("_id"), true);
-                            }
+                        ODataRow row = (ODataRow) objects.get(position);
+                        OControls.setText(v, R.id.itemName, row.getString("name"));
+                        final CheckBox chBox = (CheckBox) v.findViewById(R.id.itemCheck);
+                        if (lineValues.get(row.getString("_id"))) {
+                            chBox.setChecked(lineValues.get(row.getString("_id")));
                         }
-                    });
+                        chBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                            @Override
+                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                ODataRow row = (ODataRow) objects.get(position);
+                                if (!chBox.isChecked()) {
+                                    lineValues.put(row.getString("_id"), false);
+                                } else {
+                                    lineValues.put(row.getString("_id"), true);
+                                }
+                            }
+                        });
+                        return v;
+                    }
                     return v;
                 }
             };
-            mAdapter.setOnSearchChange(this);
             mList.setAdapter(mAdapter);
         } else {
             finish();
