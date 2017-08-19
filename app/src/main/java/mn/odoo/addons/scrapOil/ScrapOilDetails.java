@@ -277,8 +277,28 @@ public class ScrapOilDetails extends OdooCompatActivity implements OField.IOnFie
                         }
 
 //                        HashMap<RelCommands, List<Object>> aakk = new HashMap<>();
-//
-                        
+//                        List<Object> val = new ArrayList<>();
+//                        for (ODataRow row : scrapOilLines) {
+//                            /*oil line like [6,false,[1,2,3,..]]*/
+//                            OValues oilImage = row.toValues();
+//                            int oilId = row.getInt("_id");
+////                            oilIds.add(oilId);
+//                            if (oilImages.get(oilId) != null) {
+//                                oilImage.put("tire_image", oilImages.get(oilId));
+//                            }
+//                            oilImage.put("in_scrap", true);
+//                            val.add(oilImage);
+////                            technicOil.insert(oilId, oilImage);
+//                        }
+//                        aakk.put(RelCommands.Append, val);
+//                        values.put("oil_ids", aakk);
+//                        int row_id = scrapOil.insert(values);
+//                        if (row_id != scrapOil.INVALID_ROW_ID) {
+//                            onOilScrapChangeUpdate.execute(domain);
+//                            Toast.makeText(this, R.string.tech_toast_information_created, Toast.LENGTH_LONG).show();
+//                            mEditMode = !mEditMode;
+//                            finish();
+//                        }
 
                         values.put("oil_ids", oilIds);
                         int row_id = scrapOil.insert(values);
