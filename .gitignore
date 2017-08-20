@@ -62,3 +62,5 @@ proguard/
 .navigation/
 # directorie
 .idea
+# app.iml file path=(app/app.iml) 
+app.iml
