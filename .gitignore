@@ -64,3 +64,5 @@ proguard/
 .idea
 # app.iml file path=(app/app.iml) 
 app.iml
+intro-slider-lib/intro-slider-lib.iml
+library/library.iml
