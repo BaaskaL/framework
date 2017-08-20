@@ -60,9 +60,8 @@ proguard/
 
 # Android Studio Navigation editor temp files
 .navigation/
-# directorie
-.idea
-# app.iml file path=(app/app.iml) 
-app.iml
-intro-slider-lib/intro-slider-lib.iml
-library/library.iml
+# Android Studio files
+.idea/ 
+*.iml
+*.ipr
+*.iws
