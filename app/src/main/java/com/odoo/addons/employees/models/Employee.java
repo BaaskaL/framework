@@ -41,7 +41,8 @@ public class Employee extends OModel {
     OColumn last_name = new OColumn("Овог", OVarchar.class);
     OColumn name = new OColumn("Нэр", OVarchar.class).setRequired();
     OColumn confirm_code = new OColumn("Зөвшөөрөх код", OVarchar.class);
-    OColumn mobile_phone = new OColumn("Ажлын утас", OVarchar.class);
+    OColumn work_phone = new OColumn("Ажлын утас", OVarchar.class);
+    OColumn rel_person_phone = new OColumn("Гар утас", OVarchar.class);
     OColumn ssnid = new OColumn("Регистр", OVarchar.class).setRequired();
     OColumn birthday = new OColumn("Төрсөн огноо", ODate.class);
     OColumn company_id = new OColumn("Компани", ResCompany.class, OColumn.RelationType.ManyToOne).setRequired();

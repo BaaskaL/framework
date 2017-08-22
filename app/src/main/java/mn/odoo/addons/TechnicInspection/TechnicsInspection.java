@@ -97,12 +97,12 @@ public class TechnicsInspection extends BaseFragment implements LoaderManager.Lo
         OControls.setText(view, R.id.inspection_create_date, row.getString("inspection_date"));
         OControls.setText(view, R.id.inspection_type, row.getString("inspection_type_name"));
         if (row.getString("state").equals("done")) {
-            OControls.setTextColor(view, R.id.inspection_origin, Color.GREEN);
-            OControls.setTextColor(view, R.id.technic_name, Color.GREEN);
-            OControls.setTextColor(view, R.id.inspection_respondent_name, Color.GREEN);
-            OControls.setTextColor(view, R.id.inspection_create_date, Color.GREEN);
-            OControls.setTextColor(view, R.id.inspection_state, Color.GREEN);
-            OControls.setTextColor(view, R.id.inspection_type, Color.GREEN);
+            OControls.setTextColor(view, R.id.inspection_origin, Color.argb(255, 0, 128, 0));
+            OControls.setTextColor(view, R.id.technic_name, Color.argb(255, 0, 128, 0));
+            OControls.setTextColor(view, R.id.inspection_respondent_name, Color.argb(255, 0, 128, 0));
+            OControls.setTextColor(view, R.id.inspection_create_date, Color.argb(255, 0, 128, 0));
+            OControls.setTextColor(view, R.id.inspection_state, Color.argb(255, 0, 128, 0));
+            OControls.setTextColor(view, R.id.inspection_type, Color.argb(255, 0, 128, 0));
             OControls.setText(view, R.id.inspection_state, ("Дууссан"));
         } else if (row.getString("state").equals("draft")) {
             OControls.setText(view, R.id.inspection_state, ("Ноорог"));

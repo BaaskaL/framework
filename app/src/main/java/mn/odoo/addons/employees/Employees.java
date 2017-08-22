@@ -104,8 +104,8 @@ public class Employees extends BaseFragment implements LoaderManager.LoaderCallb
         OControls.setText(view, R.id.employeeSSIND, (row.getString("ssnid").equals("false"))
                 ? "" : row.getString("ssnid"));
 
-        OControls.setText(view, R.id.employeePhone, (row.getString("mobile_phone").equals("false"))
-                ? "" : row.getString("mobile_phone"));
+        OControls.setText(view, R.id.employeeWorkPhone, (row.getString("work_phone").equals("false"))
+                ? "" : row.getString("work_phone"));
 
         OControls.setText(view, R.id.employeeJob, (row.getString("job_name").equals("false"))
                 ? "" : row.getString("job_name"));

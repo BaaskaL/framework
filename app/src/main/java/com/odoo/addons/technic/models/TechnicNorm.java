@@ -22,6 +22,7 @@ package com.odoo.addons.technic.models;
 import android.content.Context;
 
 import com.odoo.core.orm.OModel;
+import com.odoo.core.orm.annotation.Odoo;
 import com.odoo.core.orm.fields.OColumn;
 import com.odoo.core.orm.fields.types.OVarchar;
 import com.odoo.core.support.OUser;
@@ -29,6 +30,7 @@ import com.odoo.core.support.OUser;
 public class TechnicNorm extends OModel {
 
     OColumn name = new OColumn("Нормын нэр", OVarchar.class);
+    @Odoo.SyncColumnName("usage_uom_ids")
     OColumn usage_uom_ids = new OColumn("Usage uoms", UsageUomLine.class, OColumn.RelationType.OneToMany).setRelatedColumn("technic_norm_id");
 
     public TechnicNorm(Context context, OUser user) {

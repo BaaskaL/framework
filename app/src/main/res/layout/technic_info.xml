@@ -32,56 +32,117 @@
                     android:textStyle="bold" />
 
                 <LinearLayout
-                    android:id="@+id/technic_view_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <odoo.controls.OField
-                        android:id="@+id/technic_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:fieldName="technic_name"
-                        app:fieldTextAppearance="?android:textAppearanceSmall" />
-
-                </LinearLayout>
-
-                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <odoo.controls.OField
-                        android:id="@+id/register_number"
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="8"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:id="@+id/technic_view_layout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <odoo.controls.OField
+                                android:id="@+id/technic_name"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:fieldName="technic_name"
+                                app:fieldTextAppearance="?android:textAppearanceSmall" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <odoo.controls.OField
+                                android:id="@+id/register_number"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                app:fieldName="register_number"
+                                app:fieldTextAppearance="?android:textAppearanceMedium" />
+
+                            <odoo.controls.OField
+                                android:id="@+id/state"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                app:fieldName="state"
+                                app:fieldTextAppearance="?android:textAppearanceSmall"
+                                app:fieldType="Selection"
+                                app:showLabel="true" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:fieldName="register_number"
-                        app:fieldTextAppearance="?android:textAppearanceMedium" />
+                        android:layout_weight="1.5"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:gravity="center"
+                            android:text="Одометр"
+                            android:textColor="#000" />
 
 
-                    <odoo.controls.OField
-                        android:id="@+id/last_km"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAlignment="center"
-                        app:fieldName="last_km"
-                        app:fieldTextAppearance="?android:textAppearanceMedium" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
 
-                    <odoo.controls.OField
-                        android:id="@+id/last_motohour"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:fieldName="last_motohour"
-                        app:fieldTextAppearance="?android:textAppearanceMedium" />
+                            <TextView
+                                android:id="@+id/last_km"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@layout/rounded_border_edittext"
+                                android:padding="5dp"
+                                android:text="0"
+                                android:textColor="#FFF"
+                                android:textSize="30dp" />
 
-                    <odoo.controls.OField
-                        android:id="@+id/state"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:fieldName="state"
-                        app:fieldTextAppearance="?android:textAppearanceSmall"
-                        app:fieldType="Selection"
-                        app:showLabel="true" />
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:text="Мото/ц"
+                                android:textColor="#000" />
+                        </LinearLayout>
 
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/last_motohour"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@layout/rounded_border_edittext"
+                                android:padding="5dp"
+                                android:text="0"
+                                android:textColor="#FFF"
+                                android:textSize="30dp" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:text="КМ"
+                                android:textColor="#000" />
+                        </LinearLayout>
+
+                    </LinearLayout>
                 </LinearLayout>
 
             </LinearLayout>
@@ -116,14 +177,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:fieldLabelColor="@color/theme_secondary"
-                    app:fieldName="technic_brand_id"
+                    app:fieldName="technic_type_id"
                     app:fieldTextAppearance="?android:textAppearanceMedium" />
 
                 <odoo.controls.OField
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:fieldLabelColor="@color/theme_secondary"
-                    app:fieldName="technic_type_id"
+                    app:fieldName="technic_brand_id"
                     app:fieldTextAppearance="?android:textAppearanceMedium" />
 
                 <odoo.controls.OField

@@ -23,13 +23,14 @@ public class TechnicDocument extends OModel {
 
     OColumn technic_id = new OColumn("Техник", TechnicsModel.class, OColumn.RelationType.ManyToOne);
     OColumn document_type_id = new OColumn("Бичиг баримтын төрөл", TechnicDocumentType.class, OColumn.RelationType.ManyToOne);
+    @Odoo.SyncColumnName("extension_ids")
+    OColumn extension_ids = new OColumn("Бичиг баримт", TechnicDocumentExtension.class, OColumn.RelationType.OneToMany).setRelatedColumn("technic_document_id");
     OColumn document_name = new OColumn("Бичиг баримтын дугаар", OVarchar.class);
     OColumn respondent_id = new OColumn("Бичиг баримт хариуцагч", Employee.class, OColumn.RelationType.ManyToOne);
-    OColumn is_tax = new OColumn("Татвар", OBoolean.class);
-    OColumn state = new OColumn("Төлөв", OSelection.class)
-            .addSelection("draft", "Ноорог")
-            .addSelection("using", "Ашиглагдаж буй")
-            .addSelection("aborted", "Ашиглагдаж буй  ");
+//    OColumn state = new OColumn("Төлөв", OSelection.class)
+//            .addSelection("draft", "Ноорог")
+//            .addSelection("using", "Ашиглагдаж буй")
+//            .addSelection("aborted", "Ашиглагдаж буй  ");
 
     @Odoo.Functional(store = true, depends = {"document_type_id"}, method = "storeDocumentTypeName")
     OColumn document_type_name = new OColumn("Бичиг баримтын төрөл", OVarchar.class).setLocalColumn();

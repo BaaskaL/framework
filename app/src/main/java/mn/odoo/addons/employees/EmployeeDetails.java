@@ -5,11 +5,14 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.odoo.App;
@@ -68,6 +71,9 @@ public class EmployeeDetails extends OdooCompatActivity
     private Toolbar toolbar;
     private OFileManager fileManager;
     private String newImage = null;
+    private TextInputLayout inputLayoutPass, inputLayoutEditPass;
+    private EditText editPass;
+    private TextView showPass;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -119,10 +125,18 @@ public class EmployeeDetails extends OdooCompatActivity
                 collapsingToolbarLayout.setTitle("Үүсгэх");
             }
             mForm = (OForm) findViewById(R.id.employeeFormEdit);
+            editPass = (EditText) findViewById(R.id.editPass);
+            if (!record.getString("confirm_code").equals("false")) {
+                editPass.setText(record.getString("confirm_code"));
+            }
             findViewById(R.id.employee_view_layout).setVisibility(View.GONE);
             findViewById(R.id.employee_edit_layout).setVisibility(View.VISIBLE);
         } else {
             mForm = (OForm) findViewById(R.id.employeeForm);
+            showPass = (TextView) findViewById(R.id.showPass);
+            if (!record.getString("confirm_code").equals("false")) {
+                showPass.setText(record.getString("confirm_code"));
+            }
             findViewById(R.id.employee_edit_layout).setVisibility(View.GONE);
             findViewById(R.id.employee_view_layout).setVisibility(View.VISIBLE);
         }
@@ -203,6 +217,7 @@ public class EmployeeDetails extends OdooCompatActivity
                         values.put("image_small", newImage);
                         values.put("image_medium", newImage);
                     }
+                    values.put("confirm_code", editPass.getText());
                     if (record != null) {
                         employ.update(record.getInt(OColumn.ROW_ID), values);
                         Toast.makeText(this, R.string.tech_toast_information_saved, Toast.LENGTH_LONG).show();

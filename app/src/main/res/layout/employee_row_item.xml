@@ -81,7 +81,7 @@
                 android:textColor="@color/body_text_1" />
 
             <TextView
-                android:id="@+id/employeePhone"
+                android:id="@+id/employeeWorkPhone"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"

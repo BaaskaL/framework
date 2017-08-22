@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.odoo.R;
 import com.odoo.addons.technic.models.TechnicsModel;
 import com.odoo.core.orm.ODataRow;
+import com.odoo.core.utils.OControls;
 
 import odoo.controls.OForm;
 
@@ -42,6 +43,8 @@ public class TechnicInfo extends Fragment {
         technic = new TechnicsModel(mContext, null);
         record = technic.browse(TechnicId);
         mForm.initForm(record);
+        OControls.setText(mForm, R.id.last_km, record.getString("last_km"));
+        OControls.setText(mForm, R.id.last_motohour, record.getString("last_motohour"));
         return mView;
     }
 }

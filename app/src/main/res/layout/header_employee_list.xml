@@ -90,7 +90,7 @@
             android:fontFamily="@string/font_normal"
             android:gravity="center"
             android:padding="2dp"
-            android:text="Утас"
+            android:text="Ажлын утас"
             android:textAppearance="?android:textAppearanceSmall"
             android:textColor="#ffffff"
             android:textStyle="bold" />

@@ -73,18 +73,47 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:fieldLabelColor="@color/theme_secondary"
-                app:fieldName="mobile_phone"
+                app:fieldName="work_phone"
                 app:fieldTextAppearance="?android:textAppearanceMedium"
                 app:iconResource="@drawable/ic_action_mobile" />
 
             <odoo.controls.OField
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword"
                 app:fieldLabelColor="@color/theme_secondary"
-                app:fieldName="confirm_code"
+                app:fieldName="rel_person_phone"
                 app:fieldTextAppearance="?android:textAppearanceMedium"
-                app:iconResource="@drawable/ic_action_message" />
+                app:iconResource="@drawable/ic_action_mobile" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingLeft="70dp"
+                android:paddingRight="20dp"
+                android:textColor="@color/theme_secondary">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Зөвшөөрөх код"
+                    android:textColor="@color/theme_secondary"
+                    android:textSize="20dp" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/showPass"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPassword"
+                        android:textColor="@color/theme_secondary"
+                        android:textSize="20dp" />
+
+                </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
 
             <View
                 style="@style/ViewSeparator"
@@ -185,21 +214,43 @@
                     android:layout_marginLeft="72dp" />
 
                 <odoo.controls.OField
-                    android:id="@+id/mobile_phone"
+                    android:id="@+id/work_phone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:fieldName="mobile_phone"
+                    app:fieldName="work_phone"
                     app:fieldTextAppearance="?android:textAppearanceMedium"
                     app:iconResource="@drawable/ic_action_mobile" />
 
                 <odoo.controls.OField
-                    android:id="@+id/confirm_code"
+                    android:id="@+id/rel_person_phone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPassword"
-                    app:fieldName="confirm_code"
+                    app:fieldName="rel_person_phone"
                     app:fieldTextAppearance="?android:textAppearanceMedium"
-                    app:iconResource="@drawable/ic_action_message" />
+                    app:iconResource="@drawable/ic_action_mobile" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:paddingLeft="70dp"
+                    android:paddingRight="20dp">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <EditText
+                            android:id="@+id/editPass"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Зөвшөөрөх код"
+                            android:inputType="textPassword"
+                            android:textColor="@color/theme_secondary"
+                            android:textSize="20dp" />
+
+                    </android.support.design.widget.TextInputLayout>
+                </LinearLayout>
 
                 <View
                     style="@style/ViewSeparator"

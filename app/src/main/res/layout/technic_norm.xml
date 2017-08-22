@@ -10,7 +10,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:modelName="technic">
+        app:modelName="technic"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,29 +34,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:fieldLabelColor="@color/theme_secondary"
-                app:fieldName="project"
+                app:fieldName="account_analytic_id"
                 app:fieldTextAppearance="?android:textAppearanceMedium" />
-
-            <odoo.controls.OField
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:fieldName="ownership_type"
-                app:fieldTextAppearance="?android:textAppearanceSmall"
-                app:fieldType="Selection"
-                app:showLabel="true" />
 
             <odoo.controls.OField
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:fieldLabelColor="@color/theme_secondary"
                 app:fieldName="account_asset_id"
-                app:fieldTextAppearance="?android:textAppearanceMedium" />
-
-            <odoo.controls.OField
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:fieldLabelColor="@color/theme_secondary"
-                app:fieldName="account_analytic_id"
                 app:fieldTextAppearance="?android:textAppearanceMedium" />
 
             <odoo.controls.OField
@@ -90,6 +78,21 @@
                 app:fieldLabelColor="@color/theme_secondary"
                 app:fieldName="current_respondent_id"
                 app:fieldTextAppearance="?android:textAppearanceMedium" />
+
+            <odoo.controls.OField
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:fieldLabelColor="@color/theme_secondary"
+                app:fieldName="project"
+                app:fieldTextAppearance="?android:textAppearanceMedium" />
+
+            <odoo.controls.OField
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fieldName="ownership_type"
+                app:fieldTextAppearance="?android:textAppearanceSmall"
+                app:fieldType="Selection"
+                app:showLabel="true" />
 
             <odoo.controls.OField
                 android:layout_width="match_parent"

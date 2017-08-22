@@ -141,6 +141,13 @@ public class Technics extends BaseFragment implements LoaderManager.LoaderCallba
         OControls.setImage(view, R.id.image_small, img);
         OControls.setText(view, R.id.technic_name, (row.getString("technic_name").equals("false"))
                 ? "Хоосон" : row.getString("technic_name"));
+        if (row.getString("state").equals("draft")) {
+            OControls.setTextColor(view, R.id.technic_name, Color.BLUE);
+        } else if (row.getString("state").equals("ready")) {
+            OControls.setTextColor(view, R.id.technic_name, Color.argb(255, 0, 128, 0));
+        } else if (row.getString("state").equals("in_repair")) {
+            OControls.setTextColor(view, R.id.technic_name, Color.RED);
+        }
     }
 
     @Override

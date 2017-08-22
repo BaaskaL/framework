@@ -67,7 +67,7 @@ public class TechnicsModel extends OModel {
     OColumn in_mongolia_date = new OColumn("МУ-д орж ирсэн он", OVarchar.class);
     OColumn registration_date = new OColumn("Бүртгэгдсэн огноо", ODateTime.class);
 
-    OColumn project = new OColumn("Төсөл", ProjectProject.class, OColumn.RelationType.ManyToOne);
+    OColumn project = new OColumn("Байршил", ProjectProject.class, OColumn.RelationType.ManyToOne);
 
     OColumn ownership_type = new OColumn("Эзэмшлийн төрөл", OSelection.class)
             .addSelection("own", "Өөрийн")
@@ -78,9 +78,9 @@ public class TechnicsModel extends OModel {
     OColumn account_asset_id = new OColumn("Хөрөнгийн нэр", AccountAssetAsset.class, OColumn.RelationType.ManyToOne);
     OColumn account_analytic_id = new OColumn("Шинжилгээний данс", AccountAnalyticAccount.class, OColumn.RelationType.ManyToOne);
     OColumn ownership_company_id = new OColumn("Эзэмшигч компани", ResCompany.class, OColumn.RelationType.ManyToOne);
-    OColumn ownership_department_id = new OColumn("Эзэмшигч хэлтэс", HrDepartment.class, OColumn.RelationType.ManyToOne);
+    OColumn ownership_department_id = new OColumn("Эзэмшигч салбар", HrDepartment.class, OColumn.RelationType.ManyToOne);
     OColumn current_company_id = new OColumn("Ажиллаж буй компани", ResCompany.class, OColumn.RelationType.ManyToOne);
-    OColumn current_department_id = new OColumn("Ажиллаж буй хэлтэс", HrDepartment.class, OColumn.RelationType.ManyToOne);
+    OColumn current_department_id = new OColumn("Ажиллаж буй салбар", HrDepartment.class, OColumn.RelationType.ManyToOne);
     OColumn current_respondent_id = new OColumn("Эзэмшигч", Employee.class, OColumn.RelationType.ManyToOne);
     OColumn id_gps = new OColumn("Техникийн дугаар /GPS/", OInteger.class);
     OColumn tires = new OColumn("Дугуй", TechnicTire.class, OColumn.RelationType.OneToMany).setRelatedColumn("technic_id");
