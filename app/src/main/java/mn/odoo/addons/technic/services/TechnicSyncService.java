@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.odoo.addons.technic.models.ProjectProject;
+import com.odoo.addons.technic.models.TechnicNorm;
 import com.odoo.addons.technic.models.TechnicsModel;
+import com.odoo.addons.technic.models.UsageUomLine;
 import com.odoo.core.orm.ODataRow;
 import com.odoo.core.orm.OSQLite;
 import com.odoo.core.rpc.helper.ODomain;
@@ -38,8 +40,8 @@ public class TechnicSyncService extends OSyncService {
     public void performDataSync(OSyncAdapter adapter, Bundle extras, OUser user) {
         if (adapter.getModel().getModelName().equals("technic")) {
             TechnicsModel technic = new TechnicsModel(getApplicationContext(), user);
-//            TechnicNorm norm = new TechnicNorm(getApplicationContext(), user);
-//            UsageUomLine normLine = new UsageUomLine(getApplicationContext(), user);
+            TechnicNorm norm = new TechnicNorm(getApplicationContext(), user);
+            UsageUomLine normLine = new UsageUomLine(getApplicationContext(), user);
             ProjectProject project = new ProjectProject(getApplicationContext(), user);
             ODomain projectDomain = new ODomain();
             projectDomain.add("id", "!=", 0);
@@ -47,18 +49,20 @@ public class TechnicSyncService extends OSyncService {
             project.quickSyncRecords(projectDomain);
 
 //            if (technic.isEmptyTable()) {
-//                Log.i("project synced ======", "norm start");
-//                norm.quickSyncRecords(projectDomain);
-//                Log.i("norm synced======", "line start");
-//                normLine.quickSyncRecords(projectDomain);
-//                Log.i("line synced======", "synced");
+            Log.i("project_synced_======", "norm start");
+            norm.quickSyncRecords(projectDomain);
+            Log.i("norm synced======", "line start");
+            normLine.quickSyncRecords(projectDomain);
+            Log.i("line synced======", "synced");
 //            }
-//            ODomain domain = new ODomain();
-//            List<Integer> projectIds = project.selectManyToManyServerIds("members", user.getUserId());
+            ODomain domain = new ODomain();
+            List<Integer> projectIds = project.selectManyToManyServerIds("members", user.getUserId());
 //            domain.add("project", "in", projectIds);
-//            Log.i("projectIds======", projectIds.toString());
-//            Log.i("DOMAIN==========", domain + "");
-//            adapter.syncDataLimit(80).setDomain(domain);
+            domain.add("id", "in", 3830);
+
+            Log.i("projectIds======", projectIds.toString());
+            Log.i("DOMAIN==========", domain + "");
+            adapter.syncDataLimit(80).setDomain(domain);
             adapter.syncDataLimit(80);
         }
     }

@@ -211,10 +211,11 @@ public class ScrapPartsDetails extends OdooCompatActivity implements OField.IOnF
 //            findViewById(R.id.technic_inspection_view_layout).setVisibility(View.VISIBLE);
 //            mList = (ExpandableListControl) findViewById(R.id.expListOrderLine);
             mList.setVisibility(View.VISIBLE);
-            mUsageList = (ExpandableListControl) findViewById(R.id.expListUsageUom);
-            mUsageList.setVisibility(View.VISIBLE);
-            mTireList = (ExpandableListControl) findViewById(R.id.expListTire);
-            mTireList.setVisibility(View.VISIBLE);
+//            mUsageList = (ExpandableListControl) findViewById(R.id.expListUsageUom);
+//            mUsageList.setVisibility(View.VISIBLE);
+            //eniig zasahhh
+//            mTireList = (ExpandableListControl) findViewById(R.id.expListTire);
+//            mTireList.setVisibility(View.VISIBLE);
         }
     }
 

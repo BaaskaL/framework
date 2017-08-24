@@ -135,7 +135,13 @@
                                 android:id="@+id/pageViewer"
                                 class="mn.odoo.addons.TechnicInspection.CustomerViewPager"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content" />
+                                android:layout_height="wrap_content"
+                                android:visibility="gone" />
+
+                            <android.support.v4.view.ViewPager
+                                android:id="@+id/pageViews"
+                                android:layout_width="match_parent"
+                                android:layout_height="800dp" />
                         </LinearLayout>
 
                     </ScrollView>

@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
@@ -116,7 +117,7 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
     private int inspectionItemId;
     private OField oState, oOrigin, date;
     private TabLayout tabLayout;
-    private CustomerViewPager viewPager;
+    private ViewPager viewPager;
     private PagerAdapter adapter;
     private int InspectionId;
     private List<TextSliderView> textSlider = new ArrayList<>();
@@ -166,17 +167,16 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText("Техникийн үзлэгийн зүйлc"));
         tabLayout.addTab(tabLayout.newTab().setText("Дугуйн үзлэг"));
-//        tabLayout.addTab(tabLayout.newTab().setText("Ашиглалт"));
+        tabLayout.addTab(tabLayout.newTab().setText("Ашиглалт"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         adapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
-        viewPager = (CustomerViewPager) findViewById(R.id.pageViewer);
+        viewPager = (ViewPager) findViewById(R.id.pageViews);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                Log.i("Selected_position=", tab.getPosition() + "");
                 viewPager.setCurrentItem(tab.getPosition());
             }
 
@@ -416,6 +416,7 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
                 for (ODataRow row : rows) {
                     technicIns.quickCreateRecord(row);
                 }
+                Log.i("domain-=====", domain.toString());
                 technicIns.quickSyncRecords(domain);
             }
             return null;
@@ -444,8 +445,6 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
                     if (record != null) {
                         for (ODataRow row : inspectionItemLines) {
                             OValues insNewVal = new OValues();
-//                            insNewVal.put("technic_inspection_category_id", row.getInt("technic_inspection_category_id"));
-//                            insNewVal.put("technic_inspection_item_id", row.getInt("technic_inspection_item_id"));
                             insNewVal.put("inspection_isitnormal", row.getBoolean("inspection_isitnormal"));
                             insNewVal.put("inspection_check", row.getBoolean("inspection_check"));
                             if (!row.getString("description").equals("false")) {
@@ -454,6 +453,8 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
                             inspectionLines.update(row.getInt(OColumn.ROW_ID), insNewVal);
                         }
                         technicIns.update(record.getInt(OColumn.ROW_ID), values);
+                        domain.add("id", "=", record.getInt(OColumn.ROW_ID));
+                        onInsChangeUpdate.execute(domain);
                         Toast.makeText(this, R.string.toast_information_saved, Toast.LENGTH_LONG).show();
                         mEditMode = !mEditMode;
                         setupToolbar();
@@ -571,39 +572,37 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
         }
     }
 
-    public void technisUsageUoms(ODataRow rows) {
+    public void technisUsageUoms(ODataRow technicObj) {
         try {
             TechnicNorm norm = new TechnicNorm(this, null);
-            Log.i("technic_norm_id====", rows.getString("technic_norm_id"));
+            Log.i("technicId====", technicObj.toString());
+            Log.i("technic_norm_id====", technicObj.getString("technic_norm_id"));
 
-            List<ODataRow> normRow = norm.select(new String[]{"usage_uom_ids", "name"}, "_id = ? ", new String[]{rows.getString("technic_norm_id")});
+            List<ODataRow> normRow = norm.select(new String[]{"usage_uom_ids", "name"}, "_id = ? ", new String[]{technicObj.getString("technic_norm_id")});
             Log.i("normRow====", normRow.toString());
             linesUom.clear();
             if (normRow.size() > 0) {
-                ODataRow normRows = norm.select(new String[]{"usage_uom_ids", "name"}, "_id = ? ", new String[]{rows.getString("technic_norm_id")}).get(0);
+                ODataRow normRows = norm.select(new String[]{"usage_uom_ids", "name"}, "_id = ? ", new String[]{technicObj.getString("technic_norm_id")}).get(0);
                 Log.i("normRows====", normRows.toString());
                 List<ODataRow> lines = normRows.getO2MRecord("usage_uom_ids").browseEach();
                 Log.i("lines=====kk", lines.toString());
-
                 for (ODataRow row : lines) {
                     ODataRow newRow = new ODataRow();
-                    if (!row.getString("product_uom_id").equals("false")) {
-                        ODataRow product_uom = productUom.select(new String[]{"name"}, "_id = ? ", new String[]{row.getString("product_uom_id")}).get(0);
-                        newRow.put("product_uom_name", product_uom.getString("name"));
-                    } else {
-                        newRow.put("product_uom_name", "Хоосон");
+                    newRow.put("product_uom_name", "");
+                    newRow.put("usage_uom_name", "");
+                    newRow.put("usage_value", "");//last_motohour
+                    if (!row.getString("product_uom_name").equals("false")) {
+                        newRow.put("product_uom_name", row.getString("product_uom_name"));
+                        if (row.getString("product_uom_name").equals("км"))
+                            newRow.put("usage_value", technicObj.getString("last_km"));
+                        else
+                            newRow.put("usage_value", technicObj.getString("last_motohour"));
                     }
-
-                    if (!row.getString("usage_uom_id").equals("false")) {
-                        ODataRow usage_uom = usageUom.select(new String[]{"name"}, "_id = ? ", new String[]{row.getString("usage_uom_id")}).get(0);
-                        newRow.put("usage_uom_name", usage_uom.getString("name"));
-                    } else {
-                        newRow.put("usage_uom_name", "Хоосон");
-                    }
+                    if (!row.getString("usage_uom_name").equals("false"))
+                        newRow.put("usage_uom_name", row.getString("usage_uom_name"));
                     newRow.put("product_uom_id", row.getString("product_uom_id"));
                     newRow.put("_id", row.getString("_id"));
                     newRow.put("usage_uom_id", row.get("usage_uom_id"));
-                    newRow.put("usage_value", row.getString("last_km"));//last_motohour
                     linesUom.add(newRow);
                 }
             }

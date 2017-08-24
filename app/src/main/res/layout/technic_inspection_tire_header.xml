@@ -111,13 +111,10 @@
 
         </LinearLayout>
 
-
-        <odoo.controls.ExpandableListControl
-            android:id="@+id/expListTire"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/my_recycler_view_tire"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/default_8dp"
-            android:layout_marginTop="@dimen/default_8dp"
-            android:orientation="vertical" />
+            android:layout_height="match_parent"
+            android:scrollbars="vertical" />
     </LinearLayout>
 </LinearLayout>

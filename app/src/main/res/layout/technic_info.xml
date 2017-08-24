@@ -100,7 +100,7 @@
                             android:orientation="horizontal">
 
                             <TextView
-                                android:id="@+id/last_km"
+                                android:id="@+id/last_motohour"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:background="@layout/rounded_border_edittext"
@@ -125,7 +125,7 @@
                             android:orientation="horizontal">
 
                             <TextView
-                                android:id="@+id/last_motohour"
+                                android:id="@+id/last_km"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:background="@layout/rounded_border_edittext"

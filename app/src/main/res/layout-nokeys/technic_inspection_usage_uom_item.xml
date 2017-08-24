@@ -21,12 +21,13 @@
             android:divider="?android:attr/dividerHorizontal"
             android:gravity="center_vertical"
             android:orientation="horizontal"
+            android:padding="@dimen/default_8dp"
             android:showDividers="middle">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/default_16dp"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="1">
 
                 <TextView
@@ -34,15 +35,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@string/font_normal"
+                    android:paddingLeft="5dp"
                     android:textColor="@color/body_text_1"
                     android:textSize="@dimen/text_size_medium" />
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="1">
 
                 <TextView
@@ -50,6 +51,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@string/font_normal"
+                    android:paddingLeft="5dp"
                     android:textColor="@color/body_text_1"
                     android:textSize="@dimen/text_size_medium" />
 
@@ -58,7 +60,7 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/default_16dp"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="1">
 
                 <EditText
@@ -66,6 +68,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Тайлбар"
+                    android:paddingLeft="5dp"
                     android:textColor="@color/body_text_1"
                     android:textSize="@dimen/text_size_medium" />
             </LinearLayout>

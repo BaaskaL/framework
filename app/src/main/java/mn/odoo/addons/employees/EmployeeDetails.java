@@ -125,10 +125,6 @@ public class EmployeeDetails extends OdooCompatActivity
                 collapsingToolbarLayout.setTitle("Үүсгэх");
             }
             mForm = (OForm) findViewById(R.id.employeeFormEdit);
-            editPass = (EditText) findViewById(R.id.editPass);
-            if (!record.getString("confirm_code").equals("false")) {
-                editPass.setText(record.getString("confirm_code"));
-            }
             findViewById(R.id.employee_view_layout).setVisibility(View.GONE);
             findViewById(R.id.employee_edit_layout).setVisibility(View.VISIBLE);
         } else {
@@ -139,6 +135,12 @@ public class EmployeeDetails extends OdooCompatActivity
             }
             findViewById(R.id.employee_edit_layout).setVisibility(View.GONE);
             findViewById(R.id.employee_view_layout).setVisibility(View.VISIBLE);
+        }
+        if (record != null && edit) {
+            editPass = (EditText) findViewById(R.id.editPass);
+            if (!record.getString("confirm_code").equals("false")) {
+                editPass.setText(record.getString("confirm_code"));
+            }
         }
         setColor(color);
     }
