@@ -191,6 +191,7 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
 
             }
         });
+        //This is testcircleci
         app = (App) getApplicationContext();
 
         TextSliderView textSliderView = new TextSliderView(this);
