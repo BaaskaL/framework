@@ -673,7 +673,6 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
             image.put("photo", newImage);
 //            recInsImages.add(image);
 
-//
             onOptionsItemSelected(item);
 
         } else {
