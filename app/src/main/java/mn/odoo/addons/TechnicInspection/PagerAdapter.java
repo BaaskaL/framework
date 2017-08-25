@@ -21,21 +21,13 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         Log.i("imput_position==", position + "");
         switch (position) {
-
             case 0:
-                Log.i("case_0====", position + "");
-                TabInspectionItems tab1 = new TabInspectionItems();
-                return tab1;
+                return new TabInspectionItems();
             case 1:
-                Log.i("case_1====", position + "");
-                TabInspectionTire tab2 = new TabInspectionTire();
-                return tab2;
+                return new TabInspectionTire();
             case 2:
-                Log.i("case_2====", position + "");
-                TabInspectionUsageUom tab3 = new TabInspectionUsageUom();
-                return tab3;
+                return new TabInspectionUsageUom();
             default:
-                Log.i("case_default==", position + "");
                 return null;
         }
     }

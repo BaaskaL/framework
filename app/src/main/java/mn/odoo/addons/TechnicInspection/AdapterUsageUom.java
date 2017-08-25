@@ -27,7 +27,6 @@ public class AdapterUsageUom extends RecyclerView.Adapter<AdapterUsageUom.ViewHo
         public TextView productUom, usageUom;
         public EditText usageValue;
 
-
         public ViewHolder(View view) {
             super(view);
             productUom = (TextView) view.findViewById(R.id.productUom);
@@ -43,7 +42,7 @@ public class AdapterUsageUom extends RecyclerView.Adapter<AdapterUsageUom.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.technic_inspection_usage_uom_item, parent, false);
+                .inflate(R.layout.technic_inspection_usage_uom_item, null);
 
         return new ViewHolder(itemView);
     }

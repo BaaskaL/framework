@@ -49,16 +49,13 @@ public class AdapterTire extends RecyclerView.Adapter<AdapterTire.ViewHolderTire
     @Override
     public ViewHolderTire onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.technic_inspection_tire_item, parent, false);
+                .inflate(R.layout.technic_inspection_tire_item, null);
         return new ViewHolderTire(itemView);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolderTire holder, final int position) {
         ODataRow tireRow = tireRows.get(position);
-        Log.i("tireRows====", tireRows.toString());
-        Log.i("\ntireRow====", tireRow.toString());
-
         holder.name.setText(((position + 1) + ". " + tireRow.getString("name")));
         holder.date_record.setText(tireRow.getString("date_record").toString());
         holder.current_position.setText(tireRow.getString("current_position").toString());

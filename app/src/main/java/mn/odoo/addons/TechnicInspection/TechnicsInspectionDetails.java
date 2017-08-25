@@ -165,13 +165,14 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
         typeField = (OField) findViewById(R.id.inspection_type_id);
 
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        viewPager = (ViewPager) findViewById(R.id.pageViewer);
+
         tabLayout.addTab(tabLayout.newTab().setText("Техникийн үзлэгийн зүйлc"));
         tabLayout.addTab(tabLayout.newTab().setText("Дугуйн үзлэг"));
         tabLayout.addTab(tabLayout.newTab().setText("Ашиглалт"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         adapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
-        viewPager = (ViewPager) findViewById(R.id.pageViews);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -471,7 +472,12 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
                             inspectionItemIds.add(newId);
                         }
                         for (ODataRow row : linesUom) {
-
+                            OValues insNewVal = new OValues();
+                            insNewVal.put("product_uom_id", row.getInt("product_uom_id"));
+                            insNewVal.put("usage_uom_id", row.getInt("usage_uom_id"));
+                            insNewVal.put("usage_value", row.getString("usage_value"));
+                            int newId = inspectionUsage.insert(insNewVal);
+                            uoomIds.add(newId);
                         }
 
                         for (ODataRow row : tireLines) {
@@ -493,6 +499,7 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
                         values.put("tire_ids", tireIds);
                         values.put("ins_photo", photoIds);
                         values.put("technic_name", photoIds);
+                        values.put("inspection_usage_ids", uoomIds);
 
                         ODataRow employObj = employee.browse(values.getInt("inspection_respondent_id"));
                         values.put("inspection_respondent_name", employObj.get("name"));
@@ -664,7 +671,7 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
             String newImage = BitMapToString(img);
             ODataRow image = new ODataRow();
             image.put("photo", newImage);
-            recInsImages.add(image);
+//            recInsImages.add(image);
 
 //
             onOptionsItemSelected(item);
