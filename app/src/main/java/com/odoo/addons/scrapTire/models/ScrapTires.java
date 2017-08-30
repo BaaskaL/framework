@@ -35,6 +35,11 @@ import com.odoo.core.orm.fields.types.OSelection;
 import com.odoo.core.orm.fields.types.OVarchar;
 import com.odoo.core.support.OUser;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static android.R.attr.value;
+
 public class ScrapTires extends OModel {
     public static final String AUTHORITY = BuildConfig.APPLICATION_ID + ".core.provider.content.sync.scrap_tire";
 
@@ -60,22 +65,24 @@ public class ScrapTires extends OModel {
     }
 
     public String storeTechnicName(OValues row) {
-        Log.i("ROW====", row.toString());
-        String name = "Хоосон";
+//        Log.i("ROW====", row.toString());
+//        String name = "Хоосон";
         if (row.size() > 0) {
             try {
                 if (!row.getString("technic_id").equals(null)) {
-                    Log.i("usage_uom_id====", row.getString("technic_id"));
-                    String value = row.getString("technic_id");
-                    String[] parts = value.split(",");
-                    name = parts[1].substring(1, parts[1].length() - 1);
-                    Log.i("name====", name);
+                    List<Object> technic = (ArrayList<Object>) row.get("technic_id");
+                    return technic.get(1) + "";
+//                    Log.i("usage_uom_id====", row.getString("technic_id"));
+//                    String value = row.getString("technic_id");
+//                    String[] parts = value.split(",");
+//                    name = parts[1].substring(1, parts[1].length() - 1);
+//                    Log.i("name====", name);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        return name;
+        return "Хоосон";
     }
 
     @Override

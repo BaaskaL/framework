@@ -130,7 +130,6 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_action_camera"
                     android:visibility="visible"
-                    app:layout_anchor="@id/tireImage"
                     app:layout_anchorGravity="bottom|right|end" />
             </LinearLayout>
 

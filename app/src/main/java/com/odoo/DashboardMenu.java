@@ -40,10 +40,10 @@ public class DashboardMenu extends Activity {
                 index = 9;
                 break;
             case R.id.btn_repair_in:
-                index = -1;
+                index = 10;
                 break;
             case R.id.btn_accumulator_scrap:
-                index = -1;
+                index = 10;
                 break;
 //            10,9,
         }

@@ -308,6 +308,34 @@
             android:windowSoftInputMode="stateHidden" />
         <activity android:name="mn.odoo.addons.otherClass.DetailsActivity" />
 
+        <!-- Sync Provider & Service Work Order // -->
+
+        <provider
+            android:name="mn.odoo.addons.workOrder.providers.WorkOrserSyncProvider"
+            android:authorities="${applicationId}.core.provider.content.sync.work_order"
+            android:label="@string/sync_label_wo"
+            android:multiprocess="true" />
+
+        <service
+            android:name="mn.odoo.addons.workOrder.services.WorkOrderSyncService"
+            android:exported="true"
+            android:process=":sync_feeds">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/work_order_sync_adapter" />
+        </service>
+
+        <activity
+            android:name="mn.odoo.addons.workOrder.WorkOrderDetails"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+
+        <activity android:name="mn.odoo.addons.workOrder.wizards.repairTeam.AddEmployeeWizard" />
+
     </application>
 
 </manifest>

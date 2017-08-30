@@ -57,9 +57,7 @@ public class TechnicSyncService extends OSyncService {
 //            }
             ODomain domain = new ODomain();
             List<Integer> projectIds = project.selectManyToManyServerIds("members", user.getUserId());
-//            domain.add("project", "in", projectIds);
-            domain.add("id", "in", 3830);
-
+            domain.add("project", "in", projectIds);
             Log.i("projectIds======", projectIds.toString());
             Log.i("DOMAIN==========", domain + "");
             adapter.syncDataLimit(80).setDomain(domain);

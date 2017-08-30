@@ -30,10 +30,12 @@
     <string name="sync_label_scrap_tire">Scrap Tire</string>
     <string name="sync_label_scrap_technic">Scrap Technic</string>
     <string name="sync_label_hr_employee">Employee</string>
+    <string name="sync_label_wo">Work Order</string>
     <string name="label_no_technic_inspection_found">No Technic Inspection Found !</string>
     <string name="label_no_scrap_parts_found">No Parts Scrap Found !</string>
     <string name="label_no_scrap_tires_found">No Tires Scrap Found !</string>
     <string name="label_no_scrap_oil_found">No Oil Scrap Found !</string>
+    <string name="label_no_work_order_found">No Work Order Found !</string>
     <string name="label_no_scrap_technic_found">No Technic Scrap Found !</string>
     <string name="label_new">New</string>
     <string name="app_title">Техник Ашиглалт Бүртгэл</string>

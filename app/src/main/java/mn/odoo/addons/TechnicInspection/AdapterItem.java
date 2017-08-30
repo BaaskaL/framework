@@ -92,6 +92,7 @@ public class AdapterItem extends RecyclerView.Adapter<AdapterItem.ViewHolder> {
                 TechnicsInspectionDetails.inspectionItemLines.get(position).put("inspection_check", (checkedId == R.id.inspection_check) ? true : false);
             }
         });
+
     }
 
     @Override

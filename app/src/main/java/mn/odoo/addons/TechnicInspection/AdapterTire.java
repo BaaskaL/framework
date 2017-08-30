@@ -1,6 +1,6 @@
 package mn.odoo.addons.TechnicInspection;
 
-import android.support.annotation.IdRes;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -9,8 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.odoo.R;
@@ -19,16 +17,19 @@ import com.odoo.core.orm.ODataRow;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Created by baaska on 2017-08-23.
  */
 
 public class AdapterTire extends RecyclerView.Adapter<AdapterTire.ViewHolderTire> {
     private List<ODataRow> tireRows = new ArrayList<>();
+    public TechnicsInspectionDetails technicsInspectionDetails;
 
     public static class ViewHolderTire extends RecyclerView.ViewHolder {
         public TextView name, date_record, current_position, state;
         public EditText serial;
+        public FloatingActionButton captureImageTire;
 
         public ViewHolderTire(View view) {
             super(view);
@@ -37,10 +38,13 @@ public class AdapterTire extends RecyclerView.Adapter<AdapterTire.ViewHolderTire
             current_position = (TextView) view.findViewById(R.id.current_position);
             state = (TextView) view.findViewById(R.id.state);
             serial = (EditText) view.findViewById(R.id.serial);
+            captureImageTire = (FloatingActionButton) view.findViewById(R.id.captureImageTire);
 
             serial.setEnabled(TechnicsInspectionDetails.mEditMode);
+
         }
     }
+
 
     public AdapterTire(List<ODataRow> tireRows) {
         this.tireRows = tireRows;
@@ -48,6 +52,7 @@ public class AdapterTire extends RecyclerView.Adapter<AdapterTire.ViewHolderTire
 
     @Override
     public ViewHolderTire onCreateViewHolder(ViewGroup parent, int viewType) {
+        technicsInspectionDetails = new TechnicsInspectionDetails();
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.technic_inspection_tire_item, null);
         return new ViewHolderTire(itemView);
@@ -76,6 +81,13 @@ public class AdapterTire extends RecyclerView.Adapter<AdapterTire.ViewHolderTire
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        });
+
+        holder.captureImageTire.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                technicsInspectionDetails.captureTire("name");
             }
         });
     }

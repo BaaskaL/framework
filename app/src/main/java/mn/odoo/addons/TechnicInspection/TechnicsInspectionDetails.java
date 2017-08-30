@@ -191,7 +191,7 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
 
             }
         });
-        //This is testcircleci
+        //This is test
         app = (App) getApplicationContext();
 
         TextSliderView textSliderView = new TextSliderView(this);
@@ -393,11 +393,18 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
             case R.id.captureImage:
                 fileManager.requestForFile(OFileManager.RequestType.IMAGE_OR_CAPTURE_IMAGE);
                 break;
+            case R.id.captureImageTire:
+                fileManager.requestForFile(OFileManager.RequestType.IMAGE_OR_CAPTURE_IMAGE);
+                break;
         }
     }
 
     private boolean hasRecordInExtra() {
         return extra != null && extra.containsKey(OColumn.ROW_ID);
+    }
+
+    public void captureTire(String name) {
+        fileManager.requestForFile(OFileManager.RequestType.IMAGE_OR_CAPTURE_IMAGE);
     }
 
     @Override

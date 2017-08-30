@@ -30,6 +30,7 @@ import mn.odoo.addons.scrapParts.ScrapPart;
 import mn.odoo.addons.scrapTechnic.ScrapTechnics;
 import mn.odoo.addons.scrapTire.ScrapTire;
 import mn.odoo.addons.technic.Technics;
+import mn.odoo.addons.workOrder.WorkOrders;
 
 public class Addons extends AddonsHelper {
 
@@ -49,4 +50,5 @@ public class Addons extends AddonsHelper {
     OAddon scrapOil = new OAddon(ScrapOil.class);
     OAddon employees = new OAddon(Employees.class);
     OAddon scrapTechnic = new OAddon(ScrapTechnics.class);
+    OAddon work_order = new OAddon(WorkOrders.class);
 }
