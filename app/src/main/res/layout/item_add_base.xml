@@ -12,6 +12,13 @@
         android:background="#ffffff"
         android:orientation="horizontal">
 
+        <CheckBox
+            android:id="@+id/clearChecks"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:gravity="center" />
+
         <ImageView
             android:id="@+id/search_icon"
             android:layout_width="wrap_content"
@@ -48,6 +55,64 @@
             android:paddingRight="16dp"
             android:src="@drawable/ic_action_action_done_all"
             android:tint="#414141" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#247648"
+        android:divider="?android:attr/dividerHorizontal"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:showDividers="middle">
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/default_16dp"
+            android:clickable="false"
+            android:fontFamily="@string/font_condensed"
+            android:gravity="center"
+            android:padding="5dp"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:ellipsize="end"
+            android:fontFamily="@string/font_normal"
+            android:gravity="center"
+            android:text="Овог"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/body_text_2" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:ellipsize="end"
+            android:fontFamily="@string/font_normal"
+            android:gravity="center"
+            android:text="Нэр"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/body_text_2" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:ellipsize="end"
+            android:fontFamily="@string/font_normal"
+            android:gravity="center"
+            android:text="Ажлын нэр"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/body_text_2" />
+
     </LinearLayout>
 
     <View style="@style/ViewSeparator" />

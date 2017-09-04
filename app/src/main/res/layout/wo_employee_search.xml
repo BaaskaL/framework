@@ -2,8 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:divider="?android:attr/dividerHorizontal"
     android:orientation="horizontal"
-    android:padding="@dimen/default_16dp">
+    android:padding="@dimen/default_16dp"
+    android:showDividers="middle">
 
     <CheckBox
         android:id="@+id/itemCheck"
@@ -22,6 +24,7 @@
         android:layout_weight="1"
         android:background="@android:color/transparent"
         android:ellipsize="end"
+        android:paddingLeft="5dp"
         android:fontFamily="@string/font_normal"
         android:gravity="center_vertical"
         android:textAppearance="?android:attr/textAppearanceMedium"
@@ -34,6 +37,20 @@
         android:layout_weight="1"
         android:background="@android:color/transparent"
         android:ellipsize="end"
+        android:paddingLeft="5dp"
+        android:fontFamily="@string/font_normal"
+        android:gravity="center_vertical"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/body_text_2" />
+
+    <TextView
+        android:id="@+id/job_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@android:color/transparent"
+        android:ellipsize="end"
+        android:paddingLeft="5dp"
         android:fontFamily="@string/font_normal"
         android:gravity="center_vertical"
         android:textAppearance="?android:attr/textAppearanceMedium"

@@ -44,6 +44,7 @@ public class AddEmployeeWizard extends ActionBarActivity implements
     private Boolean mLongClicked = false;
     private List<String> employeeIds = new ArrayList<>();
     public static OModel mModel;
+    private CheckBox clearChbox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +53,8 @@ public class AddEmployeeWizard extends ActionBarActivity implements
         edt_searchable_input = (EditText) findViewById(R.id.edt_searchable_input);
         edt_searchable_input.addTextChangedListener(this);
         findViewById(R.id.done).setOnClickListener(this);
+        clearChbox = (CheckBox) findViewById(R.id.clearChecks);
+        clearChbox.setOnClickListener(this);
         Bundle extra = getIntent().getExtras();
         if (extra != null) {
             mList = (ListView) findViewById(R.id.searchable_items);
@@ -61,36 +64,38 @@ public class AddEmployeeWizard extends ActionBarActivity implements
                 employeeIds.add(key);
             }
             List<ODataRow> empRows = mModel.select(null, "_id IN (" + StringUtils.repeat(" ?, ", employeeIds.size() - 1) + " ?)", employeeIds.toArray(new String[employeeIds.size()]));
-            objects.addAll(empRows);
             mAdapter = new OListAdapter(this, R.layout.wo_employee_search, objects) {
                 @Override
                 public View getView(final int position, View convertView, ViewGroup parent) {
                     View v = convertView;
-                    if (v == null) {
-                        v = getLayoutInflater().inflate(getResource(), parent, false);
-                        ODataRow row = (ODataRow) objects.get(position);
-                        OControls.setText(v, R.id.lastName, row.getString("last_name"));
-                        OControls.setText(v, R.id.name, row.getString("name"));
-                        final CheckBox chBox = (CheckBox) v.findViewById(R.id.itemCheck);
-                        if (lineValues.get(row.getString("_id"))) {
-                            chBox.setChecked(lineValues.get(row.getString("_id")));
-                        }
-                        chBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                            @Override
-                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                                ODataRow row = (ODataRow) objects.get(position);
-                                if (!chBox.isChecked()) {
-                                    lineValues.put(row.getString("_id"), false);
-                                } else {
-                                    lineValues.put(row.getString("_id"), true);
-                                }
-                            }
-                        });
-                        return v;
+//                    if (v == null)
+                    v = getLayoutInflater().inflate(getResource(), parent, false);
+                    ODataRow row = (ODataRow) objects.get(position);
+                    OControls.setText(v, R.id.lastName, row.getString("last_name"));
+                    OControls.setText(v, R.id.name, row.getString("name"));
+                    OControls.setText(v, R.id.job_name, row.getString("job_name"));
+                    final CheckBox chBox = (CheckBox) v.findViewById(R.id.itemCheck);
+                    if (lineValues.get(row.getString("_id"))) {
+                        chBox.setChecked(lineValues.get(row.getString("_id")));
                     }
+                    chBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                            ODataRow row = (ODataRow) objects.get(position);
+                            if (!chBox.isChecked()) {
+                                lineValues.put(row.getString("_id"), false);
+                            } else {
+                                lineValues.put(row.getString("_id"), true);
+                            }
+                            if (clearChbox.isChecked()) {
+                                clearChbox.setChecked(false);
+                            }
+                        }
+                    });
                     return v;
                 }
             };
+            objects.addAll(empRows);
             mList.setAdapter(mAdapter);
         } else {
             finish();
@@ -201,6 +206,12 @@ public class AddEmployeeWizard extends ActionBarActivity implements
                 intent.putExtras(data);
                 setResult(RESULT_OK, intent);
                 finish();
+                break;
+            case R.id.clearChecks:
+                for (String key : lineValues.keySet()) {
+                    lineValues.put(key, false);
+                    mList.setAdapter(mAdapter);//475002506  419011921
+                }
                 break;
             default:
                 setResult(RESULT_CANCELED);

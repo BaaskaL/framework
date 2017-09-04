@@ -929,16 +929,22 @@ public class OModel implements ISyncServiceListener {
     public void handleRelationValues(int record_id, OColumn column, RelValues values) {
         OModel relModel = createInstance(column.getType());
         HashMap<RelCommands, List<Object>> columnValues = values.getColumnValues();
+        Log.i("columnValues=====", columnValues.toString());
+        Log.i("columnValues=====", columnValues.keySet().toString());
         for (RelCommands commands : columnValues.keySet()) {
+            Log.i("commands=====", commands.toString());
+            Log.i("getRelationType=====", column.getRelationType().toString());
             switch (column.getRelationType()) {
                 case OneToMany:
                     Log.i("columnValues===", columnValues.toString());
                     handleOneToManyRecords(column, commands, relModel, record_id, columnValues);
                     break;
                 case ManyToMany:
+                    Log.i("1111", "1111");
                     handleManyToManyRecords(column, commands, relModel, record_id, columnValues);
                     break;
             }
+            Log.i("for======", "for");
         }
     }
 
@@ -1035,10 +1041,12 @@ public class OModel implements ISyncServiceListener {
                 List<Object> ids = values.get(command);
                 // Unlink records
                 values.put(RelCommands.Unlink, ids);
+                Log.i("relValue_==Unlink===", ids + "");
                 handleManyToManyRecords(column, RelCommands.Unlink, relModel, record_id, values);
 
                 // Appending record in relation with base record
                 values.put(RelCommands.Append, ids);
+                Log.i("relValue_==Append===", ids + "");
                 handleManyToManyRecords(column, RelCommands.Append, relModel, record_id, values);
                 break;
             case Delete:
@@ -1049,16 +1057,18 @@ public class OModel implements ISyncServiceListener {
                 // Deleting master record from relation model with given ids
                 String deleteSql = "DELETE FROM " + relModel.getTableName() + " WHERE " + OColumn.ROW_ID + " IN (" +
                         TextUtils.join(",", values.get(command)) + ")";
+                Log.i("relValue_update==del===", deleteSql);
                 db.execSQL(deleteSql);
                 break;
             case Unlink:
                 // Unlink relation with base record
                 String unlinkSQL = "DELETE FROM " + table + " WHERE " + base_column + " = " + record_id + " AND " + rel_column + " IN (" +
                         TextUtils.join(",", values.get(command)) + ")";
+                Log.i("relValue_update==unl===", unlinkSQL);
                 db.execSQL(unlinkSQL);
                 break;
         }
-        values.remove(command);
+//        values.remove(command);
         db.close();
     }
 

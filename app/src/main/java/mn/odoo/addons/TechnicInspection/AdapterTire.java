@@ -1,5 +1,6 @@
 package mn.odoo.addons.TechnicInspection;
 
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -25,6 +26,7 @@ import java.util.List;
 public class AdapterTire extends RecyclerView.Adapter<AdapterTire.ViewHolderTire> {
     private List<ODataRow> tireRows = new ArrayList<>();
     public TechnicsInspectionDetails technicsInspectionDetails;
+    private static final int CAMERA_REQUEST = 1888;
 
     public static class ViewHolderTire extends RecyclerView.ViewHolder {
         public TextView name, date_record, current_position, state;
@@ -87,7 +89,9 @@ public class AdapterTire extends RecyclerView.Adapter<AdapterTire.ViewHolderTire
         holder.captureImageTire.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                technicsInspectionDetails.captureTire("name");
+//                technicsInspectionDetails.captureTire("name");
+//                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+//                startActivityForResult(cameraIntent, CAMERA_REQUEST);
             }
         });
     }

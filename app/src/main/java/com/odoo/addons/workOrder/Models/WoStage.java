@@ -16,6 +16,6 @@ public class WoStage extends OModel {
     OColumn name = new OColumn("Нэр", OVarchar.class);
 
     public WoStage(Context context, OUser user) {
-        super(context, "repair.order.state", user);
+        super(context, "work.order.stage", user);
     }
 }

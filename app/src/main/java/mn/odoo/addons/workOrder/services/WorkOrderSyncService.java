@@ -49,6 +49,7 @@ public class WorkOrderSyncService extends OSyncService implements ISyncFinishLis
             Log.i("DOMAIN==========", domain + "");
             adapter.syncDataLimit(80).setDomain(domain);
             adapter.syncDataLimit(80);
+            adapter.onSyncFinish(this);
         }
     }
 

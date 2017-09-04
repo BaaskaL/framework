@@ -17,7 +17,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:layout_weight="0.3"
+            android:layout_weight="0.4"
             android:fontFamily="@string/font_normal"
             android:gravity="center"
             android:text="tire"
@@ -29,7 +29,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:layout_weight="1"
+            android:layout_weight="0.8"
             android:fontFamily="@string/font_normal"
             android:gravity="left"
             android:text="technic name"
@@ -37,17 +37,28 @@
             android:textColor="@color/body_text_1" />
 
         <TextView
-            android:id="@+id/tvOilDate"
+            android:id="@+id/tvWoPlannedDate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_weight="0.3"
             android:fontFamily="@string/font_normal"
             android:gravity="center"
-            android:text="date"
+            android:text="planned_date"
             android:textAppearance="?android:textAppearanceSmall"
             android:textColor="@color/body_text_1" />
 
+        <TextView
+            android:id="@+id/tvWoPlannedEndDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="0.3"
+            android:fontFamily="@string/font_normal"
+            android:gravity="center"
+            android:text="planned_end_date"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:textColor="@color/body_text_1" />
 
         <TextView
             android:id="@+id/tvAssigned"

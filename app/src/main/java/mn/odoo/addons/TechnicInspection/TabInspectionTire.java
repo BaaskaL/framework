@@ -24,7 +24,7 @@ public class TabInspectionTire extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View View = inflater.inflate(R.layout.technic_inspection_tire_header, container, false);
         mRecyclerView = (RecyclerView) View.findViewById(R.id.my_recycler_view_tire);
-        mRecyclerView.setHasFixedSize(true);
+//        mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
 

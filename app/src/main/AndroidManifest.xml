@@ -159,12 +159,12 @@
         <activity
             android:name="mn.odoo.addons.TechnicInspection.TechnicsInspectionDetails"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="stateHidden" />
 
         <activity
             android:name="mn.odoo.addons.TechnicInspection.TechnicsInspectionSignature"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="stateHidden" />
 
 
         <!-- Sync Provider & Service Scrap Parts // -->
@@ -334,7 +334,9 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
 
-        <activity android:name="mn.odoo.addons.workOrder.wizards.repairTeam.AddEmployeeWizard" />
+        <activity
+            android:name="mn.odoo.addons.workOrder.wizards.repairTeam.AddEmployeeWizard"
+            android:windowSoftInputMode="stateHidden" />
 
     </application>
 

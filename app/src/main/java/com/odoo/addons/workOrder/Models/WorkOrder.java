@@ -30,10 +30,6 @@ public class WorkOrder extends OModel {
 
     public static final String AUTHORITY = BuildConfig.APPLICATION_ID + ".core.provider.content.sync.work_order";
 
-    public WorkOrder(Context context, OUser user) {
-        super(context, "work.order", user);
-    }
-
     OColumn name = new OColumn("Нэр", OVarchar.class).setRequired();
     OColumn origin = new OColumn("Лавлах дугаар", OVarchar.class);
     OColumn planned_date = new OColumn("Төлөвлөсөн огноо", ODate.class).setRequired();
@@ -57,6 +53,10 @@ public class WorkOrder extends OModel {
 
     @Odoo.Functional(store = true, depends = {"assigned_to"}, method = "storeAssignedName")
     OColumn assigned_to_name = new OColumn("Хариуцагч", OVarchar.class).setLocalColumn();
+
+    public WorkOrder(Context context, OUser user) {
+        super(context, "work.order", user);
+    }
 
     public String storeStageName(OValues value) {
         try {
