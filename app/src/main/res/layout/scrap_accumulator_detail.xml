@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbarScrapAccumulator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/theme_toolbar"
+        android:minHeight="?attr/actionBarSize"
+        android:paddingTop="@dimen/statusBarHeight"
+        app:layout_collapseMode="pin"
+        app:theme="@style/ToolBarBackTheme"
+        app:titleMarginStart="@dimen/default_8dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:paddingTop="@dimen/statusBarHeight">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <odoo.controls.OForm
+                android:id="@+id/OFormAccumulatorScrap"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#ffffff"
+                android:orientation="vertical"
+                app:modelName="technic.accumulator.scrap">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <odoo.controls.OField
+                        android:id="@+id/OriginAccumulatorScrap"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:defaultFieldValue="-"
+                        app:fieldName="origin"
+                        app:fieldTextAppearance="?android:textAppearanceLarge" />
+
+                    <odoo.controls.OField
+                        android:id="@+id/DateAccumulatorScrap"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:fieldLabelColor="@color/theme_secondary"
+                        app:fieldName="date"
+                        app:fieldTextAppearance="?android:textAppearanceSmall"
+                        app:iconResource="@drawable/ic_action_time_clock" />
+
+                    <odoo.controls.OField
+                        android:id="@+id/TechnicAccumulatorScrap"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:fieldLabelColor="@color/theme_secondary"
+                        app:fieldName="technic"
+                        app:fieldTextAppearance="?android:textAppearanceSmall"
+                        app:widgetType="SearchableLive" />
+
+                    <odoo.controls.OField
+                        android:id="@+id/IsPayableAccumulatorScrap"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:fieldLabelColor="@color/theme_secondary"
+                        app:fieldName="is_payable"
+                        app:fieldTextAppearance="?android:textAppearanceMedium"
+                        app:showLabel="false" />
+
+                    <odoo.controls.OField
+                        android:id="@+id/descriptionAccumulatorScrap"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:fieldLabelColor="@color/theme_secondary"
+                        app:fieldName="description"
+                        app:fieldTextAppearance="?android:textAppearanceMedium" />
+
+                    <odoo.controls.OField
+                        android:id="@+id/StateAccumulatorScrap"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:defaultFieldValue="request"
+                        app:fieldLabelColor="@color/theme_secondary"
+                        app:fieldName="state"
+                        app:fieldTextAppearance="?android:textAppearanceMedium" />
+
+                </LinearLayout>
+
+                <View
+                    style="@style/ViewSeparator"
+                    android:layout_marginLeft="72dp" />
+
+                <LinearLayout
+                    android:id="@+id/layoutAddItemAccumulator"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:paddingBottom="@dimen/default_8dp"
+                    android:paddingLeft="@dimen/default_16dp"
+                    android:paddingRight="@dimen/default_16dp"
+                    android:paddingTop="@dimen/default_8dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:padding="2dp"
+                        android:src="@drawable/ic_action_edit"
+                        android:tint="@color/android_orange_dark" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:text="Manage accumulator lines"
+                        android:textAllCaps="true"
+                        android:textAppearance="?android:textAppearanceSmall"
+                        android:textColor="@color/android_orange_dark"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <odoo.controls.ExpandableListControl
+                        android:id="@+id/ExpandListAccumulatorLine"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/default_8dp"
+                        android:layout_marginTop="@dimen/default_8dp"
+                        android:orientation="vertical" />
+
+                    <ProgressBar
+                        android:id="@+id/accumulatorScrapProgress"
+                        style="?android:attr/progressBarStyleSmall"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:visibility="gone" />
+
+                </RelativeLayout>
+
+            </odoo.controls.OForm>
+        </ScrollView>
+    </LinearLayout>
+</LinearLayout>
