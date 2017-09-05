@@ -20,11 +20,13 @@
 package com.odoo.config;
 
 import com.odoo.addons.customers.Customers;
+import com.odoo.addons.scrapAccumulator.ScrapAccumulator;
 import com.odoo.core.support.addons.AddonsHelper;
 import com.odoo.core.support.addons.OAddon;
 
 import mn.odoo.addons.TechnicInspection.TechnicsInspection;
 import mn.odoo.addons.employees.Employees;
+import mn.odoo.addons.scrapAccumulator.ScrapAccumulators;
 import mn.odoo.addons.scrapOil.ScrapOil;
 import mn.odoo.addons.scrapParts.ScrapPart;
 import mn.odoo.addons.scrapTechnic.ScrapTechnics;
@@ -51,4 +53,5 @@ public class Addons extends AddonsHelper {
     OAddon employees = new OAddon(Employees.class);
     OAddon scrapTechnic = new OAddon(ScrapTechnics.class);
     OAddon work_order = new OAddon(WorkOrders.class);
+    OAddon scrapAccumulator= new OAddon(ScrapAccumulators.class);
 }

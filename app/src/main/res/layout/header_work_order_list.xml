@@ -73,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="10dp"
-                android:layout_weight="0.3"
+                android:layout_weight="0.5"
                 android:fontFamily="@string/font_normal"
                 android:gravity="center"
                 android:text="Хариуцагч"

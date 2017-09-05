@@ -20,7 +20,7 @@
             android:layout_weight="0.4"
             android:fontFamily="@string/font_normal"
             android:gravity="center"
-            android:text="tire"
+            android:text="origin"
             android:textAppearance="?android:textAppearanceSmall"
             android:textColor="@color/body_text_1" />
 
@@ -65,7 +65,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:layout_weight="0.3"
+            android:layout_marginRight="10dp"
+            android:layout_weight="0.5"
             android:fontFamily="@string/font_normal"
             android:gravity="center"
             android:text="Хариуцагч"

@@ -242,8 +242,7 @@ public class WorkOrders extends BaseFragment implements LoaderManager.LoaderCall
 
     @Override
     public void onViewBind(View view, Cursor cursor, ODataRow row) {
-        OControls.setText(view, R.id.inspection_origin, (row.getString("origin").equals("-")) ? "Илгээгдээгүй" : row.getString("origin"));
-        OControls.setText(view, R.id.tvWoSequence, (row.getString("origin").equals("false") ? "" : row.getString("origin")));
+        OControls.setText(view, R.id.tvWoSequence, (row.getString("origin").equals("-")) ? "Илгээгдээгүй" : row.getString("origin"));
         OControls.setText(view, R.id.tvWoName, (row.getString("name")));
         OControls.setText(view, R.id.tvWoPlannedDate, (row.getString("planned_date")));
         OControls.setText(view, R.id.tvWoPlannedEndDate, (row.getString("planned_date")));

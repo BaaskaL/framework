@@ -245,6 +245,37 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
+
+        <!-- Sync Provider & Service Scrap Accumulator // -->
+
+        <provider
+            android:name="mn.odoo.addons.scrapAccumulator.providers.ScrapAccumSyncProvider"
+            android:authorities="${applicationId}.core.provider.content.sync.accumulator_scrap"
+            android:label="@string/sync_label_scrap_accumulator"
+            android:multiprocess="true" />
+
+        <service
+            android:name="mn.odoo.addons.scrapAccumulator.services.ScrapAccumSyncService"
+            android:exported="true"
+            android:process=":sync_feeds">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/scrap_accum_sync_adapter" />
+        </service>
+
+        <activity
+            android:name="mn.odoo.addons.scrapAccumulator.ScrapAccumulatorDetails"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name="mn.odoo.addons.scrapAccumulator.wizards.AccumulatorDetailsWizard"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+
         <!-- Sync Provider & Service Employee // -->
 
         <provider

@@ -24,6 +24,7 @@ import android.util.Log;
 
 import com.odoo.BuildConfig;
 import com.odoo.addons.employees.models.Employee;
+import com.odoo.addons.scrapAccumulator.Accumulator;
 import com.odoo.addons.scrapOil.models.TechnicOil;
 import com.odoo.addons.scrapTire.models.TechnicTire;
 import com.odoo.base.addons.res.ResCompany;
@@ -85,6 +86,7 @@ public class TechnicsModel extends OModel {
     OColumn id_gps = new OColumn("Техникийн дугаар /GPS/", OInteger.class);
     OColumn tires = new OColumn("Дугуй", TechnicTire.class, OColumn.RelationType.OneToMany).setRelatedColumn("technic_id");
     OColumn oils = new OColumn("ШТМ", TechnicOil.class, OColumn.RelationType.OneToMany).setRelatedColumn("tech_id");
+    OColumn accumulators = new OColumn("ШТМ", Accumulator.class, OColumn.RelationType.OneToMany).setRelatedColumn("technic");
     OColumn technic_document_ids = new OColumn("Document", TechnicDocument.class, OColumn.RelationType.OneToMany).setRelatedColumn("technic_id");
     OColumn technic_usage_history_ids = new OColumn("Usage history", TechnicUsageHistory.class, OColumn.RelationType.OneToMany).setRelatedColumn("technic_id");
     OColumn technic_state_history_ids = new OColumn("State history", TechnicStateHistory.class, OColumn.RelationType.OneToMany).setRelatedColumn("technic_id");
