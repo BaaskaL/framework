@@ -39,4 +39,9 @@ public class GridViewAdapter extends ArrayAdapter {
         image.setImageBitmap(item);
         return convertView;
     }
+
+    public void updateContent(ArrayList<Bitmap> updates) {
+        this.data = updates;
+        this.notifyDataSetChanged();
+    }
 }

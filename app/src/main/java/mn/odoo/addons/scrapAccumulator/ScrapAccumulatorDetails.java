@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -394,6 +395,9 @@ public class ScrapAccumulatorDetails extends OdooCompatActivity implements OFiel
         Bundle extra = new Bundle();
         if (row != null) {
             extra = row.getPrimaryBundleData();
+            Log.i("extra===1111===", extra.toString());
+            extra.putString("scrap_id", record.getString("_id"));
+            Log.i("extra===2222===", extra.toString());
         }
         intent.putExtras(extra);
         startActivityForResult(intent, REQUEST_ADD_ITEMS);

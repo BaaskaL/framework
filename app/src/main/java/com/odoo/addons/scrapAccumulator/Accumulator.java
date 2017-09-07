@@ -54,7 +54,7 @@ public class Accumulator extends OModel {
             .addSelection("in_reserve", "Нөөцөнд")
             .addSelection("in_scrap", "Акталсан")
             .setDefaultValue("draft");
-//    OColumn scrap_photos = new OColumn("Photos", ShTMScrapPhotos.class, OColumn.RelationType.OneToMany).setRelatedColumn("shtm_id");
+    OColumn scrap_photos = new OColumn("Photos", ScrapAccumulatorPhotos.class, OColumn.RelationType.OneToMany).setRelatedColumn("shtm_id");
     OColumn in_scrap = new OColumn("In scrap", OBoolean.class);
     @Odoo.Functional(store = true, depends = {"product_id"}, method = "storeProductName")
     OColumn product_name = new OColumn("Product name", OVarchar.class).setLocalColumn();

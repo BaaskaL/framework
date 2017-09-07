@@ -55,7 +55,7 @@ public class ScrapAccumulator extends OModel {
             .addSelection("refused", "Татгалзсан")
             .addSelection("done", "Дууссан")
             .setDefaultValue("request");
-    OColumn accumulator_photos = new OColumn("Accumulator photos", ScrapAccumulatorPhotos.class, OColumn.RelationType.OneToMany).setRelatedColumn("scrap_id");
+    OColumn accumulator_photos = new OColumn("Accumulator photos", ScrapAccumulatorPhotos.class, OColumn.RelationType.OneToMany).setRelatedColumn("accumulator_id");
     @Odoo.Functional(store = true, depends = {"technic"}, method = "storeTechnicName")
     OColumn technic_name = new OColumn("Техник", OVarchar.class).setLocalColumn();
 

@@ -28,6 +28,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.odoo.core.auth.OdooAccountManager;
 import com.odoo.core.orm.OModel;
@@ -248,6 +249,7 @@ public class BaseModelProvider extends ContentProvider {
     private void storeUpdateRelationRecords(OModel model, ContentValues values,
                                             String selection, String[] args) {
         int row_id = model.selectRowId(selection, args);
+        Log.i("values=====", values.toString());
         for (String key : values.keySet()) {
             try {
                 OColumn column = model.getColumn(key);
