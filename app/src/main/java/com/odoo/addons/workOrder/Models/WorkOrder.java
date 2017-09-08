@@ -14,6 +14,7 @@ import com.odoo.core.orm.OValues;
 import com.odoo.core.orm.annotation.Odoo;
 import com.odoo.core.orm.fields.OColumn;
 import com.odoo.core.orm.fields.types.ODate;
+import com.odoo.core.orm.fields.types.ODateTime;
 import com.odoo.core.orm.fields.types.OFloat;
 import com.odoo.core.orm.fields.types.OSelection;
 import com.odoo.core.orm.fields.types.OVarchar;
@@ -33,6 +34,7 @@ public class WorkOrder extends OModel {
     OColumn name = new OColumn("Нэр", OVarchar.class).setRequired();
     OColumn origin = new OColumn("Лавлах дугаар", OVarchar.class);
     OColumn planned_date = new OColumn("Төлөвлөсөн огноо", ODate.class).setRequired();
+    OColumn create_date = new OColumn("Үүсгэсэн огноо", ODateTime.class).setRequired();
     OColumn technic_id = new OColumn("Техник", TechnicsModel.class, OColumn.RelationType.ManyToOne);
     OColumn project = new OColumn("Төсөл", ProjectProject.class, OColumn.RelationType.ManyToOne).setRequired();
     @Odoo.onChange(method = "technicNormOnChange")
@@ -41,9 +43,9 @@ public class WorkOrder extends OModel {
     OColumn stage = new OColumn("Төлөв", WoStage.class, OColumn.RelationType.ManyToOne);
     OColumn repair_team = new OColumn("Засварын баг", Employee.class, OColumn.RelationType.ManyToMany);
     OColumn priority = new OColumn("Урьтамж", OSelection.class)
-            .addSelection("1", "Бага")
-            .addSelection("2", "Хэвийн")
-            .addSelection("3", "Өндөр")
+            .addSelection("1", "Хэвийн")
+            .addSelection("2", "Яаралтай")
+            .addSelection("3", "Маш яаралтай")
             .setDefaultValue("1");
     OColumn notes = new OColumn("Тодорхойлолт", OVarchar.class);
     OColumn planned_hours = new OColumn("Төлөвлөсөн цаг", OFloat.class).setRequired();

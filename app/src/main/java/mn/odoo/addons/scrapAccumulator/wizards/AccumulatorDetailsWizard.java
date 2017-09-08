@@ -108,7 +108,7 @@ public class AccumulatorDetailsWizard extends OdooCompatActivity implements View
 
         List<ODataRow> scrapPhotos = new ArrayList<>();
         Log.i("Picture=======", scrapAccumulatorPhotos.select().toString());
-        scrapPhotos = scrapAccumulatorPhotos.select(null, "scrap_id = ? and accumulator_id = ?", new String[]{scrap_id, rowId});
+            scrapPhotos = scrapAccumulatorPhotos.select(null, "scrap_id = ? and accumulator_id = ?", new String[]{scrap_id, rowId});
         gridView.setAdapter(adapterFill(scrapPhotos));
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

@@ -82,6 +82,7 @@ public class EmployeeDetails extends OdooCompatActivity
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.employee_collapsing_toolbar);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        editPass = (EditText) findViewById(R.id.editPass);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -137,7 +138,7 @@ public class EmployeeDetails extends OdooCompatActivity
             findViewById(R.id.employee_view_layout).setVisibility(View.VISIBLE);
         }
         if (record != null && edit) {
-            editPass = (EditText) findViewById(R.id.editPass);
+
             if (!record.getString("confirm_code").equals("false")) {
                 editPass.setText(record.getString("confirm_code"));
             }
