@@ -930,7 +930,7 @@ public class OModel implements ISyncServiceListener {
         OModel relModel = createInstance(column.getType());
         HashMap<RelCommands, List<Object>> columnValues = values.getColumnValues();
         Log.i("columnValues=====", columnValues.toString());
-        Log.i("columnValues=====", columnValues.keySet().toString());
+        Log.i("columnValues=====keySet", columnValues.keySet().toString());
         for (RelCommands commands : columnValues.keySet()) {
             Log.i("commands=====", commands.toString());
             Log.i("getRelationType=====", column.getRelationType().toString());
@@ -1068,7 +1068,7 @@ public class OModel implements ISyncServiceListener {
                 db.execSQL(unlinkSQL);
                 break;
         }
-//        values.remove(command);
+        values.remove(command);
         db.close();
     }
 

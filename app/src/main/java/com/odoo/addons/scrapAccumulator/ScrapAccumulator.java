@@ -47,7 +47,7 @@ public class ScrapAccumulator extends OModel {
     OColumn technic = new OColumn("Техник", TechnicsModel.class, OColumn.RelationType.ManyToOne);
     OColumn accumulators = new OColumn("ШТМ", Accumulator.class, OColumn.RelationType.ManyToMany);
     OColumn is_payable = new OColumn("Төлбөртэй эсэх", OBoolean.class);
-    OColumn description = new OColumn("Тайлбар", OVarchar.class);
+    OColumn description = new OColumn("Тайлбар", OVarchar.class).setRequired();
     OColumn state = new OColumn("Төлөв", OSelection.class)
             .addSelection("request", "Хүсэлт")
             .addSelection("waiting_approval", "Баталгаа хүлээгдсэн")

@@ -173,28 +173,21 @@ public class AccumulatorDetailsWizard extends OdooCompatActivity implements View
                 if (values != null) {
                     if (record != null) {
                         List<OValues> imgValuene = new ArrayList();
-
                         for (int i = 0; i < gridAdapter.getCount(); i++) {
-//                            Object obj = gridAdapter.getItem(i).toString();
-//                            String temp = Base64.encodeToString(b, Base64.DEFAULT);
-
                             OValues row = new OValues();
                             row.put("scrap_id", scrap_id);
                             row.put("photo", gridAdapter.getItem(i));
                             row.put("accumulator_id", rowId);
                             imgValuene.add(row);
                         }
-
-//                        for (String img : imageItemsString) {
-//                            OValues row = new OValues();
-//                            row.put("scrap_id", scrap_id);
-//                            row.put("photo", img);
-//                            row.put("accumulator_id", rowId);
-//                            imgValuene.add(row);
-//                        }
-
-                        values.put("scrap_photos", new RelValues().append(imgValuene.toArray(new OValues[imgValuene.size()])));
-//                        values.put("scrap_photos", new RelValues().append(imgValuene));
+//                        List<ODataRow> rows = scrapAccumulatorPhotos.select(null, "scrap_id = ? and accumulator_id = ?", new String[]{scrap_id, "0"});
+                        List<ODataRow> rows = scrapAccumulatorPhotos.select(null, "scrap_id = ? and accumulator_id = ?", new String[]{scrap_id, rowId});
+                        List<Integer> ids = new ArrayList<>();
+                        for (ODataRow row : rows) {
+                            ids.add(row.getInt("_id"));
+                        }
+                        Log.i("delete_ids====", ids.toString());
+                        values.put("scrap_photos", new RelValues().append(imgValuene.toArray(new OValues[imgValuene.size()])).delete(ids));
                         accumulator.update(record.getInt(OColumn.ROW_ID), values);
 
                         mEditMode = !mEditMode;

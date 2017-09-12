@@ -50,7 +50,7 @@ public class ScrapAccumulators extends BaseFragment implements LoaderManager.Loa
     private View mView;
     private OCursorListAdapter mAdapter = null;
     private boolean syncRequested = false;
-    private ScrapOils scrapOil;
+    private ScrapAccumulator scrapAccumulator;
     private Context mContext;
 
     @Override
@@ -69,7 +69,7 @@ public class ScrapAccumulators extends BaseFragment implements LoaderManager.Loa
         super.onViewCreated(view, savedInstanceState);
         mView = view;
         mContext = this.getContext();
-        scrapOil = new ScrapOils(mContext, null);
+        scrapAccumulator = new ScrapAccumulator(mContext, null);
         ListView mListViewScrap = (ListView) mView.findViewById(R.id.listview_scrap);
         mAdapter = new OCursorListAdapter(getActivity(), null, R.layout.scrap_accumulator_row_item);
         mAdapter.setOnViewBindListener(this);
@@ -169,7 +169,6 @@ public class ScrapAccumulators extends BaseFragment implements LoaderManager.Loa
     public void onRefresh() {
         if (inNetwork()) {
             parent().sync().requestSync(ScrapAccumulator.AUTHORITY);
-            setSwipeRefreshing(true);
             OnAccumScrapChangeUpdate onAccumScrapChangeUpdate = new OnAccumScrapChangeUpdate();
             ODomain d = new ODomain();
             /*swipe хийхэд бүх аккумулятор актыг update хйих*/
@@ -197,7 +196,7 @@ public class ScrapAccumulators extends BaseFragment implements LoaderManager.Loa
         @Override
         protected Void doInBackground(ODomain... params) {
             ODomain domain = params[0];
-            scrapOil.quickSyncRecords(domain);
+            scrapAccumulator.quickSyncRecords(domain);
             return null;
         }
 

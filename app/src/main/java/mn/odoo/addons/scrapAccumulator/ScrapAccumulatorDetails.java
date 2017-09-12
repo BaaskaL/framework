@@ -19,11 +19,13 @@ import com.odoo.App;
 import com.odoo.R;
 import com.odoo.addons.scrapAccumulator.Accumulator;
 import com.odoo.addons.scrapAccumulator.ScrapAccumulator;
+import com.odoo.addons.scrapAccumulator.ScrapAccumulatorPhotos;
 import com.odoo.addons.scrapOil.models.ShTMScrapPhotos;
 import com.odoo.addons.technic.models.TechnicsModel;
 import com.odoo.base.addons.ir.feature.OFileManager;
 import com.odoo.core.orm.ODataRow;
 import com.odoo.core.orm.OValues;
+import com.odoo.core.orm.RelValues;
 import com.odoo.core.orm.fields.OColumn;
 import com.odoo.core.rpc.helper.ODomain;
 import com.odoo.core.support.OdooCompatActivity;
@@ -37,7 +39,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import mn.odoo.addons.otherClass.AddItemLineWizard;
-import mn.odoo.addons.otherClass.OilDetailsWizard;
 import mn.odoo.addons.scrapAccumulator.wizards.AccumulatorDetailsWizard;
 import odoo.controls.ExpandableListControl;
 import odoo.controls.OField;
@@ -77,7 +78,6 @@ public class ScrapAccumulatorDetails extends OdooCompatActivity implements OFiel
     private HashMap<String, Integer> lineIds = new HashMap<>();
     private List<Object> objects = new ArrayList<>();
     public static final int REQUEST_ADD_ITEMS = 323;
-//    private HashMap<String, Float> lineValues = new HashMap<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -106,6 +106,7 @@ public class ScrapAccumulatorDetails extends OdooCompatActivity implements OFiel
         technicId = (OField) mForm.findViewById(R.id.TechnicAccumulatorScrap);
         isPaybale = (OField) mForm.findViewById(R.id.IsPayableAccumulatorScrap);
         layoutAddItem = (LinearLayout) findViewById(R.id.layoutAddItemAccumulator);
+
         layoutAddItem.setOnClickListener(this);
 
         setupToolbar();
@@ -150,6 +151,17 @@ public class ScrapAccumulatorDetails extends OdooCompatActivity implements OFiel
             int technic_id = record.getInt("technic");
             getTechnicAccumulators(technic_id);
             scrapAccumulatorLines = record.getM2MRecord("accumulators").browseEach();
+
+            ScrapAccumulatorPhotos scrapAccumulatorPhotos = new ScrapAccumulatorPhotos(this, null);
+            List<ODataRow> aa = scrapAccumulatorPhotos.select(new String[]{"scrap_id", "accumulator_id"}, "scrap_id = ?", new String[]{ScrapId + ""});
+            List<ODataRow> a1a = scrapAccumulatorPhotos.select(new String[]{"scrap_id", "accumulator_id"}, "scrap_id = ? and accumulator_id = ?", new String[]{ScrapId + "", "0"});
+            Log.i(" ====size=====", aa.size() + "");
+            Log.i("AccumulatorPhotos=====", scrapAccumulatorPhotos.select().toString());
+
+            for (ODataRow row : aa) {
+                Log.i("photoo===", row.toString());
+            }
+
             drawAccumulator(scrapAccumulatorLines);
         }
         setMode(mEditMode);
@@ -241,20 +253,17 @@ public class ScrapAccumulatorDetails extends OdooCompatActivity implements OFiel
             case R.id.menu_save:
                 OValues values = mForm.getValues();
                 if (values != null) {
-                    List<Integer> oilIds = new ArrayList<>();
+                    List oilIds = new ArrayList();
                     if (record != null) {
                         for (ODataRow row : scrapAccumulatorLines) {
-                            OValues oilImage = new OValues();
                             int oilId = row.getInt("_id");
                             oilIds.add(oilId);
-                            if (oilImages.get(oilId) != null) {
-                                oilImage.put("tire_image", oilImages.get(oilId));
-                            } else {
-                                oilImage.put("tire_image", false);
-                            }
-                            accumulator.update(oilId, oilImage);
                         }
-                        values.put("oil_ids", oilIds);
+                        if (oilIds.isEmpty()) {
+                            OAlert.showError(this, "Аккумулятор сонгон уу?");
+                            break;
+                        } else
+                            values.put("accumulators", new RelValues().replace(oilIds));
                         scrapAccumulator.update(record.getInt(OColumn.ROW_ID), values);
                         onOilScrapChangeUpdate.execute(domain);
                         mEditMode = !mEditMode;
@@ -276,32 +285,11 @@ public class ScrapAccumulatorDetails extends OdooCompatActivity implements OFiel
                             oilImage.put("in_scrap", true);
                             accumulator.update(oilId, oilImage);
                         }
-
-//                        HashMap<RelCommands, List<Object>> aakk = new HashMap<>();
-//                        List<Object> val = new ArrayList<>();
-//                        for (ODataRow row : scrapOilLines) {
-//                            /*oil line like [6,false,[1,2,3,..]]*/
-//                            OValues oilImage = row.toValues();
-//                            int oilId = row.getInt("_id");
-////                            oilIds.add(oilId);
-//                            if (oilImages.get(oilId) != null) {
-//                                oilImage.put("tire_image", oilImages.get(oilId));
-//                            }
-//                            oilImage.put("in_scrap", true);
-//                            val.add(oilImage);
-////                            technicOil.insert(oilId, oilImage);
-//                        }
-//                        aakk.put(RelCommands.Append, val);
-//                        values.put("oil_ids", aakk);
-//                        int row_id = scrapOil.insert(values);
-//                        if (row_id != scrapOil.INVALID_ROW_ID) {
-//                            onOilScrapChangeUpdate.execute(domain);
-//                            Toast.makeText(this, R.string.tech_toast_information_created, Toast.LENGTH_LONG).show();
-//                            mEditMode = !mEditMode;
-//                            finish();
-//                        }
-
-                        values.put("oil_ids", oilIds);
+                        if (oilIds.isEmpty()) {
+                            OAlert.showError(this, "Аккумулятор сонгон уу?");
+                            break;
+                        } else
+                            values.put("accumulators", new RelValues().append(oilIds));
                         int row_id = scrapAccumulator.insert(values);
                         if (row_id != scrapAccumulator.INVALID_ROW_ID) {
                             onOilScrapChangeUpdate.execute(domain);

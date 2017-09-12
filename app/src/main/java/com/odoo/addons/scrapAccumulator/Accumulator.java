@@ -46,7 +46,7 @@ public class Accumulator extends OModel {
     OColumn serial = new OColumn("Сериал дугаар", OVarchar.class);
     OColumn technic = new OColumn("Техник", TechnicsModel.class, OColumn.RelationType.ManyToOne);
     OColumn reason = new OColumn("Шалтгаан", ScrapAccumulatorReason.class, OColumn.RelationType.ManyToOne);
-//    OColumn capacity = new OColumn("Хэмжээ", OFloat.class);
+    //    OColumn capacity = new OColumn("Хэмжээ", OFloat.class);
     OColumn date = new OColumn("Бүртгэгдсэн огноо", ODateTime.class);
     OColumn state = new OColumn("Төлөв", OSelection.class)
             .addSelection("draft", "Ноорог")
@@ -54,9 +54,10 @@ public class Accumulator extends OModel {
             .addSelection("in_reserve", "Нөөцөнд")
             .addSelection("in_scrap", "Акталсан")
             .setDefaultValue("draft");
-    OColumn scrap_photos = new OColumn("Photos", ScrapAccumulatorPhotos.class, OColumn.RelationType.OneToMany).setRelatedColumn("shtm_id");
+    OColumn scrap_photos = new OColumn("Photos", ScrapAccumulatorPhotos.class, OColumn.RelationType.OneToMany).setRelatedColumn("accumulator_id");
     OColumn in_scrap = new OColumn("In scrap", OBoolean.class);
-    @Odoo.Functional(store = true, depends = {"product_id"}, method = "storeProductName")
+
+    @Odoo.Functional(store = true, depends = {"product"}, method = "storeProductName")
     OColumn product_name = new OColumn("Product name", OVarchar.class).setLocalColumn();
     @Odoo.Functional(store = true, depends = {"reason"}, method = "storeReasonName")
     OColumn reason_name = new OColumn("Reason name", OVarchar.class).setLocalColumn();
