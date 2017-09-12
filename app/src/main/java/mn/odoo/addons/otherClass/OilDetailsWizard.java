@@ -111,7 +111,7 @@ public class OilDetailsWizard extends OdooCompatActivity implements View.OnClick
 
 
     private void adaperRun() {
-        gridAdapter = new GridViewAdapter(this, R.layout.grid_item_layout, imageItems);
+//        gridAdapter = new GridViewAdapter(this, R.layout.grid_item_layout, imageItems);
         gridView.setAdapter(gridAdapter);
     }
 

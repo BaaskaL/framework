@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -46,7 +47,6 @@ public class AccumulatorDetailsWizard extends OdooCompatActivity implements View
 
     private Accumulator accumulator;
     private ScrapAccumulatorPhotos scrapAccumulatorPhotos;
-    private ScrapOilReason scrapOilReason;
 
     private EditText edt_searchable_input;
     private ListView mList = null;
@@ -82,7 +82,6 @@ public class AccumulatorDetailsWizard extends OdooCompatActivity implements View
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         extra = getIntent().getExtras();
-        Log.i("extra=====", extra.toString());
         scrap_id = extra.getString("scrap_id");
         rowId = String.valueOf(extra.getInt(OColumn.ROW_ID));
         setContentView(R.layout.accumulator_detail_wizard);
@@ -97,7 +96,6 @@ public class AccumulatorDetailsWizard extends OdooCompatActivity implements View
 
         fileManager = new OFileManager(this);
         accumulator = new Accumulator(this, null);
-        scrapOilReason = new ScrapOilReason(this, null);
         scrapAccumulatorPhotos = new ScrapAccumulatorPhotos(this, null);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -107,8 +105,7 @@ public class AccumulatorDetailsWizard extends OdooCompatActivity implements View
         setTitle(record.getString("name"));
 
         List<ODataRow> scrapPhotos = new ArrayList<>();
-        Log.i("Picture=======", scrapAccumulatorPhotos.select().toString());
-            scrapPhotos = scrapAccumulatorPhotos.select(null, "scrap_id = ? and accumulator_id = ?", new String[]{scrap_id, rowId});
+        scrapPhotos = scrapAccumulatorPhotos.select(null, "scrap_id = ? and accumulator_id = ?", new String[]{scrap_id, rowId});
         gridView.setAdapter(adapterFill(scrapPhotos));
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -119,12 +116,21 @@ public class AccumulatorDetailsWizard extends OdooCompatActivity implements View
                 startActivity(intent);
             }
         });
+//        gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//            @Override
+//            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+////                TireLocalId = row.getInt("_id");
+////                TireShowPopupMenu(v, TireLocalId);
+////                return true;
+//                return false;
+//            }
+//        });
     }
 
     private GridViewAdapter adapterFill(List<ODataRow> scrapPhotos) {
         for (ODataRow row : scrapPhotos)
-            imageItems.add(BitmapUtils.getBitmapImage(mContext, row.getString("photo")));
-        gridAdapter = new GridViewAdapter(this, R.layout.grid_item_layout, imageItems);
+            imageItemsString.add(row.getString("photo"));
+        gridAdapter = new GridViewAdapter(this, R.layout.grid_item_layout, imageItemsString);
         return gridAdapter;
     }
 
@@ -167,13 +173,26 @@ public class AccumulatorDetailsWizard extends OdooCompatActivity implements View
                 if (values != null) {
                     if (record != null) {
                         List<OValues> imgValuene = new ArrayList();
-                        for (String img : imageItemsString) {
+
+                        for (int i = 0; i < gridAdapter.getCount(); i++) {
+//                            Object obj = gridAdapter.getItem(i).toString();
+//                            String temp = Base64.encodeToString(b, Base64.DEFAULT);
+
                             OValues row = new OValues();
                             row.put("scrap_id", scrap_id);
-                            row.put("photo", img);
+                            row.put("photo", gridAdapter.getItem(i));
                             row.put("accumulator_id", rowId);
                             imgValuene.add(row);
                         }
+
+//                        for (String img : imageItemsString) {
+//                            OValues row = new OValues();
+//                            row.put("scrap_id", scrap_id);
+//                            row.put("photo", img);
+//                            row.put("accumulator_id", rowId);
+//                            imgValuene.add(row);
+//                        }
+
                         values.put("scrap_photos", new RelValues().append(imgValuene.toArray(new OValues[imgValuene.size()])));
 //                        values.put("scrap_photos", new RelValues().append(imgValuene));
                         accumulator.update(record.getInt(OColumn.ROW_ID), values);
@@ -250,11 +269,11 @@ public class AccumulatorDetailsWizard extends OdooCompatActivity implements View
         OValues values = fileManager.handleResult(requestCode, resultCode, data);
         if (values != null && !values.contains("size_limit_exceed")) {
             String newImage = values.getString("datas");
+            imageItemsString.add(newImage);
             Bitmap img = BitmapUtils.getBitmapImage(this, newImage);
             Bitmap scaledBitmap = Bitmap.createScaledBitmap(img, 2560, 1600, true);//screen resolution 16:10
-            imageItemsString.add(newImage);
             imageItems.add(scaledBitmap);
-            gridAdapter.updateContent(imageItems);
+            gridAdapter.updateContent(imageItemsString);
         } else if (values != null) {
             Toast.makeText(this, R.string.toast_image_size_too_large, Toast.LENGTH_LONG).show();
         }
