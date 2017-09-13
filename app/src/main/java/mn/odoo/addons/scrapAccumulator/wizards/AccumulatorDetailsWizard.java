@@ -3,17 +3,22 @@ package mn.odoo.addons.scrapAccumulator.wizards;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -27,6 +32,7 @@ import com.odoo.core.orm.ODataRow;
 import com.odoo.core.orm.OValues;
 import com.odoo.core.orm.RelValues;
 import com.odoo.core.orm.fields.OColumn;
+import com.odoo.core.rpc.helper.ODomain;
 import com.odoo.core.support.OdooCompatActivity;
 import com.odoo.core.support.list.OListAdapter;
 import com.odoo.core.utils.BitmapUtils;
@@ -47,17 +53,7 @@ public class AccumulatorDetailsWizard extends OdooCompatActivity implements View
 
     private Accumulator accumulator;
     private ScrapAccumulatorPhotos scrapAccumulatorPhotos;
-
-    private EditText edt_searchable_input;
-    private ListView mList = null;
-    private OListAdapter mAdapter;
     private Toolbar toolbar;
-
-    private List<Object> objects = new ArrayList<>();
-    private int selected_position = -1;
-    //    private LiveSearch mLiveDataLoader = null;
-    private OColumn mCol = null;
-    private HashMap<String, Boolean> lineValues = new HashMap<>();
 
     private OField oReason;
     private Menu mMenu;
@@ -68,10 +64,8 @@ public class AccumulatorDetailsWizard extends OdooCompatActivity implements View
 
     private GridView gridView;
     private GridViewAdapter gridAdapter;
-    //    private List<ODataRow> scrap_photos = new ArrayList<>();
     private Button takePic;
     private OFileManager fileManager;
-    private ArrayList<Bitmap> imageItems = new ArrayList<>();
     private ArrayList<String> imageItemsString = new ArrayList<>();
     private Context mContext;
     private String scrap_id;
@@ -110,21 +104,63 @@ public class AccumulatorDetailsWizard extends OdooCompatActivity implements View
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Bitmap item = (Bitmap) parent.getItemAtPosition(position);
+                Log.i("click========", position + "");
+                ImageView image = (ImageView) view.findViewById(R.id.image);
+                Bitmap item = BitmapUtils.getBitmapImage(mContext, gridAdapter.getItem(position).toString());
                 Intent intent = new Intent(AccumulatorDetailsWizard.this, DetailsActivity.class);
                 DetailsActivity.image = item;
                 startActivity(intent);
             }
         });
-//        gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-//            @Override
-//            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-////                TireLocalId = row.getInt("_id");
-////                TireShowPopupMenu(v, TireLocalId);
-////                return true;
-//                return false;
-//            }
-//        });
+
+
+        gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+//                gridAdapter.remove(gridAdapter.getItem(position).toString());
+//                imageItemsString.remove(position);
+//                gridAdapter.updateContent(imageItemsString);
+
+//                gridAdapter.remove(gridAdapter.getItem(position));
+//                gridAdapter.notifyDataSetChanged();
+//                Toast.makeText(getActivity(), "You selected : " + item, Toast.LENGTH_SHORT).show();
+//                gridAdapter.delete(position);
+//                ShowPopupMenu(view, position);
+                return true;
+            }
+        });
+    }
+
+    public static void detailsss() {
+//        ImageView image = (ImageView) view.findViewById(R.id.image);
+//        Bitmap item = BitmapUtils.getBitmapImage(mContext, gridAdapter.getItem(2).toString());
+//        Intent intent = new Intent(AccumulatorDetailsWizard.this, DetailsActivity.class);
+//        DetailsActivity.image = item;
+//        startActivity(intent);
+    }
+
+    private void ShowPopupMenu(View view, int position) {
+        PopupMenu popup = new PopupMenu(view.getContext(), view);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.card_view_menu, popup.getMenu());
+        popup.getMenu().clear();
+        popup.getMenu().add("Зураг устгах");
+        popup.setOnMenuItemClickListener(new ImageMenuItemClickListener(position));
+        popup.show();
+    }
+
+    class ImageMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
+        private int key;
+
+        public ImageMenuItemClickListener(int positon) {
+            this.key = positon;
+        }
+
+        @Override
+        public boolean onMenuItemClick(MenuItem menuItem) {
+            gridAdapter.remove(key);
+            return true;
+        }
     }
 
     private GridViewAdapter adapterFill(List<ODataRow> scrapPhotos) {
@@ -163,6 +199,8 @@ public class AccumulatorDetailsWizard extends OdooCompatActivity implements View
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        OnAccumuScrapPhotoChangeUpdate onAccumuScrapPhotoChangeUpdate = new OnAccumuScrapPhotoChangeUpdate();
+        ODomain domain = new ODomain();
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
@@ -180,7 +218,6 @@ public class AccumulatorDetailsWizard extends OdooCompatActivity implements View
                             row.put("accumulator_id", rowId);
                             imgValuene.add(row);
                         }
-//                        List<ODataRow> rows = scrapAccumulatorPhotos.select(null, "scrap_id = ? and accumulator_id = ?", new String[]{scrap_id, "0"});
                         List<ODataRow> rows = scrapAccumulatorPhotos.select(null, "scrap_id = ? and accumulator_id = ?", new String[]{scrap_id, rowId});
                         List<Integer> ids = new ArrayList<>();
                         for (ODataRow row : rows) {
@@ -189,7 +226,7 @@ public class AccumulatorDetailsWizard extends OdooCompatActivity implements View
                         Log.i("delete_ids====", ids.toString());
                         values.put("scrap_photos", new RelValues().append(imgValuene.toArray(new OValues[imgValuene.size()])).delete(ids));
                         accumulator.update(record.getInt(OColumn.ROW_ID), values);
-
+                        onAccumuScrapPhotoChangeUpdate.execute(domain);
                         mEditMode = !mEditMode;
                         setMode(mEditMode);
                         Toast.makeText(this, R.string.tech_toast_information_saved, Toast.LENGTH_LONG).show();
@@ -214,6 +251,18 @@ public class AccumulatorDetailsWizard extends OdooCompatActivity implements View
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private class OnAccumuScrapPhotoChangeUpdate extends AsyncTask<ODomain, Void, Void> {
+
+        @Override
+        protected Void doInBackground(ODomain... params) {
+            ODomain domain = params[0];
+            scrapAccumulatorPhotos.quickSyncRecords(domain);
+            //required 2 call
+//            scrapAccumulatorPhotos.quickSyncRecords(domain);
+            return null;
+        }
     }
 
     @Override
@@ -264,8 +313,6 @@ public class AccumulatorDetailsWizard extends OdooCompatActivity implements View
             String newImage = values.getString("datas");
             imageItemsString.add(newImage);
             Bitmap img = BitmapUtils.getBitmapImage(this, newImage);
-            Bitmap scaledBitmap = Bitmap.createScaledBitmap(img, 2560, 1600, true);//screen resolution 16:10
-            imageItems.add(scaledBitmap);
             gridAdapter.updateContent(imageItemsString);
         } else if (values != null) {
             Toast.makeText(this, R.string.toast_image_size_too_large, Toast.LENGTH_LONG).show();

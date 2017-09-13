@@ -2,6 +2,7 @@ package mn.odoo.addons.otherClass;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v7.widget.PopupMenu;
 import android.util.Log;
@@ -18,6 +19,7 @@ import com.odoo.core.utils.BitmapUtils;
 
 import java.util.ArrayList;
 
+import mn.odoo.addons.scrapAccumulator.wizards.AccumulatorDetailsWizard;
 import mn.odoo.addons.scrapTire.ScrapTireDetails;
 
 /**
@@ -36,30 +38,6 @@ public class GridViewAdapter extends ArrayAdapter {
         this.data = data;
     }
 
-    private void ShowPopupMenu(View view, int position) {
-        PopupMenu popup = new PopupMenu(view.getContext(), view);
-        MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.card_view_menu, popup.getMenu());
-        popup.getMenu().clear();
-        popup.getMenu().add("Зураг устгах");
-        popup.setOnMenuItemClickListener(new ImageMenuItemClickListener(position));
-        popup.show();
-    }
-
-    class ImageMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
-        private int key;
-
-        public ImageMenuItemClickListener(int positon) {
-            this.key = positon;
-        }
-
-        @Override
-        public boolean onMenuItemClick(MenuItem menuItem) {
-            data.remove(key);
-            notifyDataSetChanged();
-            return true;
-        }
-    }
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
@@ -67,15 +45,26 @@ public class GridViewAdapter extends ArrayAdapter {
         convertView = inflater.inflate(layoutResourceId, parent, false);
         ImageView image = (ImageView) convertView.findViewById(R.id.image);
         convertView.setTag(image);
-        Bitmap item = BitmapUtils.getBitmapImage(context, data.get(position));
+        final Bitmap item = BitmapUtils.getBitmapImage(context, data.get(position));
+//        Bitmap scaledBitmap = Bitmap.createScaledBitmap(img, 2560, 1600, true);//screen resolution 16:10
         image.setImageBitmap(item);
 
         if (true) {
             image.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    ShowPopupMenu(v, position);
+//                    ShowPopupMenu(v, position);
                     return true;
+                }
+            });
+            image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+//                    Bitmap item = (Bitmap) parent.getItemAtPosition(position);
+//                    Intent intent = new Intent(GridViewAdapter.this, DetailsActivity.class);
+//                    DetailsActivity.image = item;
+//                    startActivity(intent);
+                    AccumulatorDetailsWizard.detailsss();
                 }
             });
         }
@@ -87,4 +76,16 @@ public class GridViewAdapter extends ArrayAdapter {
         this.data = updates;
         this.notifyDataSetChanged();
     }
+
+    public void notifyDataSetChanged() {
+        this.notifyDataSetChanged();
+    }
+
+    public void delete(int positon) {
+        if (data != null) {
+            data.remove(positon);
+        }
+        this.notifyDataSetChanged();
+    }
+
 }

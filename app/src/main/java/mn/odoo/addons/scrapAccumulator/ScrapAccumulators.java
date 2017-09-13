@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.odoo.R;
 import com.odoo.addons.scrapAccumulator.ScrapAccumulator;
+import com.odoo.addons.scrapAccumulator.ScrapAccumulatorPhotos;
 import com.odoo.addons.scrapOil.models.ScrapOils;
 import com.odoo.core.orm.ODataRow;
 import com.odoo.core.rpc.helper.ODomain;
@@ -51,6 +52,7 @@ public class ScrapAccumulators extends BaseFragment implements LoaderManager.Loa
     private OCursorListAdapter mAdapter = null;
     private boolean syncRequested = false;
     private ScrapAccumulator scrapAccumulator;
+    private ScrapAccumulatorPhotos scrapAccumulatorPhotos;
     private Context mContext;
 
     @Override
@@ -70,6 +72,7 @@ public class ScrapAccumulators extends BaseFragment implements LoaderManager.Loa
         mView = view;
         mContext = this.getContext();
         scrapAccumulator = new ScrapAccumulator(mContext, null);
+        scrapAccumulatorPhotos = new ScrapAccumulatorPhotos(mContext, null);
         ListView mListViewScrap = (ListView) mView.findViewById(R.id.listview_scrap);
         mAdapter = new OCursorListAdapter(getActivity(), null, R.layout.scrap_accumulator_row_item);
         mAdapter.setOnViewBindListener(this);
@@ -196,7 +199,9 @@ public class ScrapAccumulators extends BaseFragment implements LoaderManager.Loa
         @Override
         protected Void doInBackground(ODomain... params) {
             ODomain domain = params[0];
+
             scrapAccumulator.quickSyncRecords(domain);
+            scrapAccumulatorPhotos.quickSyncRecords(domain);
             return null;
         }
 
