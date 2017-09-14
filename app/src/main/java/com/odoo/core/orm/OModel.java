@@ -936,7 +936,10 @@ public class OModel implements ISyncServiceListener {
             Log.i("getRelationType=====", column.getRelationType().toString());
             switch (column.getRelationType()) {
                 case OneToMany:
-                    Log.i("columnValues===", columnValues.toString());
+                    Log.i("1==columnValues===", columnValues.toString());
+                    Log.i("1==commands===", commands.toString());
+                    Log.i("1==relModel===", relModel.toString());
+                    Log.i("1==record_id===", record_id + "");
                     handleOneToManyRecords(column, commands, relModel, record_id, columnValues);
                     break;
                 case ManyToMany:
@@ -953,12 +956,26 @@ public class OModel implements ISyncServiceListener {
         if (commands == RelCommands.Replace) {
             // Force to unlink record even no any other record values available.
             OValues old_values = new OValues();
+            Log.i("1==relModel==", relModel + "");
+            Log.i("1==record_id==", record_id + "");
+            Log.i("1==getRelatedColumn==", column.getRelatedColumn() + "");
             old_values.put(column.getRelatedColumn(), 0);
-            Log.i("ene_idddd==", record_id + "");
+            Log.i("1==old_values==", old_values + "");
+            List<ODataRow> before = relModel.select(new String[]{"scrap_id", "accumulator_id"}, column.getRelatedColumn() + " = ?", new String[]{record_id + ""});
+            Log.i("1==before_ssize==", before.size() + "");
+            for (ODataRow row : before) {
+                Log.i("1==before_select==", row.toString());
+            }
             int count = relModel.update(column.getRelatedColumn() + " = ?", new String[]{record_id + ""},
                     old_values);
+            List<ODataRow> after = relModel.select(new String[]{"scrap_id", "accumulator_id"});
+            Log.i("1==after_ssize==", after.size() + "");
+            for (ODataRow row : after) {
+                Log.i("1==after_select==", row.toString());
+            }
             Log.i(TAG, String.format("#%d references removed " + relModel.getModelName(), count));
         }
+        Log.i("1==values==", values.toString());
         for (Object rowObj : values.get(commands)) {
             Log.i("o2m_value_inser====1", rowObj.toString());
             Log.i("commands_relation==", commands.toString());

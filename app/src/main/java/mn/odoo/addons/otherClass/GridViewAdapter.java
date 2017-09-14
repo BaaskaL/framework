@@ -16,6 +16,7 @@ import android.widget.ImageView;
 
 import com.odoo.R;
 import com.odoo.core.utils.BitmapUtils;
+import com.odoo.core.utils.StringUtils;
 
 import java.util.ArrayList;
 
@@ -46,46 +47,18 @@ public class GridViewAdapter extends ArrayAdapter {
         ImageView image = (ImageView) convertView.findViewById(R.id.image);
         convertView.setTag(image);
         final Bitmap item = BitmapUtils.getBitmapImage(context, data.get(position));
-//        Bitmap scaledBitmap = Bitmap.createScaledBitmap(img, 2560, 1600, true);//screen resolution 16:10
         image.setImageBitmap(item);
-
-        if (true) {
-            image.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-//                    ShowPopupMenu(v, position);
-                    return true;
-                }
-            });
-            image.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-//                    Bitmap item = (Bitmap) parent.getItemAtPosition(position);
-//                    Intent intent = new Intent(GridViewAdapter.this, DetailsActivity.class);
-//                    DetailsActivity.image = item;
-//                    startActivity(intent);
-                    AccumulatorDetailsWizard.detailsss();
-                }
-            });
-        }
         return convertView;
 
     }
 
-    public void updateContent(ArrayList<String> updates) {
-        this.data = updates;
-        this.notifyDataSetChanged();
-    }
-
-    public void notifyDataSetChanged() {
-        this.notifyDataSetChanged();
-    }
-
-    public void delete(int positon) {
-        if (data != null) {
-            data.remove(positon);
+    public boolean updateContent(String content) {
+        if (data.contains(content)) {
+            return false;
         }
+        this.data.add(content);
         this.notifyDataSetChanged();
+        return true;
     }
 
 }

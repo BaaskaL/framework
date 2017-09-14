@@ -23,7 +23,6 @@ import android.widget.Toast;
 import com.odoo.R;
 import com.odoo.addons.scrapAccumulator.ScrapAccumulator;
 import com.odoo.addons.scrapAccumulator.ScrapAccumulatorPhotos;
-import com.odoo.addons.scrapOil.models.ScrapOils;
 import com.odoo.core.orm.ODataRow;
 import com.odoo.core.rpc.helper.ODomain;
 import com.odoo.core.support.addons.fragment.BaseFragment;
@@ -199,9 +198,7 @@ public class ScrapAccumulators extends BaseFragment implements LoaderManager.Loa
         @Override
         protected Void doInBackground(ODomain... params) {
             ODomain domain = params[0];
-
             scrapAccumulator.quickSyncRecords(domain);
-            scrapAccumulatorPhotos.quickSyncRecords(domain);
             return null;
         }
 

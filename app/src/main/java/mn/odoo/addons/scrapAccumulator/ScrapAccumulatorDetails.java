@@ -2,6 +2,8 @@ package mn.odoo.addons.scrapAccumulator;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
@@ -24,13 +26,16 @@ import com.odoo.addons.scrapOil.models.ShTMScrapPhotos;
 import com.odoo.addons.technic.models.TechnicsModel;
 import com.odoo.base.addons.ir.feature.OFileManager;
 import com.odoo.core.orm.ODataRow;
+import com.odoo.core.orm.OSQLite;
 import com.odoo.core.orm.OValues;
 import com.odoo.core.orm.RelValues;
 import com.odoo.core.orm.fields.OColumn;
 import com.odoo.core.rpc.helper.ODomain;
+import com.odoo.core.support.OUser;
 import com.odoo.core.support.OdooCompatActivity;
 import com.odoo.core.utils.OAlert;
 import com.odoo.core.utils.OControls;
+import com.odoo.core.utils.OCursorUtils;
 import com.odoo.core.utils.ODateUtils;
 import com.odoo.core.utils.OResource;
 
@@ -153,13 +158,10 @@ public class ScrapAccumulatorDetails extends OdooCompatActivity implements OFiel
             scrapAccumulatorLines = record.getM2MRecord("accumulators").browseEach();
 
             ScrapAccumulatorPhotos scrapAccumulatorPhotos = new ScrapAccumulatorPhotos(this, null);
-            List<ODataRow> aa = scrapAccumulatorPhotos.select(new String[]{"scrap_id", "accumulator_id"}, "scrap_id = ?", new String[]{ScrapId + ""});
-            List<ODataRow> a1a = scrapAccumulatorPhotos.select(new String[]{"scrap_id", "accumulator_id"}, "scrap_id = ? and accumulator_id = ?", new String[]{ScrapId + "", "0"});
-            Log.i(" ====size=====", aa.size() + "");
-            Log.i("AccumulatorPhotos=====", scrapAccumulatorPhotos.select().toString());
-
-            for (ODataRow row : aa) {
-                Log.i("photoo===", row.toString());
+            Log.i("Accumulato===size==", scrapAccumulatorPhotos.select().size() + "");
+            for (ODataRow row : scrapAccumulatorPhotos.select(new String[]{"accumulator_id", "scrap_id"})) {
+                Log.i("row====", row.toString());
+//                scrapAccumulatorPhotos.delete(row.getInt("_id"));
             }
 
             drawAccumulator(scrapAccumulatorLines);
