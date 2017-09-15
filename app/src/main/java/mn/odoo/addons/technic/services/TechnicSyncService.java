@@ -16,6 +16,7 @@ import com.odoo.core.service.OSyncAdapter;
 import com.odoo.core.service.OSyncService;
 import com.odoo.core.support.OUser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -56,7 +57,19 @@ public class TechnicSyncService extends OSyncService {
             Log.i("line synced======", "synced");
 //            }
             ODomain domain = new ODomain();
-            List<Integer> projectIds = project.selectManyToManyServerIds("members", user.getUserId());
+            List<Integer> projectIds = new ArrayList<>();
+            List<ODataRow> projectRows = project.select();
+            for (ODataRow row : projectRows) {
+                List<ODataRow> memberRows = row.getM2MRecord("members").browseEach();
+                Log.i("memberRows====", memberRows.toString());
+                for (ODataRow memerRow : memberRows) {
+                    if (memerRow.getString("_id").equals(user.getUserId())) {
+                        projectIds.add(row.getInt("id"));
+                    }
+                }
+            }
+
+//            projectIds = project.selectManyToManyServerIds("members", user.getUserId());
             domain.add("project", "in", projectIds);
             Log.i("projectIds======", projectIds.toString());
             Log.i("DOMAIN==========", domain + "");

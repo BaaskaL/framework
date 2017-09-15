@@ -1,5 +1,7 @@
 package com.odoo.core.rpc.helper.utils.gson;
 
+import android.util.Log;
+
 import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.AbstractMap;
@@ -32,9 +34,12 @@ public abstract class OdooRecord<K, V> extends AbstractMap<K, V> {
         if (!getString(key).equals("false")) {
             OdooRecord rec = new LinkedTreeMap();
             List<Object> value = getArray(key);
-            rec.put("id", value.get(0));
-            rec.put("name", value.get(1));
-            return rec;
+            Log.i("value====", value.toString());
+            if (value.size() > 0) {
+                rec.put("id", value.get(0));
+                rec.put("name", value.get(1));
+                return rec;
+            }
         }
         return null;
     }

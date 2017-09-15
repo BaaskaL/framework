@@ -18,6 +18,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextPaint;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,6 +28,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.odoo.R;
+import com.odoo.addons.technic.models.GTechnicColor;
 import com.odoo.addons.technic.models.TechnicDocument;
 import com.odoo.addons.technic.models.TechnicsModel;
 import com.odoo.core.orm.ODataRow;
@@ -229,6 +231,8 @@ public class Technics extends BaseFragment implements LoaderManager.LoaderCallba
         @Override
         protected Void doInBackground(ODomain... params) {
             ODomain domain = params[0];
+            GTechnicColor colorr = new GTechnicColor(mContext, null);
+            Log.i("colorr====", colorr.select().toString());
             technicsModel.quickSyncRecords(domain);
 //            technicDocument.quickSyncRecords(domain);
             return null;

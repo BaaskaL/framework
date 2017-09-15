@@ -28,6 +28,7 @@ import com.odoo.addons.scrapAccumulator.Accumulator;
 import com.odoo.addons.scrapOil.models.TechnicOil;
 import com.odoo.addons.scrapTire.models.TechnicTire;
 import com.odoo.base.addons.res.ResCompany;
+import com.odoo.core.orm.ODataRow;
 import com.odoo.core.orm.OModel;
 import com.odoo.core.orm.OValues;
 import com.odoo.core.orm.annotation.Odoo;
@@ -40,6 +41,7 @@ import com.odoo.core.orm.fields.types.OVarchar;
 import com.odoo.core.rpc.helper.ODomain;
 import com.odoo.core.support.OUser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TechnicsModel extends OModel {
@@ -124,9 +126,22 @@ public class TechnicsModel extends OModel {
     @Override
     public ODomain defaultDomain() {
         ODomain domain = new ODomain();
-        List<Integer> projectIds = projectObj.selectManyToManyServerIds("members", userObj.getUserId());
+        List<Integer> projectIds = new ArrayList<>();
+        List<ODataRow> projectRows = projectObj.select();
+        for (ODataRow row : projectRows) {
+            List<ODataRow> memberRows = row.getM2MRecord("members").browseEach();
+            Log.i("memberRows====", memberRows.toString());
+            Log.i("getUserId====", userObj.getUserId().toString());
+            Log.i("row_projId====", row.getString("id").toString());
+            for (ODataRow memerRow : memberRows) {
+                if (memerRow.getString("_id").equals(userObj.getUserId().toString())) {
+                    projectIds.add(row.getInt("id"));
+                }
+            }
+        }
+        Log.i("projectIds====", projectIds.toString());
+//        List<Integer> projectIds = projectObj.selectManyToManyServerIds("members", userObj.getUserId());
         domain.add("project", "in", projectIds);
-        Log.i("projectIds======", projectIds.toString());
         return domain;
     }
 

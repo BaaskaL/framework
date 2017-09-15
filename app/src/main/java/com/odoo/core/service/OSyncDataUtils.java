@@ -199,6 +199,7 @@ public class OSyncDataUtils {
                             if (!record.getString(name).equals("false")) {
                                 switch (column.getRelationType()) {
                                     case ManyToOne:
+                                        Log.i("name=====", name.toString());
                                         OdooRecord m2oData = record.getM20(name);
                                         OModel m2o_model = mModel.createInstance(column.getType());
                                         String recKey = m2o_model.getModelName() + "_" + m2oData.getInt("id");

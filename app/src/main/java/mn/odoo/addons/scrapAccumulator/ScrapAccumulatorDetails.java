@@ -22,20 +22,16 @@ import com.odoo.R;
 import com.odoo.addons.scrapAccumulator.Accumulator;
 import com.odoo.addons.scrapAccumulator.ScrapAccumulator;
 import com.odoo.addons.scrapAccumulator.ScrapAccumulatorPhotos;
-import com.odoo.addons.scrapOil.models.ShTMScrapPhotos;
 import com.odoo.addons.technic.models.TechnicsModel;
 import com.odoo.base.addons.ir.feature.OFileManager;
 import com.odoo.core.orm.ODataRow;
-import com.odoo.core.orm.OSQLite;
 import com.odoo.core.orm.OValues;
 import com.odoo.core.orm.RelValues;
 import com.odoo.core.orm.fields.OColumn;
 import com.odoo.core.rpc.helper.ODomain;
-import com.odoo.core.support.OUser;
 import com.odoo.core.support.OdooCompatActivity;
 import com.odoo.core.utils.OAlert;
 import com.odoo.core.utils.OControls;
-import com.odoo.core.utils.OCursorUtils;
 import com.odoo.core.utils.ODateUtils;
 import com.odoo.core.utils.OResource;
 
@@ -64,7 +60,7 @@ public class ScrapAccumulatorDetails extends OdooCompatActivity implements OFiel
     private Menu mMenu;
     private TechnicsModel technic;
     private Accumulator accumulator;
-    private ShTMScrapPhotos shTMScrapPhotos;
+    private ScrapAccumulatorPhotos scrapAccumulatorPhotos;
     private ScrapAccumulator scrapAccumulator;
     private ExpandableListControl mList;
     private ExpandableListControl.ExpandableListAdapter mAdapter;
@@ -97,7 +93,7 @@ public class ScrapAccumulatorDetails extends OdooCompatActivity implements OFiel
         mEditMode = (!hasRecordInExtra() ? true : false);
         technic = new TechnicsModel(this, null);
         accumulator = new Accumulator(this, null);
-        shTMScrapPhotos = new ShTMScrapPhotos(this, null);
+        scrapAccumulatorPhotos = new ScrapAccumulatorPhotos(this, null);
         scrapAccumulator = new ScrapAccumulator(this, null);
         fileManager = new OFileManager(this);
 
@@ -157,12 +153,11 @@ public class ScrapAccumulatorDetails extends OdooCompatActivity implements OFiel
             getTechnicAccumulators(technic_id);
             scrapAccumulatorLines = record.getM2MRecord("accumulators").browseEach();
 
-            ScrapAccumulatorPhotos scrapAccumulatorPhotos = new ScrapAccumulatorPhotos(this, null);
-            Log.i("Accumulato===size==", scrapAccumulatorPhotos.select().size() + "");
-            for (ODataRow row : scrapAccumulatorPhotos.select(new String[]{"accumulator_id", "scrap_id"})) {
-                Log.i("row====", row.toString());
-//                scrapAccumulatorPhotos.delete(row.getInt("_id"));
-            }
+//            Log.i("Accumulato===size==", scrapAccumulatorPhotos.select().size() + "");
+//            for (ODataRow row : scrapAccumulatorPhotos.select(new String[]{"accumulator_id", "scrap_id"})) {
+//                Log.i("row====", row.toString());
+////                scrapAccumulatorPhotos.delete(row.getInt("_id"));
+//            }
 
             drawAccumulator(scrapAccumulatorLines);
         }
@@ -246,8 +241,8 @@ public class ScrapAccumulatorDetails extends OdooCompatActivity implements OFiel
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        OnOilScrapChangeUpdate onOilScrapChangeUpdate = new OnOilScrapChangeUpdate();
-        ODomain domain = new ODomain();
+        final OnOilScrapChangeUpdate onOilScrapChangeUpdate = new OnOilScrapChangeUpdate();
+        final ODomain domain = new ODomain();
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
@@ -334,6 +329,7 @@ public class ScrapAccumulatorDetails extends OdooCompatActivity implements OFiel
                             public void onConfirmChoiceSelect(OAlert.ConfirmType type) {
                                 if (type == OAlert.ConfirmType.POSITIVE) {
                                     if (scrapAccumulator.delete(record.getInt(OColumn.ROW_ID))) {
+                                        onOilScrapChangeUpdate.execute(domain);
                                         Toast.makeText(ScrapAccumulatorDetails.this, R.string.tech_toast_information_deleted,
                                                 Toast.LENGTH_SHORT).show();
                                         finish();
@@ -401,6 +397,7 @@ public class ScrapAccumulatorDetails extends OdooCompatActivity implements OFiel
             scrapAccumulator.quickSyncRecords(domain);
             //required 2 call
             scrapAccumulator.quickSyncRecords(domain);
+            scrapAccumulatorPhotos.quickSyncRecords(domain);
             return null;
         }
     }

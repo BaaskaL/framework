@@ -199,6 +199,7 @@ public class ScrapAccumulators extends BaseFragment implements LoaderManager.Loa
         protected Void doInBackground(ODomain... params) {
             ODomain domain = params[0];
             scrapAccumulator.quickSyncRecords(domain);
+            scrapAccumulatorPhotos.quickSyncRecords(domain);
             return null;
         }
 
