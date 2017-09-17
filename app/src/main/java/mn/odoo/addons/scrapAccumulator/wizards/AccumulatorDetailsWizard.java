@@ -5,28 +5,21 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.odoo.R;
 import com.odoo.addons.scrapAccumulator.Accumulator;
 import com.odoo.addons.scrapAccumulator.ScrapAccumulatorPhotos;
-import com.odoo.addons.scrapOil.models.ScrapOilReason;
-import com.odoo.addons.scrapOil.models.TechnicOil;
 import com.odoo.base.addons.ir.feature.OFileManager;
 import com.odoo.core.orm.ODataRow;
 import com.odoo.core.orm.OValues;
@@ -34,13 +27,13 @@ import com.odoo.core.orm.RelValues;
 import com.odoo.core.orm.fields.OColumn;
 import com.odoo.core.rpc.helper.ODomain;
 import com.odoo.core.support.OdooCompatActivity;
-import com.odoo.core.support.list.OListAdapter;
 import com.odoo.core.utils.BitmapUtils;
 import com.odoo.core.utils.OAlert;
 import com.odoo.core.utils.OResource;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
 
 import mn.odoo.addons.otherClass.DetailsActivity;
@@ -69,6 +62,7 @@ public class AccumulatorDetailsWizard extends OdooCompatActivity implements View
     private OFileManager fileManager;
     private ArrayList<String> imageItemsString = new ArrayList<>();
     private String scrap_id;
+    private String scrap_name = "";
     private String rowId;
 
     @Override
@@ -76,6 +70,9 @@ public class AccumulatorDetailsWizard extends OdooCompatActivity implements View
         super.onCreate(savedInstanceState);
         extra = getIntent().getExtras();
         scrap_id = extra.getString("scrap_id");
+        scrap_name = extra.getString("scrap_name");
+
+        setTitle(scrap_name);
         rowId = String.valueOf(extra.getInt(OColumn.ROW_ID));
         setContentView(R.layout.accumulator_detail_wizard);
         setResult(RESULT_CANCELED);
@@ -95,7 +92,6 @@ public class AccumulatorDetailsWizard extends OdooCompatActivity implements View
 
         record = accumulator.browse(Integer.parseInt(rowId));
         mForm.initForm(record);
-        setTitle(record.getString("name"));
 
         List<ODataRow> scrapPhotos = new ArrayList<>();
         scrapPhotos = scrapAccumulatorPhotos.select(null, "scrap_id = ? and accumulator_id = ?", new String[]{scrap_id, rowId});
@@ -183,18 +179,15 @@ public class AccumulatorDetailsWizard extends OdooCompatActivity implements View
                 break;
             case R.id.menu_save:
                 OValues values = mForm.getValues();
-                Log.i(":values====", values.toString());
                 if (values != null) {
                     if (record != null) {
                         List<OValues> imgValuene = new ArrayList();
                         for (int i = 0; i < gridAdapter.getCount(); i++) {
                             ODataRow row = (ODataRow) gridAdapter.getItem(i);
                             if (row.getString("id").equals("0")) {
-                                Log.i("toValues======", row.toString());
                                 imgValuene.add(row.toValues());
                             }
                         }
-                        Log.i("deleteIds===", gridAdapter.deleteIds.toString());
                         values.put("scrap_photos", new RelValues().append(imgValuene.toArray(new OValues[imgValuene.size()])).delete(gridAdapter.deleteIds));
                         accumulator.update(record.getInt(OColumn.ROW_ID), values);
                         onAccumuScrapPhotoChangeUpdate.execute(domain);
@@ -271,10 +264,12 @@ public class AccumulatorDetailsWizard extends OdooCompatActivity implements View
         super.onActivityResult(requestCode, resultCode, data);
         OValues values = fileManager.handleResult(requestCode, resultCode, data);
         if (values != null && !values.contains("size_limit_exceed")) {
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss_SSS").format(new Date());
             ODataRow row = new ODataRow();
             row.put("scrap_id", scrap_id);
             row.put("photo", values.getString("datas"));
             row.put("accumulator_id", rowId);
+            row.put("name", "(" + record.getString("name") + ")_" + timeStamp);
             row.put("id", 0);
             if (!gridAdapter.updateContent(row)) {
                 Toast.makeText(this, "Уг зураг аль хэдийн орсон байна!!!", Toast.LENGTH_LONG).show();

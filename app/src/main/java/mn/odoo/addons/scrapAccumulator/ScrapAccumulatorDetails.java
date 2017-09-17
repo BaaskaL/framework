@@ -381,9 +381,8 @@ public class ScrapAccumulatorDetails extends OdooCompatActivity implements OFiel
         Bundle extra = new Bundle();
         if (row != null) {
             extra = row.getPrimaryBundleData();
-            Log.i("extra===1111===", extra.toString());
             extra.putString("scrap_id", record.getString("_id"));
-            Log.i("extra===2222===", extra.toString());
+            extra.putString("scrap_name", record.getString("origin"));
         }
         intent.putExtras(extra);
         startActivityForResult(intent, REQUEST_ADD_ITEMS);

@@ -1,23 +1,16 @@
 package mn.odoo.addons.scrapTechnic;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v7.widget.PopupMenu;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.daimajia.slider.library.SliderLayout;
-import com.daimajia.slider.library.SliderTypes.BaseSliderView;
-import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.odoo.App;
 import com.odoo.R;
 import com.odoo.addons.scrapTechnic.models.ScrapTechnic;
@@ -26,10 +19,10 @@ import com.odoo.addons.technic.models.TechnicsModel;
 import com.odoo.base.addons.ir.feature.OFileManager;
 import com.odoo.core.orm.ODataRow;
 import com.odoo.core.orm.OValues;
+import com.odoo.core.orm.RelValues;
 import com.odoo.core.orm.fields.OColumn;
 import com.odoo.core.rpc.helper.ODomain;
 import com.odoo.core.support.OdooCompatActivity;
-import com.odoo.core.utils.BitmapUtils;
 import com.odoo.core.utils.OAlert;
 import com.odoo.core.utils.ODateUtils;
 import com.odoo.core.utils.OResource;
@@ -37,6 +30,8 @@ import com.odoo.core.utils.OResource;
 import java.util.ArrayList;
 import java.util.List;
 
+import mn.odoo.addons.otherClass.ImageFragmentAdapter;
+import mn.odoo.addons.otherClass.InkPageIndicator;
 import odoo.controls.OField;
 import odoo.controls.OForm;
 
@@ -44,26 +39,28 @@ import odoo.controls.OForm;
  * Created by baaska on 7/30/17.
  */
 
-public class ScrapTechnicsDetail extends OdooCompatActivity implements View.OnClickListener, BaseSliderView.OnSliderClickListener {
+public class ScrapTechnicsDetail extends OdooCompatActivity implements View.OnClickListener {
 
     public static final String TAG = ScrapTechnicsDetail.class.getSimpleName();
+    private TechnicsModel technic;
+    private ScrapTechnic scrapTechnic;
+    private TechnicScrapPhoto technicScrapPhoto;
+
     private Bundle extra;
     private OForm mForm;
     private OField oState, date, technicId;
     private ODataRow record = null;
     private Boolean mEditMode = false;
     private Menu mMenu;
-    private TechnicsModel technic;
-    private ScrapTechnic scrapTechnic;
-    private TechnicScrapPhoto technicScrapPhoto;
     private Toolbar toolbar;
     private OFileManager fileManager;
     App app;
     /*picture*/
-    private SliderLayout mSlider;
+    private ViewPager mPager;
+    private ImageFragmentAdapter mAdapter;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     public List<ODataRow> recScrapTechImages = new ArrayList<>();
-    private List<TextSliderView> textSlider = new ArrayList<>();
+    private int ScrapId = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,9 +68,10 @@ public class ScrapTechnicsDetail extends OdooCompatActivity implements View.OnCl
         setContentView(R.layout.scrap_technic_detail);
 
         extra = getIntent().getExtras();
+        ScrapId = extra.getInt(OColumn.ROW_ID);
 
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.scrap_technic_collapsing_toolbar);
-        mSlider = (SliderLayout) findViewById(R.id.slider);
+        mPager = (ViewPager) findViewById(R.id.pager);
         toolbar = (Toolbar) findViewById(R.id.toolbarTechnicScrap);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -85,20 +83,10 @@ public class ScrapTechnicsDetail extends OdooCompatActivity implements View.OnCl
         fileManager = new OFileManager(this);
         app = (App) getApplicationContext();
 
-
         mForm = (OForm) findViewById(R.id.OFormTechnicScrap);
-
         oState = (OField) mForm.findViewById(R.id.stateTechnicScrap);
         date = (OField) mForm.findViewById(R.id.dateTechnicScrap);
         technicId = (OField) mForm.findViewById(R.id.technicTechnicScrap);
-
-        TextSliderView textSliderView = new TextSliderView(this);
-        textSliderView.description("Default")
-                .image(R.drawable.user_xlarge)
-                .setScaleType(BaseSliderView.ScaleType.CenterInside);
-        mSlider.addSlider(textSliderView);
-        mSlider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
-        mSlider.stopAutoCycle();
         setupToolbar();
     }
 
@@ -126,20 +114,18 @@ public class ScrapTechnicsDetail extends OdooCompatActivity implements View.OnCl
     }
 
     private void setupToolbar() {
+        OnTechnicScrapImageSync imageSync = new OnTechnicScrapImageSync();
         if (!hasRecordInExtra()) {
             setTitle("Үүсгэх");
             mForm.setEditable(mEditMode);
+            imageSync.execute(recScrapTechImages);
             mForm.initForm(null);
             ((OField) mForm.findViewById(R.id.dateTechnicScrap)).setValue(ODateUtils.getDate());
         } else {
-            OnTechnicScrapImageSync imageSync = new OnTechnicScrapImageSync();
             setTitle("Техник акт дэлгэрэнгүй");
-            int ScrapId = extra.getInt(OColumn.ROW_ID);
             record = scrapTechnic.browse(ScrapId);
             recScrapTechImages = record.getO2MRecord("scrap_photos").browseEach();
-            if (recScrapTechImages.size() > 0) {
-                imageSync.execute(recScrapTechImages);
-            }
+            imageSync.execute(recScrapTechImages);
             mForm.initForm(record);
             mForm.setEditable(mEditMode);
         }
@@ -167,18 +153,17 @@ public class ScrapTechnicsDetail extends OdooCompatActivity implements View.OnCl
                 finish();
                 break;
             case R.id.menu_save:
-                List<Integer> photoIds = new ArrayList<>();
                 OValues values = mForm.getValues();
                 if (values != null) {
-                    if (record != null) {
-                        for (ODataRow row : recScrapTechImages) {
-                            if (row.getString("scrap_id").equals("false")) {
-                                OValues photo = new OValues();
-                                photo.put("scrap_id", record.getInt(OColumn.ROW_ID));
-                                photo.put("photo", row.get("photo"));
-                                technicScrapPhoto.insert(photo);
-                            }
+                    List<OValues> imgValuene = new ArrayList();
+                    for (int i = 0; i < mAdapter.getCount(); i++) {
+                        ODataRow row = mAdapter.getRow(i);
+                        if (row.getString("id").equals("0")) {
+                            imgValuene.add(row.toValues());
                         }
+                    }
+                    values.put("scrap_photos", new RelValues().append(imgValuene.toArray(new OValues[imgValuene.size()])).delete(mAdapter.getDeleteIds()));
+                    if (record != null) {
                         scrapTechnic.update(record.getInt(OColumn.ROW_ID), values);
                         onTechnicScrapChangeUpdate.execute(domain);
                         mEditMode = !mEditMode;
@@ -186,15 +171,7 @@ public class ScrapTechnicsDetail extends OdooCompatActivity implements View.OnCl
                         setMode(mEditMode);
                         Toast.makeText(this, R.string.tech_toast_information_saved, Toast.LENGTH_LONG).show();
                     } else {
-                        for (ODataRow row : recScrapTechImages) {
-                            OValues photo = new OValues();
-                            photo.put("photo", row.get("photo"));
-                            int newId = technicScrapPhoto.insert(photo);
-                            photoIds.add(newId);
-                        }
-                        ODataRow techObj = technic.browse(values.getInt("technic"));
-                        values.put("technic_name", techObj.get("name"));
-                        values.put("scrap_photos", photoIds);
+                        values.put("technic_name", technic.browse(values.getInt("technic")).getString("name"));
                         int row_id = scrapTechnic.insert(values);
                         if (row_id != scrapTechnic.INVALID_ROW_ID) {
                             onTechnicScrapChangeUpdate.execute(domain);
@@ -257,11 +234,6 @@ public class ScrapTechnicsDetail extends OdooCompatActivity implements View.OnCl
         }
     }
 
-    @Override
-    public void onSliderClick(BaseSliderView slider) {
-
-    }
-
     private class OnTechnicScrapChangeUpdate extends AsyncTask<ODomain, Void, Void> {
 
         @Override
@@ -278,30 +250,6 @@ public class ScrapTechnicsDetail extends OdooCompatActivity implements View.OnCl
             }
             return null;
         }
-    }
-
-    class technicImageMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
-        private int key;
-
-        public technicImageMenuItemClickListener(int positon) {
-            this.key = positon;
-        }
-
-        @Override
-        public boolean onMenuItemClick(MenuItem menuItem) {
-//            oilImages.remove(key);
-            return true;
-        }
-    }
-
-    private void technicScrapShowPopupMenu(View view, int position) {
-        PopupMenu popup = new PopupMenu(view.getContext(), view);
-        MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.card_view_menu, popup.getMenu());
-        popup.getMenu().clear();
-        popup.getMenu().add("Зураг устгах");
-        popup.setOnMenuItemClickListener(new technicImageMenuItemClickListener(position));
-        popup.show();
     }
 
     @Override
@@ -331,34 +279,18 @@ public class ScrapTechnicsDetail extends OdooCompatActivity implements View.OnCl
 
         @Override
         protected Void doInBackground(List<ODataRow>... params) {
-            try {
-                for (ODataRow row : params[0]) {
-                    Bitmap img = BitmapUtils.getBitmapImage(ScrapTechnicsDetail.this, row.getString("photo"));
-                    Bitmap scaledBitmap = Bitmap.createScaledBitmap(img, 2560, 1600, true);//screen resolution 16:10
-                    String path = MediaStore.Images.Media.insertImage(getApplicationContext().getContentResolver(), scaledBitmap, "Title", null);
-                    Uri tempUri = Uri.parse(path);
-                    TextSliderView textSliderView = new TextSliderView(ScrapTechnicsDetail.this);
-                    textSliderView.description("ZZZZZ")
-                            .image(tempUri)
-                            .setScaleType(BaseSliderView.ScaleType.CenterInside)
-                            .setOnSliderClickListener(ScrapTechnicsDetail.this);
-                    textSlider.add(textSliderView);
-                }
-            } catch (Exception e) {
-
-            }
+            mAdapter = new ImageFragmentAdapter(getSupportFragmentManager(), params[0]);
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            mSlider.removeAllSliders();
-            for (TextSliderView slide : textSlider) {
-                mSlider.addSlider(slide);
-            }
-            mSlider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
-            mSlider.startAutoCycle();
+            mPager.setAdapter(null);
+            mPager.setAdapter(mAdapter);
+            InkPageIndicator mIndicator;
+            mIndicator = (InkPageIndicator) findViewById(R.id.indicator);
+            mIndicator.setViewPager(mPager);
         }
     }
 
@@ -367,27 +299,11 @@ public class ScrapTechnicsDetail extends OdooCompatActivity implements View.OnCl
         super.onActivityResult(requestCode, resultCode, data);
         OValues values = fileManager.handleResult(requestCode, resultCode, data);
         if (values != null && !values.contains("size_limit_exceed")) {
-            String newImage = values.getString("datas");
-            ODataRow image = new ODataRow();
-            image.put("photo", newImage);
-            recScrapTechImages.add(image);
-
-            Bitmap img = BitmapUtils.getBitmapImage(this, newImage);
-            Bitmap scaledBitmap = Bitmap.createScaledBitmap(img, 2560, 1600, true);//screen resolution 16:10
-            String path = MediaStore.Images.Media.insertImage(getApplicationContext().getContentResolver(), img, "Title", null);
-            Uri tempUri = Uri.parse(path);
-            TextSliderView textSliderView = new TextSliderView(this);
-            textSliderView.description("aa")
-                    .image(tempUri)
-                    .setScaleType(BaseSliderView.ScaleType.CenterInside)
-                    .setOnSliderClickListener(this);
-            textSliderView.bundle(new Bundle());
-            if (mSlider.getCurrentSlider().getDescription().equals("Default")) {
-                mSlider.removeSliderAt(0);
-            }
-            mSlider.addSlider(textSliderView);
-            mSlider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
-            mSlider.startAutoCycle();
+            ODataRow row = new ODataRow();
+            row.put("photo", values.getString("datas"));
+            row.put("scrap_id", ScrapId);
+            row.put("id", 0);
+            mAdapter.update(row);
         } else if (values != null) {
             Toast.makeText(this, R.string.toast_image_size_too_large, Toast.LENGTH_LONG).show();
         }

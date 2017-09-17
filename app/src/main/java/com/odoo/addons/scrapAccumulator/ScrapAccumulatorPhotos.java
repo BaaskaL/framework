@@ -26,6 +26,7 @@ import com.odoo.addons.scrapOil.models.TechnicOil;
 import com.odoo.core.orm.OModel;
 import com.odoo.core.orm.fields.OColumn;
 import com.odoo.core.orm.fields.types.OBlob;
+import com.odoo.core.orm.fields.types.OVarchar;
 import com.odoo.core.support.OUser;
 
 public class ScrapAccumulatorPhotos extends OModel {
@@ -33,6 +34,7 @@ public class ScrapAccumulatorPhotos extends OModel {
     OColumn scrap_id = new OColumn("Акт", ScrapAccumulator.class, OColumn.RelationType.ManyToOne);
     OColumn accumulator_id = new OColumn("ШТМ", Accumulator.class, OColumn.RelationType.ManyToOne);
     OColumn photo = new OColumn("Зураг", OBlob.class);
+    OColumn name = new OColumn("Нэр", OVarchar.class);
 
     public ScrapAccumulatorPhotos(Context context, OUser user) {
         super(context, "product.accumulator.photos", user);
