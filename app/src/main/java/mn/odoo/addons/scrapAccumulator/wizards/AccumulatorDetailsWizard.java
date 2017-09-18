@@ -17,6 +17,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.odoo.App;
 import com.odoo.R;
 import com.odoo.addons.scrapAccumulator.Accumulator;
 import com.odoo.addons.scrapAccumulator.ScrapAccumulatorPhotos;
@@ -64,6 +65,7 @@ public class AccumulatorDetailsWizard extends OdooCompatActivity implements View
     private String scrap_id;
     private String scrap_name = "";
     private String rowId;
+    App app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +85,7 @@ public class AccumulatorDetailsWizard extends OdooCompatActivity implements View
         toolbar = (Toolbar) findViewById(R.id.toolbarOilWizard);
         oReason = (OField) mForm.findViewById(R.id.accumReason);
         takePic = (Button) findViewById(R.id.takePictureAccum);
+        app = (App) getApplicationContext();
 
         fileManager = new OFileManager(this);
         accumulator = new Accumulator(this, null);
@@ -221,10 +224,17 @@ public class AccumulatorDetailsWizard extends OdooCompatActivity implements View
 
         @Override
         protected Void doInBackground(ODomain... params) {
-            ODomain domain = params[0];
-            scrapAccumulatorPhotos.quickSyncRecords(domain);
-            //required 2 call
-//            scrapAccumulatorPhotos.quickSyncRecords(domain);
+            if (app.inNetwork()) {
+                ODomain domain = params[0];
+                List<ODataRow> rows = scrapAccumulatorPhotos.select(null, "id = ?", new String[]{"0"});
+                for (ODataRow row : rows) {
+                    scrapAccumulatorPhotos.quickCreateRecord(row);
+                }
+                /*Бусад бичлэгүүдийг update хийж байна*/
+                scrapAccumulatorPhotos.quickSyncRecords(domain);
+            } else {
+                Toast.makeText(mContext, OResource.string(mContext, R.string.toast_network_required), Toast.LENGTH_LONG).show();
+            }
             return null;
         }
     }

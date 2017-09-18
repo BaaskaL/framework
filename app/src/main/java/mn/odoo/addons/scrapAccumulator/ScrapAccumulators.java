@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -33,6 +34,7 @@ import com.odoo.core.support.list.OCursorListAdapter;
 import com.odoo.core.utils.IntentUtils;
 import com.odoo.core.utils.OControls;
 import com.odoo.core.utils.OCursorUtils;
+import com.odoo.core.utils.OResource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -109,7 +111,7 @@ public class ScrapAccumulators extends BaseFragment implements LoaderManager.Loa
                 break;
 
         }
-        OControls.setText(view, R.id.tvAccumOrigin, (row.getString("origin").equals("false") ? "" : row.getString("origin")));
+        OControls.setText(view, R.id.tvAccumOrigin, (row.getString("origin").equals("-") ? "Илгээгдээгүй" : row.getString("origin")));
         OControls.setText(view, R.id.tvAccumTechnicName, (row.getString("technic_name")));
         OControls.setText(view, R.id.tvAccumDate, (row.getString("date")));
         OControls.setText(view, R.id.tvAccumState, state);
@@ -185,21 +187,46 @@ public class ScrapAccumulators extends BaseFragment implements LoaderManager.Loa
     private class OnAccumScrapChangeUpdate extends AsyncTask<ODomain, Void, Void> {
         private ProgressDialog progressDialog;
 
+        Handler handle = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                progressDialog.incrementProgressBy(1);
+            }
+        };
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             progressDialog = new ProgressDialog(mContext);
-            progressDialog.setCancelable(false);
-            progressDialog.setTitle(R.string.title_please_wait);
-            progressDialog.setMessage("Update");
-            progressDialog.hide();
+            progressDialog.setTitle(R.string.title_please_wait_mn);
+            progressDialog.setMessage("Мэдээлэл шинэчилж байна.");
+//            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+//            progressDialog.setProgress(1);
+            progressDialog.setMax(mAdapter.getCount());
+            progressDialog.setCancelable(true);
+            progressDialog.show();
         }
 
         @Override
         protected Void doInBackground(ODomain... params) {
-            ODomain domain = params[0];
-            scrapAccumulator.quickSyncRecords(domain);
-            scrapAccumulatorPhotos.quickSyncRecords(domain);
+            if (inNetwork()) {
+                ODomain domain = params[0];
+                List<ODataRow> rows = scrapAccumulator.select(null, "id = ?", new String[]{"0"});
+                List<ODataRow> photoRows = scrapAccumulatorPhotos.select(null, "id = ?", new String[]{"0"});
+                for (ODataRow row : rows) {
+                    scrapAccumulator.quickCreateRecord(row);
+                }
+                for (ODataRow row : photoRows) {
+                    scrapAccumulatorPhotos.quickCreateRecord(row);
+                }
+                /*Бусад бичлэгүүдийг update хийж байна*/
+                scrapAccumulator.quickSyncRecords(domain);
+                scrapAccumulatorPhotos.quickSyncRecords(domain);
+            } else {
+                Toast.makeText(mContext, OResource.string(mContext, R.string.toast_network_required), Toast.LENGTH_LONG).show();
+            }
+
             return null;
         }
 

@@ -6,6 +6,7 @@
     <string name="tech_toast_information_deleted">Мэдээлэл устгагдлаа</string>
     <string name="label_no_employee_found">No Employee Found !</string>
     <string name="close_activity">Анхааруулга, бичлэг засварлагдсан байгаа ч өөрчлөлтүүд хэрэгсэгдэхгүй.</string>
+    <string name="required_save">Та эхлээд заавал хадгалсан байх ёстой!!!.</string>
     <string name="to_delete">Та энэ мэдээллийг үнэхээр устгах уу?</string>
     <!--<string name="app_name">Odoo</string>-->
     <string name="app_name">Техник Ашиглалт Бүртгэл</string>
