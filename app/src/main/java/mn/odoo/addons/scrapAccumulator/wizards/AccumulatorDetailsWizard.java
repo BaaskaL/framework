@@ -232,10 +232,15 @@ public class AccumulatorDetailsWizard extends OdooCompatActivity implements View
                 }
                 /*Бусад бичлэгүүдийг update хийж байна*/
                 scrapAccumulatorPhotos.quickSyncRecords(domain);
-            } else {
-                Toast.makeText(mContext, OResource.string(mContext, R.string.toast_network_required), Toast.LENGTH_LONG).show();
             }
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (!app.inNetwork())
+                Toast.makeText(mContext, OResource.string(mContext, R.string.toast_network_required), Toast.LENGTH_LONG).show();
         }
     }
 

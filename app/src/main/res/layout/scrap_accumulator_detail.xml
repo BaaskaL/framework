@@ -132,10 +132,96 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
+                    <LinearLayout
+                        android:id="@+id/accumHeader"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#247648"
+                        android:divider="?android:attr/dividerHorizontal"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingLeft="@dimen/default_16dp"
+                        android:paddingRight="@dimen/default_16dp"
+                        android:showDividers="middle">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="@dimen/default_8dp"
+                            android:layout_weight="2.4"
+                            android:fontFamily="@string/font_normal"
+                            android:gravity="center"
+                            android:text="Нэр"
+                            android:textColor="@color/body_text_1"
+                            android:textSize="@dimen/text_size_medium" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_weight="1.1"
+                            android:fontFamily="@string/font_normal"
+                            android:gravity="center"
+                            android:text="Б/Огноо"
+                            android:textColor="@color/body_text_1"
+                            android:textSize="@dimen/text_size_medium" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_weight="2"
+                            android:fontFamily="@string/font_normal"
+                            android:gravity="center"
+                            android:text="Аккумлятор"
+                            android:textColor="@color/body_text_1"
+                            android:textSize="@dimen/text_size_medium" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="Багтаамж"
+                            android:textColor="@color/body_text_1"
+                            android:textSize="@dimen/text_size_medium" />
+
+                        <TextView
+                            android:id="@+id/usage_percent"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_weight="1.2"
+                            android:gravity="center"
+                            android:text="Ашиглалтын хувь"
+                            android:textColor="@color/body_text_1"
+                            android:textSize="@dimen/text_size_medium" />
+
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_weight="1.5"
+                            android:gravity="center"
+                            android:text="Төлөв"
+                            android:textColor="@color/body_text_1"
+                            android:textSize="@dimen/text_size_medium" />
+
+                    </LinearLayout>
+
                     <odoo.controls.ExpandableListControl
                         android:id="@+id/ExpandListAccumulatorLine"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_below="@+id/accumHeader"
                         android:layout_marginBottom="@dimen/default_8dp"
                         android:layout_marginTop="@dimen/default_8dp"
                         android:orientation="vertical" />
@@ -145,6 +231,7 @@
                         style="?android:attr/progressBarStyleSmall"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
+                        android:layout_centerInParent="true"
                         android:visibility="gone" />
 
                 </RelativeLayout>

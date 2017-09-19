@@ -5,11 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,7 +64,6 @@ public class ScrapAccumulatorDetails extends OdooCompatActivity implements OFiel
     private List<ODataRow> technicAccumulatorLines = new ArrayList<>();
     private List<ODataRow> oilRow = new ArrayList<>();
     private Toolbar toolbar;
-    private OFileManager fileManager;
     private LinearLayout layoutAddItem = null;
     private Context mContext;
     App app;
@@ -93,7 +89,6 @@ public class ScrapAccumulatorDetails extends OdooCompatActivity implements OFiel
         accumulator = new Accumulator(this, null);
         scrapAccumulatorPhotos = new ScrapAccumulatorPhotos(this, null);
         scrapAccumulator = new ScrapAccumulator(this, null);
-        fileManager = new OFileManager(this);
 
         mList = (ExpandableListControl) findViewById(R.id.ExpandListAccumulatorLine);
         mList.setOnClickListener(this);
@@ -124,7 +119,6 @@ public class ScrapAccumulatorDetails extends OdooCompatActivity implements OFiel
         oOrigin.setEditable(false);
         oState.setEditable(false);
         if (edit && record == null) {
-            Log.i("tech====", technicId.toString());
             technicId.setOnValueChangeListener(this);
         }
         if (record != null) {
@@ -146,26 +140,10 @@ public class ScrapAccumulatorDetails extends OdooCompatActivity implements OFiel
             record = scrapAccumulator.browse(ScrapId);
             mForm.initForm(record);
             mForm.setEditable(mEditMode);
-            int technic_id = record.getInt("technic");
-            getTechnicAccumulators(technic_id);
             scrapAccumulatorLines = record.getM2MRecord("accumulators").browseEach();
             drawAccumulator(scrapAccumulatorLines);
         }
         setMode(mEditMode);
-    }
-
-    private void getTechnicAccumulators(int techId) {
-        ODataRow techRecord = technic.browse(techId);
-        technicAccumulatorLines = techRecord.getO2MRecord("accumulators").browseEach();
-        toWizardTechAccums.clear();
-        for (ODataRow line : technicAccumulatorLines) {
-            toWizardTechAccums.put(line.getString("_id"), false);
-        }
-        for (ODataRow line : scrapAccumulatorLines) {
-            if (toWizardTechAccums.containsKey(line.getString("_id"))) {
-                toWizardTechAccums.put(line.getString("_id"), true);
-            }
-        }
     }
 
     private void drawAccumulator(List<ODataRow> accumIds) {
@@ -181,14 +159,17 @@ public class ScrapAccumulatorDetails extends OdooCompatActivity implements OFiel
                         if (row.getString("date").equals("false"))
                             OControls.setText(mView, R.id.date, "");
                         OControls.setText(mView, R.id.product, row.getString("product_name"));
-                        OControls.setText(mView, R.id.reason, row.getString("reason_name"));
+                        OControls.setText(mView, R.id.capacity, row.getString("capacity"));
+                        OControls.setText(mView, R.id.usage_percent, row.getString("usage_percent"));
+
                         if (row.getString("state").equals("draft"))
                             OControls.setText(mView, R.id.state, "Ноорог");
-                        else if (row.getString("state").equals("in_using"))
+                        else if (row.getString("state").equals("in_use"))
                             OControls.setText(mView, R.id.state, "Ашиглаж буй");
                         else if (row.getString("state").equals("in_reserve"))
                             OControls.setText(mView, R.id.state, "Нөөцөнд");
-                        else OControls.setText(mView, R.id.state, "Акталсан");
+                        else if (row.getString("state").equals("in_scrap"))
+                            OControls.setText(mView, R.id.state, "Акталсан");
 
                         mView.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -217,7 +198,7 @@ public class ScrapAccumulatorDetails extends OdooCompatActivity implements OFiel
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        final OnOilScrapChangeUpdate onOilScrapChangeUpdate = new OnOilScrapChangeUpdate();
+        final OnTechnicScrapChangeUpdate onTechnicScrapChangeUpdate = new OnTechnicScrapChangeUpdate();
         final ODomain domain = new ODomain();
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -240,7 +221,7 @@ public class ScrapAccumulatorDetails extends OdooCompatActivity implements OFiel
                     if (record != null) {
                         values.put("accumulators", new RelValues().replace(accumIds));
                         scrapAccumulator.update(record.getInt(OColumn.ROW_ID), values);
-                        onOilScrapChangeUpdate.execute(domain);
+                        onTechnicScrapChangeUpdate.execute(domain);
                         mEditMode = !mEditMode;
                         mForm.setEditable(mEditMode);
                         setMode(mEditMode);
@@ -250,7 +231,7 @@ public class ScrapAccumulatorDetails extends OdooCompatActivity implements OFiel
                         values.put("technic_name", technic.browse(values.getInt("technic")).getString("name"));
                         int row_id = scrapAccumulator.insert(values);
                         if (row_id != scrapAccumulator.INVALID_ROW_ID) {
-                            onOilScrapChangeUpdate.execute(domain);
+                            onTechnicScrapChangeUpdate.execute(domain);
                             Toast.makeText(this, R.string.tech_toast_information_created, Toast.LENGTH_LONG).show();
                             mEditMode = !mEditMode;
                             finish();
@@ -288,7 +269,7 @@ public class ScrapAccumulatorDetails extends OdooCompatActivity implements OFiel
                             public void onConfirmChoiceSelect(OAlert.ConfirmType type) {
                                 if (type == OAlert.ConfirmType.POSITIVE) {
                                     if (scrapAccumulator.delete(record.getInt(OColumn.ROW_ID))) {
-                                        onOilScrapChangeUpdate.execute(domain);
+                                        onTechnicScrapChangeUpdate.execute(domain);
                                         Toast.makeText(ScrapAccumulatorDetails.this, R.string.tech_toast_information_deleted,
                                                 Toast.LENGTH_SHORT).show();
                                         finish();
@@ -321,6 +302,20 @@ public class ScrapAccumulatorDetails extends OdooCompatActivity implements OFiel
         }
     }
 
+    private void getTechnicAccumulators(int techId) {
+        ODataRow techRecord = technic.browse(techId);
+        technicAccumulatorLines = techRecord.getO2MRecord("accumulators").browseEach();
+        toWizardTechAccums.clear();
+        for (ODataRow line : technicAccumulatorLines) {
+            toWizardTechAccums.put(line.getString("_id"), false);
+        }
+        for (ODataRow line : scrapAccumulatorLines) {
+            if (toWizardTechAccums.containsKey(line.getString("_id"))) {
+                toWizardTechAccums.put(line.getString("_id"), true);
+            }
+        }
+    }
+
     private void loadActivity(ODataRow row) {
         if (record != null) {
             Intent intent = new Intent(this, AccumulatorDetailsWizard.class);
@@ -337,7 +332,7 @@ public class ScrapAccumulatorDetails extends OdooCompatActivity implements OFiel
         }
     }
 
-    private class OnOilScrapChangeUpdate extends AsyncTask<ODomain, Void, Void> {
+    private class OnTechnicScrapChangeUpdate extends AsyncTask<ODomain, Void, Void> {
         @Override
         protected Void doInBackground(ODomain... params) {
             if (app.inNetwork()) {
@@ -367,14 +362,9 @@ public class ScrapAccumulatorDetails extends OdooCompatActivity implements OFiel
 
     @Override
     public void onFieldValueChange(OField field, Object value) {
-        Log.i("field===", field.getFieldName().toString());
         if (record == null && field.getFieldName().equals("technic")) {
             ODataRow techVal = (ODataRow) value;
-            Log.i("techVal.getString==", techVal.getString("id").toString());
             technicSync(techVal.getString("id"));
-            scrapAccumulatorLines.clear();
-            drawAccumulator(scrapAccumulatorLines);
-            getTechnicAccumulators((Integer) technicId.getValue());
         }
     }
 
@@ -402,7 +392,6 @@ public class ScrapAccumulatorDetails extends OdooCompatActivity implements OFiel
                 ODomain domain = new ODomain();
                 domain.add("id", "=", serverTechId);
                 OnTechnicSync sync = new OnTechnicSync();
-                Log.i("techVal.getString==", "work====");
                 sync.execute(domain);
             } else {
                 Toast.makeText(this, R.string.toast_network_required, Toast.LENGTH_SHORT).show();
@@ -413,8 +402,6 @@ public class ScrapAccumulatorDetails extends OdooCompatActivity implements OFiel
     }
 
     private class OnTechnicSync extends AsyncTask<ODomain, Void, Void> {
-        App app = (App) getApplicationContext();
-
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -424,12 +411,9 @@ public class ScrapAccumulatorDetails extends OdooCompatActivity implements OFiel
         @Override
         protected Void doInBackground(ODomain... params) {
             try {
-                if (app.inNetwork()) {
-                    Thread.sleep(500);
-                    technic.quickSyncRecords(params[0]);
-                }
+                technic.quickSyncRecords(params[0]);
             } catch (Exception e) {
-
+                e.printStackTrace();
             }
             return null;
         }

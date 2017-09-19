@@ -66,6 +66,22 @@
                         app:fieldTextAppearance="?android:textAppearanceMedium" />
 
                     <odoo.controls.OField
+                        android:id="@+id/accumCapacity"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:fieldLabelColor="@color/theme_secondary"
+                        app:fieldName="capacity"
+                        app:fieldTextAppearance="?android:textAppearanceMedium" />
+
+                    <odoo.controls.OField
+                        android:id="@+id/accumUsagePercent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:fieldLabelColor="@color/theme_secondary"
+                        app:fieldName="usage_percent"
+                        app:fieldTextAppearance="?android:textAppearanceMedium" />
+
+                    <odoo.controls.OField
                         android:id="@+id/accumReason"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

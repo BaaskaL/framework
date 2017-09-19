@@ -32,6 +32,7 @@ import com.odoo.core.orm.fields.OColumn;
 import com.odoo.core.orm.fields.types.OBoolean;
 import com.odoo.core.orm.fields.types.ODateTime;
 import com.odoo.core.orm.fields.types.OFloat;
+import com.odoo.core.orm.fields.types.OInteger;
 import com.odoo.core.orm.fields.types.OSelection;
 import com.odoo.core.orm.fields.types.OVarchar;
 import com.odoo.core.support.OUser;
@@ -43,14 +44,15 @@ public class Accumulator extends OModel {
 
     OColumn product = new OColumn("Аккумлятор", ProductProduct.class, OColumn.RelationType.ManyToOne);
     OColumn name = new OColumn("Нэр", OVarchar.class);
+    OColumn capacity = new OColumn("Багтаамж /AH/", OInteger.class);
+    OColumn usage_percent = new OColumn("Ашиглалтын хувь", OFloat.class);
     OColumn serial = new OColumn("Сериал дугаар", OVarchar.class);
     OColumn technic = new OColumn("Техник", TechnicsModel.class, OColumn.RelationType.ManyToOne);
     OColumn reason = new OColumn("Шалтгаан", ScrapAccumulatorReason.class, OColumn.RelationType.ManyToOne);
-    //    OColumn capacity = new OColumn("Хэмжээ", OFloat.class);
     OColumn date = new OColumn("Бүртгэгдсэн огноо", ODateTime.class);
     OColumn state = new OColumn("Төлөв", OSelection.class)
             .addSelection("draft", "Ноорог")
-            .addSelection("in_using", "Ашиглаж буй")
+            .addSelection("in_use", "Ашиглаж буй")
             .addSelection("in_reserve", "Нөөцөнд")
             .addSelection("in_scrap", "Акталсан")
             .setDefaultValue("draft");
