@@ -187,14 +187,6 @@ public class ScrapAccumulators extends BaseFragment implements LoaderManager.Loa
     private class OnAccumScrapChangeUpdate extends AsyncTask<ODomain, Void, Void> {
         private ProgressDialog progressDialog;
 
-        Handler handle = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                progressDialog.incrementProgressBy(1);
-            }
-        };
-
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -226,7 +218,6 @@ public class ScrapAccumulators extends BaseFragment implements LoaderManager.Loa
             } else {
                 Toast.makeText(mContext, OResource.string(mContext, R.string.toast_network_required), Toast.LENGTH_LONG).show();
             }
-
             return null;
         }
 

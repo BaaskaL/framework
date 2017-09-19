@@ -29,6 +29,7 @@ import com.odoo.core.orm.fields.OColumn;
 import com.odoo.core.orm.fields.types.OBoolean;
 import com.odoo.core.orm.fields.types.ODateTime;
 import com.odoo.core.orm.fields.types.OFloat;
+import com.odoo.core.orm.fields.types.OInteger;
 import com.odoo.core.orm.fields.types.OSelection;
 import com.odoo.core.orm.fields.types.OVarchar;
 import com.odoo.core.support.OUser;
@@ -43,6 +44,7 @@ public class TechnicOil extends OModel {
     OColumn product_id = new OColumn("Бараа", ProductProduct.class, OColumn.RelationType.ManyToOne);
     OColumn reason = new OColumn("Шалтгаан", ScrapOilReason.class, OColumn.RelationType.ManyToOne);
     OColumn capacity = new OColumn("Хэмжээ", OFloat.class);
+    OColumn usage_percent = new OColumn("Ашиглалтын хувь", OFloat.class);
     OColumn date = new OColumn("Суурилуулсан огноо", ODateTime.class);
     OColumn state = new OColumn("Төлөв", OSelection.class)
             .addSelection("draft", "Ноорог")

@@ -23,6 +23,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.odoo.BuildConfig;
+import com.odoo.addons.scrapAccumulator.ScrapAccumulatorPhotos;
 import com.odoo.addons.technic.models.TechnicsModel;
 import com.odoo.core.orm.OModel;
 import com.odoo.core.orm.OValues;
@@ -42,7 +43,7 @@ public class ScrapOils extends OModel {
 
     OColumn origin = new OColumn("Актын дугаар", OVarchar.class);
     OColumn technic_id = new OColumn("Техник", TechnicsModel.class, OColumn.RelationType.ManyToOne);
-    OColumn oil_ids = new OColumn("ШТМ", TechnicOil.class, OColumn.RelationType.ManyToMany);
+    OColumn oil_ids = new OColumn("ШТМ", TechnicOil.class, OColumn.RelationType.ManyToMany).setRequired();
     OColumn is_payable = new OColumn("Төлбөртэй эсэх", OBoolean.class);
     OColumn date = new OColumn("Огноо", ODateTime.class);
     OColumn description = new OColumn("Тайлбар", OVarchar.class);

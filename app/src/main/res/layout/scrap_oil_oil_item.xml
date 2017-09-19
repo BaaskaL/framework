@@ -118,21 +118,12 @@
                 android:layout_weight="1.5">
 
                 <TextView
-                    android:id="@+id/reason"
+                    android:id="@+id/usage_percent"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/body_text_1"
                     android:textSize="@dimen/text_size_medium" />
             </LinearLayout>
-
-            <ImageButton
-                android:id="@+id/btn_detail"
-                android:layout_width="20dp"
-                android:layout_height="match_parent"
-                android:background="@color/gts_yellow"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:src="@drawable/ic_action_more" />
 
         </LinearLayout>
 

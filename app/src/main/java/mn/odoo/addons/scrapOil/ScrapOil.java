@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.odoo.R;
 import com.odoo.addons.scrapOil.models.ScrapOils;
+import com.odoo.addons.scrapOil.models.ShTMScrapPhotos;
 import com.odoo.core.orm.ODataRow;
 import com.odoo.core.rpc.helper.ODomain;
 import com.odoo.core.support.addons.fragment.BaseFragment;
@@ -32,6 +33,7 @@ import com.odoo.core.support.list.OCursorListAdapter;
 import com.odoo.core.utils.IntentUtils;
 import com.odoo.core.utils.OControls;
 import com.odoo.core.utils.OCursorUtils;
+import com.odoo.core.utils.OResource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +52,7 @@ public class ScrapOil extends BaseFragment implements LoaderManager.LoaderCallba
     private OCursorListAdapter mAdapter = null;
     private boolean syncRequested = false;
     private ScrapOils scrapOil;
+    private ShTMScrapPhotos shTMScrapPhotos;
     private Context mContext;
 
     @Override
@@ -69,6 +72,7 @@ public class ScrapOil extends BaseFragment implements LoaderManager.LoaderCallba
         mView = view;
         mContext = this.getContext();
         scrapOil = new ScrapOils(mContext, null);
+        shTMScrapPhotos = new ShTMScrapPhotos(mContext, null);
         ListView mListViewScrap = (ListView) mView.findViewById(R.id.listview_scrap);
         mAdapter = new OCursorListAdapter(getActivity(), null, R.layout.scrap_oil_row_item);
         mAdapter.setOnViewBindListener(this);
@@ -82,17 +86,34 @@ public class ScrapOil extends BaseFragment implements LoaderManager.LoaderCallba
 
     @Override
     public void onStatusChange(Boolean changed) {
-//        if (changed) {
-//            getLoaderManager().restartLoader(0, null, this);
-//        }
         getLoaderManager().restartLoader(0, null, this);
     }
 
     @Override
     public void onViewBind(View view, Cursor cursor, ODataRow row) {
-        OControls.setText(view, R.id.tvOilSequence, (row.getString("origin").equals("false") ? "" : row.getString("origin")));
+        String state = "";
+        switch (row.getString("state")) {
+            case "request":
+                state = "Хүсэлт";
+                break;
+            case "waiting_approval":
+                state = "Баталгаа хүлээгдсэн";
+                break;
+            case "approved":
+                state = "Баталсан";
+                break;
+            case "refused":
+                state = "Татгалзсан";
+                break;
+            case "done":
+                state = "Дууссан";
+                break;
+
+        }
+        OControls.setText(view, R.id.tvOilSequence, (row.getString("origin").equals("-") ? "Илгээгдээгүй" : row.getString("origin")));
         OControls.setText(view, R.id.tvOilTechnicName, (row.getString("technic_name")));
         OControls.setText(view, R.id.tvOilDate, (row.getString("date")));
+        OControls.setText(view, R.id.tvOilState, state);
     }
 
     @Override
@@ -151,7 +172,6 @@ public class ScrapOil extends BaseFragment implements LoaderManager.LoaderCallba
     public void onRefresh() {
         if (inNetwork()) {
             parent().sync().requestSync(ScrapOils.AUTHORITY);
-            setSwipeRefreshing(true);
             OnOilScrapChangeUpdate onTireScrapChangeUpdate = new OnOilScrapChangeUpdate();
             ODomain d = new ODomain();
             /*swipe хийхэд бүх үзлэгийг update хйих*/
@@ -170,16 +190,33 @@ public class ScrapOil extends BaseFragment implements LoaderManager.LoaderCallba
         protected void onPreExecute() {
             super.onPreExecute();
             progressDialog = new ProgressDialog(mContext);
-            progressDialog.setCancelable(false);
-            progressDialog.setTitle(R.string.title_please_wait);
-            progressDialog.setMessage("Update");
-            progressDialog.hide();
+            progressDialog.setTitle(R.string.title_please_wait_mn);
+            progressDialog.setMessage("Мэдээлэл шинэчилж байна.");
+//            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+//            progressDialog.setProgress(1);
+            progressDialog.setMax(mAdapter.getCount());
+            progressDialog.setCancelable(true);
+            progressDialog.show();
         }
 
         @Override
         protected Void doInBackground(ODomain... params) {
-            ODomain domain = params[0];
-            scrapOil.quickSyncRecords(domain);
+            if (inNetwork()) {
+                ODomain domain = params[0];
+                List<ODataRow> rows = scrapOil.select(null, "id = ?", new String[]{"0"});
+                List<ODataRow> photoRows = shTMScrapPhotos.select(null, "id = ?", new String[]{"0"});
+                for (ODataRow row : rows) {
+                    scrapOil.quickCreateRecord(row);
+                }
+                for (ODataRow row : photoRows) {
+                    shTMScrapPhotos.quickCreateRecord(row);
+                }
+                /*Бусад бичлэгүүдийг update хийж байна*/
+                scrapOil.quickSyncRecords(domain);
+                shTMScrapPhotos.quickSyncRecords(domain);
+            } else {
+                Toast.makeText(mContext, OResource.string(mContext, R.string.toast_network_required), Toast.LENGTH_LONG).show();
+            }
             return null;
         }
 

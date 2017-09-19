@@ -24,6 +24,7 @@ import android.content.Context;
 import com.odoo.core.orm.OModel;
 import com.odoo.core.orm.fields.OColumn;
 import com.odoo.core.orm.fields.types.OBlob;
+import com.odoo.core.orm.fields.types.OVarchar;
 import com.odoo.core.support.OUser;
 
 public class ShTMScrapPhotos extends OModel {
@@ -31,6 +32,7 @@ public class ShTMScrapPhotos extends OModel {
     OColumn scrap_id = new OColumn("Акт", ScrapOils.class, OColumn.RelationType.ManyToOne);
     OColumn shtm_id = new OColumn("ШТМ", TechnicOil.class, OColumn.RelationType.ManyToOne);
     OColumn photo = new OColumn("Зураг", OBlob.class);
+    OColumn name = new OColumn("Нэр", OVarchar.class);
 
     public ShTMScrapPhotos(Context context, OUser user) {
         super(context, "shtm.register.scrap.photos", user);

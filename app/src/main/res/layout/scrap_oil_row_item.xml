@@ -48,5 +48,17 @@
             android:text="date"
             android:textAppearance="?android:textAppearanceSmall"
             android:textColor="@color/body_text_1" />
+
+        <TextView
+            android:id="@+id/tvOilState"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="0.3"
+            android:fontFamily="@string/font_normal"
+            android:gravity="center"
+            android:text="State"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:textColor="@color/body_text_1" />
     </LinearLayout>
 </LinearLayout>

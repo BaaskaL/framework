@@ -369,6 +369,10 @@
             android:name="mn.odoo.addons.workOrder.wizards.repairTeam.AddEmployeeWizard"
             android:windowSoftInputMode="stateHidden" />
 
+        <activity
+            android:name="mn.odoo.addons.scrapOil.wizards.OilDetailsWizard"
+            android:windowSoftInputMode="stateHidden" />
+
     </application>
 
 </manifest>
