@@ -63,8 +63,15 @@
                         android:layout_height="wrap_content"
                         app:fieldLabelColor="@color/theme_secondary"
                         app:fieldName="capacity"
-                        app:fieldTextAppearance="?android:textAppearanceSmall"
-                        app:widgetType="SearchableLive" />
+                        app:fieldTextAppearance="?android:textAppearanceSmall" />
+
+                    <odoo.controls.OField
+                        android:id="@+id/oilUsagePercent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:fieldLabelColor="@color/theme_secondary"
+                        app:fieldName="usage_percent"
+                        app:fieldTextAppearance="?android:textAppearanceSmall" />
 
                     <odoo.controls.OField
                         android:id="@+id/oilDateRecord"
@@ -104,7 +111,7 @@
                     android:orientation="horizontal">
 
                     <Button
-                        android:id="@+id/takePicture"
+                        android:id="@+id/takePictureOil"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Take Picture" />

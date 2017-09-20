@@ -5,54 +5,60 @@
     android:orientation="horizontal">
 
     <LinearLayout
-        android:id="@+id/customerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="?android:attr/dividerHorizontal"
         android:orientation="horizontal"
-        android:paddingBottom="@dimen/default_8dp"
-        android:paddingLeft="@dimen/default_8dp"
-        android:paddingRight="@dimen/default_16dp"
-        android:paddingTop="@dimen/default_8dp">
+        android:padding="@dimen/default_8dp"
+        android:showDividers="middle">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/tvPartOrigin"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginLeft="10dp"
+            android:layout_weight="0.3"
+            android:fontFamily="@string/font_normal"
+            android:gravity="center"
+            android:text="origin"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:textColor="@color/body_text_1" />
 
-            <TextView
-                android:id="@+id/tvPartName"
-                android:layout_width="180dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:fontFamily="@string/font_normal"
-                android:text="selbeg"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="@color/body_text_1"></TextView>
+        <TextView
+            android:id="@+id/tvPartTechnicName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:fontFamily="@string/font_normal"
+            android:gravity="left"
+            android:text="technic name"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:textColor="@color/body_text_1" />
 
-            <TextView
-                android:id="@+id/tvTechnicName"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="5dp"
-                android:layout_weight="1"
-                android:fontFamily="@string/font_normal"
-                android:text="tehnik ner"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="@color/body_text_2"></TextView>
+        <TextView
+            android:id="@+id/tvPartDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="0.3"
+            android:fontFamily="@string/font_normal"
+            android:gravity="center"
+            android:text="date"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:textColor="@color/body_text_1" />
 
-            <TextView
-                android:id="@+id/tvDate"
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="5dp"
-                android:layout_weight="0.5"
-                android:fontFamily="@string/font_normal"
-                android:text="ognoo"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="@color/body_text_2"></TextView>
-        </LinearLayout>
+        <TextView
+            android:id="@+id/tvPartState"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="0.3"
+            android:fontFamily="@string/font_normal"
+            android:gravity="center"
+            android:text="State"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:textColor="@color/body_text_1" />
+
     </LinearLayout>
 </LinearLayout>

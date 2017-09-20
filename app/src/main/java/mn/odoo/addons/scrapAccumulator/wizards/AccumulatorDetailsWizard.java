@@ -82,7 +82,7 @@ public class AccumulatorDetailsWizard extends OdooCompatActivity implements View
 
         mForm = (OForm) findViewById(R.id.OFormAccumulatorScrapWizard);
         gridView = (GridView) findViewById(R.id.gridViewAccumImage);
-        toolbar = (Toolbar) findViewById(R.id.toolbarOilWizard);
+        toolbar = (Toolbar) findViewById(R.id.toolbarAccumulatorWizard);
         oReason = (OField) mForm.findViewById(R.id.accumReason);
         takePic = (Button) findViewById(R.id.takePictureAccum);
         app = (App) getApplicationContext();

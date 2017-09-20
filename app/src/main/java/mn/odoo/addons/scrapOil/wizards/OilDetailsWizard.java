@@ -83,8 +83,8 @@ public class OilDetailsWizard extends OdooCompatActivity implements View.OnClick
         mForm = (OForm) findViewById(R.id.OFormOilScrapWizard);
         gridView = (GridView) findViewById(R.id.gridViewOilImage);
         toolbar = (Toolbar) findViewById(R.id.toolbarOilWizard);
-        oReason = (OField) mForm.findViewById(R.id.accumReason);
-        takePic = (Button) findViewById(R.id.takePictureAccum);
+        oReason = (OField) mForm.findViewById(R.id.oilReason);
+        takePic = (Button) findViewById(R.id.takePictureOil);
         app = (App) getApplicationContext();
 
         fileManager = new OFileManager(this);
@@ -104,8 +104,8 @@ public class OilDetailsWizard extends OdooCompatActivity implements View.OnClick
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ImageView image = (ImageView) view.findViewById(R.id.image);
-                ODataRow accumRow = (ODataRow) gridAdapter.getItem(position);
-                Bitmap item = BitmapUtils.getBitmapImage(mContext, accumRow.getString("photo"));
+                ODataRow row = (ODataRow) gridAdapter.getItem(position);
+                Bitmap item = BitmapUtils.getBitmapImage(mContext, row.getString("photo"));
                 Intent intent = new Intent(OilDetailsWizard.this, DetailsActivity.class);
                 DetailsActivity.image = item;
                 startActivity(intent);
@@ -174,7 +174,7 @@ public class OilDetailsWizard extends OdooCompatActivity implements View.OnClick
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        OnAccumuScrapPhotoChangeUpdate onAccumuScrapPhotoChangeUpdate = new OnAccumuScrapPhotoChangeUpdate();
+        OnOilScrapPhotoChangeUpdate onOilScrapPhotoChangeUpdate = new OnOilScrapPhotoChangeUpdate();
         ODomain domain = new ODomain();
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -193,7 +193,7 @@ public class OilDetailsWizard extends OdooCompatActivity implements View.OnClick
                         }
                         values.put("scrap_photos", new RelValues().append(imgValuene.toArray(new OValues[imgValuene.size()])).delete(gridAdapter.deleteIds));
                         technicOil.update(record.getInt(OColumn.ROW_ID), values);
-                        onAccumuScrapPhotoChangeUpdate.execute(domain);
+                        onOilScrapPhotoChangeUpdate.execute(domain);
                         mEditMode = !mEditMode;
                         setMode(mEditMode);
                         Toast.makeText(this, R.string.tech_toast_information_saved, Toast.LENGTH_LONG).show();
@@ -220,7 +220,7 @@ public class OilDetailsWizard extends OdooCompatActivity implements View.OnClick
         return super.onOptionsItemSelected(item);
     }
 
-    private class OnAccumuScrapPhotoChangeUpdate extends AsyncTask<ODomain, Void, Void> {
+    private class OnOilScrapPhotoChangeUpdate extends AsyncTask<ODomain, Void, Void> {
 
         @Override
         protected Void doInBackground(ODomain... params) {
@@ -265,7 +265,7 @@ public class OilDetailsWizard extends OdooCompatActivity implements View.OnClick
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.takePictureAccum:
+            case R.id.takePictureOil:
                 fileManager.requestForFile(OFileManager.RequestType.IMAGE_OR_CAPTURE_IMAGE);
                 break;
             default:

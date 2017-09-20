@@ -191,7 +191,7 @@
         <activity
             android:name="mn.odoo.addons.scrapParts.ScrapPartsDetails"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="stateHidden" />
 
         <!-- Sync Provider & Service Scrap Tire // -->
 
@@ -333,10 +333,6 @@
             android:name="mn.odoo.addons.otherClass.AddItemLineWizard"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
-        <activity
-            android:name="mn.odoo.addons.otherClass.OilDetailsWizard"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden" />
         <activity android:name="mn.odoo.addons.otherClass.DetailsActivity" />
 
         <!-- Sync Provider & Service Work Order // -->
@@ -371,6 +367,10 @@
 
         <activity
             android:name="mn.odoo.addons.scrapOil.wizards.OilDetailsWizard"
+            android:windowSoftInputMode="stateHidden" />
+
+        <activity
+            android:name="mn.odoo.addons.scrapParts.wizards.PartsDetailsWizard"
             android:windowSoftInputMode="stateHidden" />
 
     </application>

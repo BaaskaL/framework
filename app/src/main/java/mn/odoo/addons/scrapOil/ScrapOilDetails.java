@@ -168,7 +168,8 @@ public class ScrapOilDetails extends OdooCompatActivity implements OField.IOnFie
                             OControls.setText(mView, R.id.state, "Хэрэглэж буй");
                         else if (row.getString("state").equals("inactive"))
                             OControls.setText(mView, R.id.state, "Нөөцөнд");
-                        else OControls.setText(mView, R.id.state, "Акталсан");
+                        else if (row.getString("state").equals("rejected"))
+                            OControls.setText(mView, R.id.state, "Акталсан");
 
                         mView.setOnClickListener(new View.OnClickListener() {
                             @Override

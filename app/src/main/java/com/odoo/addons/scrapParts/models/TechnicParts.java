@@ -21,50 +21,71 @@ package com.odoo.addons.scrapParts.models;
 
 import android.content.Context;
 
+import com.odoo.addons.scrapOil.models.ProductProduct;
+import com.odoo.addons.technic.models.TechnicsModel;
 import com.odoo.core.orm.OModel;
+import com.odoo.core.orm.OValues;
+import com.odoo.core.orm.annotation.Odoo;
 import com.odoo.core.orm.fields.OColumn;
+import com.odoo.core.orm.fields.types.OBoolean;
+import com.odoo.core.orm.fields.types.ODateTime;
 import com.odoo.core.orm.fields.types.OFloat;
+import com.odoo.core.orm.fields.types.OSelection;
 import com.odoo.core.orm.fields.types.OVarchar;
 import com.odoo.core.support.OUser;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TechnicParts extends OModel {
 
-    OColumn name = new OColumn("Name", OVarchar.class);
-    OColumn reason = new OColumn("Reason", PartsScrapReason.class, OColumn.RelationType.ManyToOne);
-    OColumn part_cost = new OColumn("Cost", OFloat.class);
-    OColumn state = new OColumn("State", OVarchar.class);
+    OColumn name = new OColumn("Нэр", OVarchar.class);
+    OColumn technic = new OColumn("Техникийн нэр", TechnicsModel.class, OColumn.RelationType.ManyToOne);
+    OColumn product = new OColumn("Бараа", ProductProduct.class, OColumn.RelationType.ManyToOne);
+    OColumn reason = new OColumn("Шалтгаан", PartsScrapReason.class, OColumn.RelationType.ManyToOne);
+    OColumn part_cost = new OColumn("Өртөг", OFloat.class);
+    OColumn date = new OColumn("Oгноо", ODateTime.class);
+    OColumn state = new OColumn("Төлөв", OSelection.class)
+            .addSelection("draft", "Ноорог")
+            .addSelection("in_use", "Ашиглаж буй")
+            .addSelection("in_reserve", "Нөөцөнд")
+            .addSelection("in_scrap", "Акталсан")
+            .setDefaultValue("draft");
 
-    //    OColumn product = new OColumn("Product", ProductProduct.class, OColumn.RelationType.ManyToOne).getRecordSyncLimit(10);
-//    OColumn finance_code = new OColumn("Finance code", OFloat.class);
-//    OColumn product_number = new OColumn("Product number", OVarchar.class);
-//    OColumn product_number_replace = new OColumn("Replace number", OVarchar.class);
-//    OColumn mongolian_name = new OColumn("Mongolian name", OVarchar.class);
-//    OColumn foriegn_name = new OColumn("Foriegn name", OVarchar.class);
-//    OColumn serial = new OColumn("Serial number", OVarchar.class);
-//    OColumn technic_id = new OColumn("Техникийн нэр", TechnicsModel.class, OColumn.RelationType.ManyToOne);
-//    OColumn date = new OColumn("Date", ODateTime.class);
-//    OColumn project = new OColumn("Project", ProjectProject.class, OColumn.RelationType.ManyToOne);
-//    OColumn usages = new OColumn("inspection_id", TechnicPartsUsage.class, OColumn.RelationType.OneToMany).setRelatedColumn("inspection_id");
+    OColumn scrap_photos = new OColumn("Photos", PartScrapPhotos.class, OColumn.RelationType.OneToMany).setRelatedColumn("part_id");
+    OColumn in_scrap = new OColumn("In scrap", OBoolean.class);
+
+    @Odoo.Functional(store = true, depends = {"product"}, method = "storeProductName")
+    OColumn product_name = new OColumn("Product name", OVarchar.class).setLocalColumn();
+    @Odoo.Functional(store = true, depends = {"reason"}, method = "storeReasonName")
+    OColumn reason_name = new OColumn("Reason name", OVarchar.class).setLocalColumn();
 
     public TechnicParts(Context context, OUser user) {
         super(context, "technic.parts", user);
     }
 
-//    public String getUsageUomName(OValues row) {
-//        Log.i("ROW====", row.toString());
-//        String name = "Хоосон";
-//        try {
-//            if (!row.getString("usage_uom_id").equals(null)) {
-//                Log.i("usage_uom_id====", row.getString("usage_uom_id"));
-//                String value = row.getString("usage_uom_id");
-//                String[] parts = value.split(",");
-//                name = parts[1].substring(1, parts[1].length() - 1);
-//                Log.i("name====", name);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return name;
-//    }
+    public String storeProductName(OValues value) {
+        try {
+            if (!value.getString("product").equals("false")) {
+                List<Object> product_id = (ArrayList<Object>) value.get("product");
+                return product_id.get(1) + "";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public String storeReasonName(OValues value) {
+        try {
+            if (!value.getString("reason").equals("false")) {
+                List<Object> reason = (ArrayList<Object>) value.get("reason");
+                return reason.get(1) + "";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
 
 }

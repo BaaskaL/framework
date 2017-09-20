@@ -46,7 +46,8 @@ public class ScrapOils extends OModel {
     OColumn oil_ids = new OColumn("ШТМ", TechnicOil.class, OColumn.RelationType.ManyToMany).setRequired();
     OColumn is_payable = new OColumn("Төлбөртэй эсэх", OBoolean.class);
     OColumn date = new OColumn("Огноо", ODateTime.class);
-    OColumn description = new OColumn("Тайлбар", OVarchar.class);
+    OColumn description = new OColumn("Тайлбар", OVarchar.class).setRequired();
+
     OColumn state = new OColumn("Төлөв", OSelection.class)
             .addSelection("request", "Хүсэлт")
             .addSelection("waiting_approval", "Баталгаа хүлээгдсэн")

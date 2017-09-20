@@ -61,7 +61,7 @@ public class ScrapOil extends BaseFragment implements LoaderManager.LoaderCallba
         setHasSyncStatusObserver(KEY, this, db());
         mView = inflater.inflate(R.layout.scrap_listview, container, false);
         LinearLayout HeaderContainer = (LinearLayout) mView.findViewById(R.id.scrap_header);
-        LinearLayout Header = (LinearLayout) inflater.inflate(R.layout.header_tire_scrap_list, container, false);
+        LinearLayout Header = (LinearLayout) inflater.inflate(R.layout.header_accumulator_scrap_list, container, false);
         HeaderContainer.addView(Header);
         return mView;
     }

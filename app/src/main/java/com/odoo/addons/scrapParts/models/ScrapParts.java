@@ -31,45 +31,50 @@ import com.odoo.core.orm.annotation.Odoo;
 import com.odoo.core.orm.fields.OColumn;
 import com.odoo.core.orm.fields.types.OBoolean;
 import com.odoo.core.orm.fields.types.ODateTime;
+import com.odoo.core.orm.fields.types.OSelection;
 import com.odoo.core.orm.fields.types.OVarchar;
 import com.odoo.core.support.OUser;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ScrapParts extends OModel {
     public static final String AUTHORITY = BuildConfig.APPLICATION_ID + ".core.provider.content.sync.scrap_parts";
 
     OColumn origin = new OColumn("Актын дугаар", OVarchar.class);
-    OColumn date = new OColumn("Хүсэлтийн огноо", ODateTime.class);
     OColumn created_user = new OColumn("Үүсгэсэн хэрэглэгч", ResUsers.class, OColumn.RelationType.ManyToOne);
-    OColumn technic_id = new OColumn("Техникийн нэр", TechnicsModel.class, OColumn.RelationType.ManyToOne);
+    OColumn technic = new OColumn("Техникийн нэр", TechnicsModel.class, OColumn.RelationType.ManyToOne);
     OColumn parts = new OColumn("Сэлбэг", TechnicParts.class, OColumn.RelationType.ManyToMany);
     OColumn is_payable = new OColumn("Төлбөртэй эсэх", OBoolean.class);
-    OColumn description = new OColumn("Тайлбар", OVarchar.class);
+    OColumn date = new OColumn("Хүсэлтийн огноо", ODateTime.class);
+    OColumn description = new OColumn("Тайлбар", OVarchar.class).setRequired();
 
-    @Odoo.Functional(store = true, depends = {"technic_id"}, method = "storeTechnicName")
-    OColumn technic_name = new OColumn("Technic name", OVarchar.class).setLocalColumn();
-//    OColumn history_lines = new OColumn("Цохолт", TechnicInspectionUsage.class, OColumn.RelationType.OneToMany).setRelatedColumn("inspection_id");
+    OColumn state = new OColumn("Төлөв", OSelection.class)
+            .addSelection("request", "Хүсэлт")
+            .addSelection("waiting_approval", "Баталгаа хүлээгдсэн")
+            .addSelection("approved", "Батлагдсан")
+            .addSelection("refused", "Татгалзсан")
+            .addSelection("returned", "Буцаагдсан")
+            .addSelection("done", "Дууссан")
+            .setDefaultValue("request");
+    OColumn part_photos = new OColumn("Parts photos", PartScrapPhotos.class, OColumn.RelationType.OneToMany).setRelatedColumn("scrap_id");
+    @Odoo.Functional(store = true, depends = {"technic"}, method = "storeTechnicName")
+    OColumn technic_name = new OColumn("Техникийн нэр", OVarchar.class).setLocalColumn();
 
     public ScrapParts(Context context, OUser user) {
         super(context, "technic.parts.scrap", user);
     }
 
-    public String storeTechnicName(OValues row) {
-        Log.i("ROW====", row.toString());
-        String name = "Хоосон";
-        if (row.size() > 0) {
-            try {
-                if (!row.getString("technic_id").equals(null)) {
-                    Log.i("usage_uom_id====", row.getString("technic_id"));
-                    String value = row.getString("technic_id");
-                    String[] parts = value.split(",");
-                    name = parts[1].substring(1, parts[1].length() - 1);
-                    Log.i("name====", name);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+    public String storeTechnicName(OValues value) {
+        try {
+            if (!value.getString("technic").equals("false")) {
+                List<Object> technic = (ArrayList<Object>) value.get("technic");
+                return technic.get(1) + "";
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return name;
+        return "";
     }
 
 }

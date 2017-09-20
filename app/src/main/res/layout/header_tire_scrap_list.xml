@@ -54,6 +54,19 @@
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textColor="#ffffff"
                 android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="0.3"
+                android:fontFamily="@string/font_normal"
+                android:gravity="center"
+                android:text="Төлөв"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textColor="#ffffff"
+                android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

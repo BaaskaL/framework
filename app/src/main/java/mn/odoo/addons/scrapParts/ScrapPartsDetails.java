@@ -1,61 +1,42 @@
 package mn.odoo.addons.scrapParts;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.IdRes;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.TextView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.daimajia.slider.library.Animations.DescriptionAnimation;
-import com.daimajia.slider.library.SliderLayout;
-import com.daimajia.slider.library.SliderTypes.BaseSliderView;
-import com.daimajia.slider.library.SliderTypes.TextSliderView;
-import com.daimajia.slider.library.Tricks.ViewPagerEx;
 import com.odoo.App;
 import com.odoo.R;
-import com.odoo.addons.TechnicInsoection.Models.ProductUom;
-import com.odoo.addons.TechnicInsoection.Models.TechnicInspectionCategory;
-import com.odoo.addons.TechnicInsoection.Models.TechnicInspectionCheckList;
-import com.odoo.addons.TechnicInsoection.Models.TechnicInspectionNorm;
-import com.odoo.addons.TechnicInsoection.Models.TechnicInspectionPack;
-import com.odoo.addons.TechnicInsoection.Models.TechnicInspectionUsage;
-import com.odoo.addons.TechnicInsoection.Models.TechnicsInspectionModel;
-import com.odoo.addons.TechnicInsoection.Models.UsageUom;
-import com.odoo.addons.technic.models.TechnicNorm;
-import com.odoo.addons.scrapTire.models.TechnicTire;
+import com.odoo.addons.scrapParts.models.PartScrapPhotos;
+import com.odoo.addons.scrapParts.models.ScrapParts;
+import com.odoo.addons.scrapParts.models.TechnicParts;
 import com.odoo.addons.technic.models.TechnicsModel;
-import com.odoo.base.addons.ir.feature.OFileManager;
 import com.odoo.core.orm.ODataRow;
-import com.odoo.core.orm.OModel;
 import com.odoo.core.orm.OValues;
+import com.odoo.core.orm.RelValues;
 import com.odoo.core.orm.fields.OColumn;
+import com.odoo.core.rpc.helper.ODomain;
 import com.odoo.core.support.OdooCompatActivity;
 import com.odoo.core.utils.OAlert;
-import com.odoo.core.utils.OAppBarUtils;
+import com.odoo.core.utils.OControls;
 import com.odoo.core.utils.ODateUtils;
 import com.odoo.core.utils.OResource;
-
-import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import mn.odoo.addons.TechnicInspection.TechnicsInspectionSignature;
+import mn.odoo.addons.otherClass.AddItemLineWizard;
+import mn.odoo.addons.scrapParts.wizards.PartsDetailsWizard;
 import odoo.controls.ExpandableListControl;
 import odoo.controls.OField;
 import odoo.controls.OForm;
@@ -64,314 +45,144 @@ import odoo.controls.OForm;
  * Created by baaska on 5/30/17.
  */
 
-public class ScrapPartsDetails extends OdooCompatActivity implements OField.IOnFieldValueChangeListener,
-        View.OnClickListener, ViewPagerEx.OnPageChangeListener, BaseSliderView.OnSliderClickListener {
+public class ScrapPartsDetails extends OdooCompatActivity implements OField.IOnFieldValueChangeListener, View.OnClickListener {
 
     public static final String TAG = ScrapPartsDetails.class.getSimpleName();
-
     private Bundle extra;
     private OForm mForm;
-    private final String KEY_MODE = "key_edit_mode";
-    private TechnicsInspectionModel technicIns;
-    private TechnicsModel technic;
+    private OField oState, oOrigin, date, technicId, isPaybale;
     private ODataRow record = null;
     private Boolean mEditMode = false;
     private Menu mMenu;
-    private List<ODataRow> resultInspectionPack;
-    private TechnicInspectionCheckList inspectionLines;
-    private TechnicInspectionUsage inspectionUsage;
-    private TechnicInspectionNorm norm_obj;
-    private TechnicInspectionPack isectionPack;
-    private TechnicInspectionCategory inspectionCategory;
-    private UsageUom usageUom;
-    private ProductUom productUom;
-    private OField typeField;
-    private int myId;
-
+    private TechnicsModel technic;
+    private TechnicParts technicParts;
+    private PartScrapPhotos partScrapPhotos;
+    private ScrapParts scrapParts;
     private ExpandableListControl mList;
     private ExpandableListControl.ExpandableListAdapter mAdapter;
-    private ExpandableListControl mUsageList;
-    private ExpandableListControl.ExpandableListAdapter mUsageAdapter;
-    private ExpandableListControl mTireList;
-    private ExpandableListControl.ExpandableListAdapter mTireAdapter;
-    private List<Object> objects = new ArrayList<>();
-    private List<ODataRow> lines = null;
-    private List<Object> UsageObjects = new ArrayList<>();
-    private List<ODataRow> linesUom = new ArrayList<>();
-    private List<Object> TireObjects = new ArrayList<>();
-    private List<ODataRow> tireLines = new ArrayList<>();
-    private CollapsingToolbarLayout collapsingToolbarLayout;
-    private ImageView userImage = null;
+    private List<ODataRow> scrapPartLines = new ArrayList<>();
+    private List<ODataRow> technicPartLines = new ArrayList<>();
+    private List<ODataRow> partRow = new ArrayList<>();
     private Toolbar toolbar;
-    private OFileManager fileManager;
-    private SliderLayout mDemoSlider;
-    private String newImage = null;
-    private HashMap<String, Integer> file_maps;
-    private HashMap<String, String> url_maps;
+    private LinearLayout layoutAddItem = null;
+    private Context mContext;
+    App app;
+    /*Зүйлс оруулж ирэх*/
+    private HashMap<String, Boolean> toWizardTechParts = new HashMap<>();
+    private List<Object> objects = new ArrayList<>();
+    public static final int REQUEST_ADD_ITEMS = 323;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.technic_inspection_detail);
-        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.technic_collapsing_toolbar);
+        setContentView(R.layout.scrap_parts_detail);
 
-        mDemoSlider = (SliderLayout) findViewById(R.id.slider);
-        toolbar = (Toolbar) findViewById(R.id.toolbarTechnic);
+        extra = getIntent().getExtras();
+        app = (App) getApplicationContext();
+        mContext = getApplicationContext();
+        toolbar = (Toolbar) findViewById(R.id.toolbarScrapPart);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        userImage = (ImageView) findViewById(R.id.technic_image);
-        findViewById(R.id.captureImage).setOnClickListener(this);
-
-        fileManager = new OFileManager(this);
-
-
-        OAppBarUtils.setAppBar(this, true);
-        if (savedInstanceState != null) {
-            mEditMode = savedInstanceState.getBoolean(KEY_MODE);
-        }
-        extra = getIntent().getExtras();
-        technicIns = new TechnicsInspectionModel(this, null);
-        if (!hasRecordInExtra())
-            mEditMode = true;
-        inspectionLines = new TechnicInspectionCheckList(this, null);
-        inspectionUsage = new TechnicInspectionUsage(this, null);
-        norm_obj = new TechnicInspectionNorm(this, null);
-        isectionPack = new TechnicInspectionPack(this, null);
-        inspectionCategory = new TechnicInspectionCategory(this, null);
+        mEditMode = (!hasRecordInExtra() ? true : false);
         technic = new TechnicsModel(this, null);
-        usageUom = new UsageUom(this, null);
-        productUom = new ProductUom(this, null);
-        typeField = (OField) findViewById(R.id.inspection_type_id);
+        technicParts = new TechnicParts(this, null);
+        partScrapPhotos = new PartScrapPhotos(this, null);
+        scrapParts = new ScrapParts(this, null);
 
-        url_maps = new HashMap<>();
-        url_maps.put("Hannibal", "http://static2.hypable.com/wp-content/uploads/2013/12/hannibal-season-2-release-date.jpg");
-//        url_maps.put("Big Bang Theory", "http://tvfiles.alphacoders.com/100/hdclearart-10.png");
-//        url_maps.put("House of Cards", "http://cdn3.nflximg.net/images/3093/2043093.jpg");
-//        url_maps.put("Game of Thrones", "http://images.boomsbeat.com/data/images/full/19640/game-of-thrones-season-4-jpg.jpg");
+        mList = (ExpandableListControl) findViewById(R.id.ExpandListPartLine);
+        mList.setOnClickListener(this);
+        mForm = (OForm) findViewById(R.id.OFormPartScrap);
 
-
-        file_maps = new HashMap<>();
-        file_maps.put("Hannibal", R.drawable.hannibal);
-        file_maps.put("Big Bang Theory", R.drawable.bigbang);
-        file_maps.put("House of Cards", R.drawable.house);
-        file_maps.put("Game of Thrones", R.drawable.game_of_thrones);
-
-        for (String name : file_maps.keySet()) {
-            TextSliderView textSliderView = new TextSliderView(this);
-            // initialize a SliderLayout
-            textSliderView.description(name).image(file_maps.get(name))
-                    .setScaleType(BaseSliderView.ScaleType.Fit)
-                    .setOnSliderClickListener(this);
-
-            //add your extra information setImageBitmap
-//            userImage.setImageBitmap(BitmapUtils.getBitmapImage(this, newImage));
-            textSliderView.bundle(new Bundle());
-            textSliderView.getBundle().
-                    putString("extra", name);
-
-            mDemoSlider.addSlider(textSliderView);
-        }
-        mDemoSlider.setPresetTransformer(SliderLayout.Transformer.Accordion);
-        mDemoSlider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
-        mDemoSlider.setCustomAnimation(new DescriptionAnimation());
-        mDemoSlider.setDuration(4000);
-        mDemoSlider.addOnPageChangeListener(this);
+        oState = (OField) mForm.findViewById(R.id.StatePartScrap);
+        oOrigin = (OField) mForm.findViewById(R.id.OriginPartScrap);
+        date = (OField) mForm.findViewById(R.id.DatePartScrap);
+        technicId = (OField) mForm.findViewById(R.id.TechnicPartScrap);
+        isPaybale = (OField) mForm.findViewById(R.id.IsPayablePartScrap);
+        layoutAddItem = (LinearLayout) findViewById(R.id.layoutAddItem);
+        layoutAddItem.setOnClickListener(this);
 
         setupToolbar();
-        initAdapter();
-        getUsageUom();
-        getTire();
+    }
+
+    private void ToolbarMenuSetVisibl(Boolean Visibility) {
+        if (mMenu != null) {
+            mMenu.findItem(R.id.menu_more).setVisible(!Visibility);
+            mMenu.findItem(R.id.menu_edit).setVisible(!Visibility);
+            mMenu.findItem(R.id.menu_save).setVisible(Visibility);
+            mMenu.findItem(R.id.menu_cancel).setVisible(Visibility);
+        }
     }
 
     private void setMode(Boolean edit) {
-        if (mMenu != null) {
-            mMenu.findItem(R.id.menu_technic_detail_more).setVisible(!edit);
-            mMenu.findItem(R.id.menu_technic_edit).setVisible(!edit);
-            mMenu.findItem(R.id.menu_technic_save).setVisible(edit);
-            mMenu.findItem(R.id.menu_technic_cancel).setVisible(edit);
+        ToolbarMenuSetVisibl(edit);
+        oOrigin.setEditable(false);
+        oState.setEditable(false);
+        if (edit && record == null) {
+            technicId.setOnValueChangeListener(this);
         }
-        if (edit) {
-//            mForm = (OForm) findViewById(R.id.technic_inspection_edit_form);
-//            findViewById(R.id.technic_inspection_view_layout).setVisibility(View.GONE);
-//            findViewById(R.id.technic_inspection_edit_layout).setVisibility(View.VISIBLE);
-            OField technicField = (OField) findViewById(R.id.inspection_technic_id);
-//            mList = (ExpandableListControl) findViewById(R.id.expListOrderLineEdit);
-            mList.setVisibility(View.VISIBLE);
-//            mUsageList = (ExpandableListControl) findViewById(R.id.expListUsageUomEdit);
-            mUsageList.setVisibility(View.VISIBLE);
-//            mTireList = (ExpandableListControl) findViewById(R.id.expListTireEdit);
-            mTireList.setVisibility(View.VISIBLE);
-            technicField.setOnValueChangeListener(this);
-            typeField.setOnValueChangeListener(this);
-        } else {
-//            mForm = (OForm) findViewById(R.id.technic_inspection_form);
-//            findViewById(R.id.technic_inspection_edit_layout).setVisibility(View.GONE);
-//            findViewById(R.id.technic_inspection_view_layout).setVisibility(View.VISIBLE);
-//            mList = (ExpandableListControl) findViewById(R.id.expListOrderLine);
-            mList.setVisibility(View.VISIBLE);
-//            mUsageList = (ExpandableListControl) findViewById(R.id.expListUsageUom);
-//            mUsageList.setVisibility(View.VISIBLE);
-            //eniig zasahhh
-//            mTireList = (ExpandableListControl) findViewById(R.id.expListTire);
-//            mTireList.setVisibility(View.VISIBLE);
-        }
-    }
-
-    private void initAdapter() {
-        if (extra != null && record != null) {
-            lines = record.getO2MRecord("technic_inspection_check_list_ids").browseEach();
-        }
-        if (lines != null) {
-            objects.clear();
-            objects.addAll(lines);
-            mAdapter = mList.getAdapter(R.layout.technic_inspection_line_item, objects,
-                    new ExpandableListControl.ExpandableListAdapterGetViewListener() {
-                        @Override
-                        public View getView(final int position, View mView, ViewGroup parent) {
-                            if (mView == null) {
-                                mView = getLayoutInflater().inflate(R.layout.technic_inspection_line_item, parent, false);
-                            }
-                            final EditText description = (EditText) mView.findViewById(R.id.edtDescription);
-                            RadioGroup radioGroup = (RadioGroup) mView.findViewById(R.id.edtRadioGroup);
-                            RadioButton inspection_isitnormal = (RadioButton) mView.findViewById(R.id.inspection_isitnormal);
-                            RadioButton inspection_check = (RadioButton) mView.findViewById(R.id.inspection_check);
-                            TextView category = (TextView) mView.findViewById(R.id.edtCategory);
-                            TextView edtName = (TextView) mView.findViewById(R.id.edtName);
-                            description.setEnabled(mEditMode);
-                            inspection_isitnormal.setEnabled(mEditMode);
-                            inspection_check.setEnabled(mEditMode);
-
-                            ODataRow row = (ODataRow) mAdapter.getItem(position);
-                            edtName.setText((position + 1) + ". " + row.getString("item_name"));
-                            category.setText(row.getString("categ_name"));
-                            inspection_isitnormal.setChecked(row.getBoolean("inspection_isitnormal"));
-                            inspection_check.setChecked(row.getBoolean("inspection_check"));
-                            if (!row.getString("description").equals("false")) {
-                                description.setText(row.getString("description"));
-                            }
-                            description.addTextChangedListener(new TextWatcher() {
-
-                                @Override
-                                public void afterTextChanged(Editable s) {
-                                    if (s.length() != 0) {
-                                        lines.get(position).put("description", description.getText().toString());
-                                    }
-                                }
-
-                                @Override
-                                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                                }
-
-                                @Override
-                                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                                }
-                            });
-
-                            radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                                @Override
-                                public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-                                    lines.get(position).put("inspection_isitnormal", (checkedId == R.id.inspection_isitnormal) ? true : false);
-                                    lines.get(position).put("inspection_check", (checkedId == R.id.inspection_check) ? true : false);
-                                }
-                            });
-
-                            return mView;
-                        }
-                    });
-            objects.clear();
-            objects.addAll(lines);
-            mAdapter.notifyDataSetChanged(objects);
-        }
-    }
-
-    private boolean saveLine(OValues values) throws JSONException {
         if (record != null) {
-            for (Object line : objects) {
-                ODataRow row = (ODataRow) line;
-                inspectionLines.update(row.getInt("id"), row.toValues());
-            }
-            Log.i("UsageObjects===", UsageObjects.toString());
-            for (Object line : UsageObjects) {
-                ODataRow row = (ODataRow) line;
-                OValues update = new OValues();
-                update.put("usage_value", row.getFloat("usage_value"));
-                inspectionUsage.update(row.getInt("_id"), update);
-                Log.i("UPDATEDDDD++++", "ss");
-
-//                ORecordValues datas = new ORecordValues();
-//                datas.put("usage_value", row.getFloat("usage_value"));
-//                Log.i("datasss", datas.toString());
-//                inspectionUsage.getServerDataHelper().updateOnServer(datas, row.getInt("id"));
-//                inspectionUsage.quickCreateRecord(row);
-            }
-            return true;
-        } else {
-            int row_id = technicIns.insert(values);
-            for (Object line : objects) {
-                ODataRow row = (ODataRow) line;
-                row.put("inspection_id", row_id);
-                inspectionLines.insert(row.toValues());
-            }
-
-            for (Object line : UsageObjects) {
-                ODataRow row = (ODataRow) line;
-                row.put("inspection_id", row_id);
-                inspectionUsage.insert(row.toValues());
-                OValues update = new OValues();
-                update.put("last_km", row.getFloat("usage_value"));
-                ODataRow technicid = technic.select(new String[]{}, "_id = ? ", new String[]{values.getString("inspection_technic_id")}).get(0);
-                Log.i("technicid", technicid.toString());
-                Log.i("update val", update.toString());
-                technic.update(values.getInt("inspection_technic_id"), update);
-//                ORecordValues datas = new ORecordValues();
-//                datas.put("last_km", row.getFloat("usage_value"));
-//                Log.i("datasss", datas.toString());
-//                technic.getServerDataHelper().updateOnServer(datas, technicid.getInt("id"));
-//                inspectionUsage.quickCreateRecord(row);
-            }
-            for (Object line : TireObjects) {
-                ODataRow row = (ODataRow) line;
-                row.put("inspection_id", row_id);
-                inspectionLines.insert(row.toValues());
-            }
-
-            if (row_id != OModel.INVALID_ROW_ID) {
-                finish();
-            }
-            return true;
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.captureImage:
-                fileManager.requestForFile(OFileManager.RequestType.IMAGE_OR_CAPTURE_IMAGE);
-                break;
+            date.setEditable(false);
+            technicId.setEditable(false);
+            isPaybale.setEditable(false);
         }
     }
 
     private void setupToolbar() {
         if (!hasRecordInExtra()) {
-            setTitle("New");
-            setMode(mEditMode);
+            setTitle("Үүсгэх");
             mForm.setEditable(mEditMode);
-            myId = technicIns.myId();
             mForm.initForm(null);
-            ((OField) mForm.findViewById(R.id.inspection_registrar_id)).setValue(myId);
-            ((OField) mForm.findViewById(R.id.inspection_date)).setValue(ODateUtils.getDate());
+            ((OField) mForm.findViewById(R.id.DatePartScrap)).setValue(ODateUtils.getDate());
         } else {
-            int rowId = extra.getInt(OColumn.ROW_ID);
-            setTitle("Technic inspection detail");
-            record = technicIns.browse(rowId);
-            technicIns.setTechnicNorm(record.getInt("inspection_technic_id"));
-            setMode(mEditMode);
-            mForm.setEditable(mEditMode);
-            resultInspectionPack = record.getO2MRecord("technic_inspection_check_list_ids").browseEach();
+            setTitle("Сэлбэгийн акт дэлгэрэнгүй");
+            int ScrapId = extra.getInt(OColumn.ROW_ID);
+            record = scrapParts.browse(ScrapId);
             mForm.initForm(record);
+            mForm.setEditable(mEditMode);
+            scrapPartLines = record.getM2MRecord("parts").browseEach();
+            drawPart(scrapPartLines);
         }
+        setMode(mEditMode);
+    }
+
+
+    private void drawPart(List<ODataRow> rows) {
+        objects.clear();
+        objects.addAll(rows);
+        mAdapter = mList.getAdapter(R.layout.scrap_accumulator_accum_item, objects,
+                new ExpandableListControl.ExpandableListAdapterGetViewListener() {
+                    @Override
+                    public View getView(final int position, View mView, ViewGroup parent) {
+                        ODataRow row = (ODataRow) mAdapter.getItem(position);
+                        OControls.setText(mView, R.id.name, (position + 1) + ". " + row.getString("name"));
+                        OControls.setText(mView, R.id.date, row.getString("date"));
+                        if (row.getString("date").equals("false"))
+                            OControls.setText(mView, R.id.date, "");
+                        OControls.setText(mView, R.id.product, row.getString("product_name"));
+                        OControls.setText(mView, R.id.capacity, row.getString("reason_name"));
+                        OControls.setText(mView, R.id.usage_percent, row.getString("part_cost"));
+
+                        if (row.getString("state").equals("draft"))
+                            OControls.setText(mView, R.id.state, "Ноорог");
+                        else if (row.getString("state").equals("in_use"))
+                            OControls.setText(mView, R.id.state, "Ашиглаж буй");
+                        else if (row.getString("state").equals("in_reserve"))
+                            OControls.setText(mView, R.id.state, "Нөөцөнд");
+                        else if (row.getString("state").equals("in_scrap"))
+                            OControls.setText(mView, R.id.state, "Акталсан");
+
+                        mView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                ODataRow row = (ODataRow) mAdapter.getItem(position);
+                                loadActivity(row);
+                            }
+                        });
+                        return mView;
+                    }
+                });
+        mAdapter.notifyDataSetChanged(objects);
     }
 
     private boolean hasRecordInExtra() {
@@ -380,78 +191,88 @@ public class ScrapPartsDetails extends OdooCompatActivity implements OField.IOnF
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_technic_inspection_detail, menu);
+        getMenuInflater().inflate(R.menu.menu_toolbar, menu);
         mMenu = menu;
-        setMode(mEditMode);
+        ToolbarMenuSetVisibl(mEditMode);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        App app = (App) getApplicationContext();
+        final OnPartScrapChangeUpdate onPartScrapChangeUpdate = new OnPartScrapChangeUpdate();
+        final ODomain domain = new ODomain();
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 break;
-            case R.id.menu_technic_save:
-                Intent intent = new Intent(this, TechnicsInspectionSignature.class);
-                startActivityForResult(intent, 1);
+            case R.id.menu_save:
                 OValues values = mForm.getValues();
                 if (values != null) {
-//                    if (record != null) {
-//                        try {
-//                            saveLine(values);
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//                        technicIns.update(record.getInt(OColumn.ROW_ID), values);
-//                        Toast.makeText(this, R.string.toast_information_saved, Toast.LENGTH_LONG).show();
-//                        mEditMode = !mEditMode;
-//                        setupToolbar();
-//                        finish();
-//                    } else {
-//                        values.put("origin", "/");
-//                        if (app.inNetwork()) {
-//                            try {
-//                                saveLine(values);
-//                                Toast.makeText(this, R.string.toast_save, Toast.LENGTH_LONG).show();
-//                            } catch (JSONException e) {
-//                                e.printStackTrace();
-//                            }
-//                        } else {
-//                            try {
-//                                saveLine(values);
-//                                Toast.makeText(this, R.string.toast_offline_save, Toast.LENGTH_LONG).show();
-//                            } catch (JSONException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    }
+                    List ids = new ArrayList();
+                    for (ODataRow row : scrapPartLines) {
+                        OValues oValues = new OValues();
+                        ids.add(row.getInt("_id"));
+                        oValues.put("in_scrap", true);
+                        technicParts.update(row.getInt("_id"), oValues);
+                    }
+                    if (ids.isEmpty()) {
+                        OAlert.showError(this, "Сэлбэг сонгон уу?");
+                        break;
+                    }
+
+                    if (record != null) {
+                        values.put("parts", new RelValues().replace(ids));
+                        scrapParts.update(record.getInt(OColumn.ROW_ID), values);
+                        onPartScrapChangeUpdate.execute(domain);
+                        mEditMode = !mEditMode;
+                        mForm.setEditable(mEditMode);
+                        setMode(mEditMode);
+                        Toast.makeText(this, R.string.tech_toast_information_saved, Toast.LENGTH_LONG).show();
+                    } else {
+                        values.put("parts", new RelValues().append(ids));
+                        values.put("technic_name", technic.browse(values.getInt("technic")).getString("name"));
+                        int row_id = scrapParts.insert(values);
+                        if (row_id != scrapParts.INVALID_ROW_ID) {
+                            onPartScrapChangeUpdate.execute(domain);
+                            Toast.makeText(this, R.string.tech_toast_information_created, Toast.LENGTH_LONG).show();
+                            mEditMode = !mEditMode;
+                            finish();
+                        }
+                    }
                 }
                 break;
-            case R.id.menu_technic_cancel:
-            case R.id.menu_technic_edit:
-                if (hasRecordInExtra()) {
-                    mEditMode = !mEditMode;
-                    setMode(mEditMode);
-                    mForm.setEditable(mEditMode);
-                    mForm.initForm(record);
-                    initAdapter();
-                    getUsageUom();
-                } else {
-                    finish();
-                }
-                break;
-            case R.id.menu_technic_delete:
-                OAlert.showConfirm(this, OResource.string(this,
-                        R.string.confirm_are_you_sure_want_to_delete),
+            case R.id.menu_cancel:
+                OAlert.showConfirm(this, OResource.string(this, R.string.close_activity),
                         new OAlert.OnAlertConfirmListener() {
                             @Override
                             public void onConfirmChoiceSelect(OAlert.ConfirmType type) {
                                 if (type == OAlert.ConfirmType.POSITIVE) {
-                                    // Deleting record and finishing activity if success.
-                                    if (technicIns.delete(record.getInt(OColumn.ROW_ID))) {
-                                        Toast.makeText(ScrapPartsDetails.this, R.string.toast_record_deleted,
+                                    mEditMode = !mEditMode;
+                                    setupToolbar();
+                                } else {
+                                    mForm.setEditable(true);
+                                    setMode(mEditMode);
+                                }
+                            }
+                        });
+                break;
+            case R.id.menu_edit:
+                if (hasRecordInExtra()) {
+                    mEditMode = !mEditMode;
+                    mForm.setEditable(mEditMode);
+                    setMode(mEditMode);
+                }
+                break;
+            case R.id.menu_delete:
+                OAlert.showConfirm(this, OResource.string(this,
+                        R.string.to_delete),
+                        new OAlert.OnAlertConfirmListener() {
+                            @Override
+                            public void onConfirmChoiceSelect(OAlert.ConfirmType type) {
+                                if (type == OAlert.ConfirmType.POSITIVE) {
+                                    if (scrapParts.delete(record.getInt(OColumn.ROW_ID))) {
+                                        onPartScrapChangeUpdate.execute(domain);
+                                        Toast.makeText(ScrapPartsDetails.this, R.string.tech_toast_information_deleted,
                                                 Toast.LENGTH_SHORT).show();
                                         finish();
                                     }
@@ -464,284 +285,164 @@ public class ScrapPartsDetails extends OdooCompatActivity implements OField.IOnF
     }
 
     @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.layoutAddItem:
+                int techId = (Integer) technicId.getValue();
+                if (techId > 0) {
+                    getTechnicParts(techId);
+                    Intent intent = new Intent(this, AddItemLineWizard.class);
+                    Bundle extra = new Bundle();
+                    for (String key : toWizardTechParts.keySet()) {
+                        extra.putBoolean(key, toWizardTechParts.get(key));
+                    }
+                    AddItemLineWizard.mModel = technicParts;
+                    intent.putExtras(extra);
+                    startActivityForResult(intent, REQUEST_ADD_ITEMS);
+                }
+                break;
+        }
+    }
+
+    private void getTechnicParts(int techId) {
+        Log.i("technicParts===", technicParts.select().toString() + "======fff=====" + techId);
+        technicPartLines = technicParts.select(null, "technic = ?", new String[]{techId + ""});
+        Log.i("technicPartLines==22=", technicPartLines.toString());
+        toWizardTechParts.clear();
+        for (ODataRow line : technicPartLines) {
+            toWizardTechParts.put(line.getString("_id"), false);
+        }
+        for (ODataRow line : scrapPartLines) {
+            if (toWizardTechParts.containsKey(line.getString("_id"))) {
+                toWizardTechParts.put(line.getString("_id"), true);
+            }
+        }
+    }
+
+    private void loadActivity(ODataRow row) {
+        if (record != null) {
+            Intent intent = new Intent(this, PartsDetailsWizard.class);
+            Bundle extra = new Bundle();
+            if (row != null) {
+                extra = row.getPrimaryBundleData();
+                extra.putString("scrap_id", record.getString("_id"));
+                extra.putString("scrap_name", record.getString("origin"));
+            }
+            intent.putExtras(extra);
+            startActivityForResult(intent, REQUEST_ADD_ITEMS);
+        } else {
+            OAlert.showAlert(this, OResource.string(this, R.string.required_save));
+        }
+    }
+
+    private class OnPartScrapChangeUpdate extends AsyncTask<ODomain, Void, Void> {
+
+        @Override
+        protected Void doInBackground(ODomain... params) {
+            if (app.inNetwork()) {
+                ODomain domain = params[0];
+                List<ODataRow> rows = scrapParts.select(null, "id = ?", new String[]{"0"});
+                List<ODataRow> photoRows = partScrapPhotos.select(null, "id = ?", new String[]{"0"});
+                for (ODataRow row : rows) {
+                    scrapParts.quickCreateRecord(row);
+                }
+                for (ODataRow row : photoRows) {
+                    partScrapPhotos.quickCreateRecord(row);
+                }
+                /*Бусад бичлэгүүдийг update хийж байна*/
+                scrapParts.quickSyncRecords(domain);
+                partScrapPhotos.quickSyncRecords(domain);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (!app.inNetwork())
+                Toast.makeText(mContext, OResource.string(mContext, R.string.toast_network_required), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
     public void onFieldValueChange(OField field, Object value) {
-        ODataRow row = ((ODataRow) value);
-        if (field.getFieldName().equals("inspection_type_id")) {
-            if (record != null && record.getInt("inspection_type_id") != 0) {
+        Log.i("TechnicPartScrap=====", value.toString());
+        if (record == null && field.getFieldName().equals("technic")) {
+            ODataRow techVal = (ODataRow) value;
+            Log.i("TechnicPartScrap===22==", value.toString());
+            technicSync(techVal.getString("id"));
+        }
+    }
+
+    @Override
+    public void finish() {
+        if (mEditMode) {
+            OAlert.showConfirm(this, OResource.string(this, R.string.close_activity),
+                    new OAlert.OnAlertConfirmListener() {
+                        @Override
+                        public void onConfirmChoiceSelect(OAlert.ConfirmType type) {
+                            if (type == OAlert.ConfirmType.POSITIVE) {
+                                mEditMode = !mEditMode;
+                                finish();
+                            }
+                        }
+                    });
+        } else {
+            super.finish();
+        }
+    }
+
+    public void technicSync(String serverTechId) {
+        try {
+            if (app.inNetwork()) {
+                ODomain domain = new ODomain();
+                domain.add("technic.id", "=", serverTechId);
+                OnTechnicPartSync sync = new OnTechnicPartSync();
+                sync.execute(domain);
             } else {
-                inspection_items(row);
-            }
-        }
-        if (field.getFieldName().equals("inspection_technic_id")) {
-            typeField.setValue(false);
-            technisUsageUoms(row);
-            technisTire(row);
-        }
-    }
-
-    public void inspection_items(ODataRow rows) {
-        try {
-            List<ODataRow> val = norm_obj.select(new String[]{"inspection_pack_id"}, "inspection_type_id = ? and norm_id = ?", new String[]{"" + rows.getInt(OColumn.ROW_ID), "" + technicIns.getTechnicNorm()});
-            if (val.size() > 0) {
-                ODataRow result = norm_obj.select(new String[]{"inspection_pack_id"}, "inspection_type_id = ? and norm_id = ?", new String[]{"" + rows.getInt(OColumn.ROW_ID), "" + technicIns.getTechnicNorm()}).get(0);
-                ODataRow inspectionPack = isectionPack.select(new String[]{"inspection_items"}, "id = ? ", new String[]{result.getString("inspection_pack_id")}).get(0);
-                resultInspectionPack = isectionPack.selectManyToManyRecords(new String[]{"name", "inspection_category_id"}, "inspection_items", inspectionPack.getInt("id"));
-                lines = new ArrayList<>();
-                for (ODataRow row : resultInspectionPack) {
-                    ODataRow newRow = new ODataRow();
-                    newRow.put("item_name", row.getString("name"));
-                    newRow.put("technic_inspection_category_id", row.get("inspection_category_id"));
-                    if (!row.get("inspection_category_id").equals("false")) {
-                        ODataRow inspectionCateg = inspectionCategory.select(new String[]{"name"}, "_id = ? ", new String[]{row.getString("inspection_category_id")}).get(0);
-                        newRow.put("categ_name", inspectionCateg.getString("name"));
-                    } else {
-                        newRow.put("categ_name", "Хоосон");
-                    }
-                    newRow.put(("technic_inspection_item_id"), row.get("_id"));
-//                    newRow.put("inspection_id", row.get("id"));
-                    newRow.put("inspection_isitnormal", true);
-                    newRow.put("inspection_check", false);
-                    newRow.put("description", "");
-                    lines.add(newRow);
-                }
-                initAdapter();
-                getUsageUom();
+                Toast.makeText(this, R.string.toast_network_required, Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void technisUsageUoms(ODataRow rows) {
-        try {
-            TechnicNorm norm = new TechnicNorm(this, null);
-            List<ODataRow> normRow = norm.select(new String[]{"usage_uom_ids", "name"}, "_id = ? ", new String[]{rows.getString("technic_norm_id")});
-            if (normRow.size() > 0) {
-                ODataRow normRows = norm.select(new String[]{"usage_uom_ids", "name"}, "_id = ? ", new String[]{rows.getString("technic_norm_id")}).get(0);
-                List<ODataRow> lines = normRows.getO2MRecord("usage_uom_ids").browseEach();
-                for (ODataRow row : lines) {
-                    ODataRow newRow = new ODataRow();
-                    if (!row.getString("product_uom_id").equals("false")) {
-                        ODataRow product_uom = productUom.select(new String[]{"name"}, "_id = ? ", new String[]{row.getString("product_uom_id")}).get(0);
-                        newRow.put("product_uom_name", product_uom.getString("name"));
-                    } else {
-                        newRow.put("product_uom_name", "Хоосон");
-                    }
+    private class OnTechnicPartSync extends AsyncTask<ODomain, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            findViewById(R.id.partScrapProgress).setVisibility(View.VISIBLE);
+        }
 
-                    if (!row.getString("usage_uom_id").equals("false")) {
-                        ODataRow usage_uom = usageUom.select(new String[]{"name"}, "_id = ? ", new String[]{row.getString("usage_uom_id")}).get(0);
-                        newRow.put("usage_uom_name", usage_uom.getString("name"));
-                    } else {
-                        newRow.put("usage_uom_name", "Хоосон");
-                    }
-                    newRow.put("product_uom_id", row.getString("product_uom_id"));
-                    newRow.put("usage_uom_id", row.get("usage_uom_id"));
-                    newRow.put("usage_value", row.getString("last_km"));//last_motohour
-                    linesUom.add(newRow);
-                }
-                getUsageUom();
+        @Override
+        protected Void doInBackground(ODomain... params) {
+            try {
+                technicParts.quickSyncRecords(params[0]);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+            return null;
         }
-    }
 
-    private void getUsageUom() {
-        if (extra != null && record != null) {
-            linesUom = record.getO2MRecord("inspection_usage_ids").browseEach();
-            Log.i("o2m get val ===", linesUom.toString());
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            findViewById(R.id.partScrapProgress).setVisibility(View.GONE);
         }
-        if (linesUom != null) {
-            UsageObjects.clear();
-            UsageObjects.addAll(linesUom);
-
-            final int template = R.layout.technic_inspection_usage_uom_item;
-
-            mUsageAdapter = mUsageList.getAdapter(template, UsageObjects,
-                    new ExpandableListControl.ExpandableListAdapterGetViewListener() {
-                        @Override
-                        public View getView(final int position, View mView, ViewGroup parent) {
-                            if (mView == null) {
-                                mView = getLayoutInflater().inflate(template, parent, false);
-                            }
-                            final EditText usageValue = (EditText) mView.findViewById(R.id.usageValue);
-                            usageValue.setEnabled(mEditMode);
-                            TextView usageUom = (TextView) mView.findViewById(R.id.usageUom);
-                            TextView productUom = (TextView) mView.findViewById(R.id.productUom);
-                            ODataRow row = (ODataRow) mUsageAdapter.getItem(position);
-                            usageUom.setText((position + 1) + ". " + row.getString("usage_uom_name"));
-                            productUom.setText(row.getString("product_uom_name"));
-                            usageValue.setText(row.getString("usage_value"));
-
-                            usageValue.addTextChangedListener(new TextWatcher() {
-
-                                @Override
-                                public void afterTextChanged(Editable s) {
-                                    if (s.length() != 0) {
-                                        linesUom.get(position).put("usage_value", usageValue.getText().toString());
-                                    }
-                                    Log.i("linesUom=====", linesUom.toString());
-                                }
-
-                                @Override
-                                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                                }
-
-                                @Override
-                                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                                }
-                            });
-                            UsageObjects.clear();
-                            UsageObjects.addAll(linesUom);
-                            return mView;
-                        }
-                    });
-            Log.i("UsageObjects========", UsageObjects.toString());
-            mUsageAdapter.notifyDataSetChanged(UsageObjects);
-        }
-    }
-
-    private void getTire() {
-        if (extra != null && record != null) {
-            List<ODataRow> tech = technic.select(new String[]{"tires"}, "_id = ? ", new String[]{record.getString("inspection_technic_id")});
-            if (tech.size() > 0) {
-                ODataRow techs = technic.select(new String[]{"tires"}, "_id = ? ", new String[]{record.getString("inspection_technic_id")}).get(0);
-                Log.i("techs====", techs.toString());
-                tireLines = techs.getO2MRecord("tires").browseEach();
-                Log.i("tire_o2m get val ===", tireLines.toString());
-            }
-        }
-        if (tireLines != null) {
-            TireObjects.clear();
-            TireObjects.addAll(tireLines);
-
-            final int template = R.layout.technic_inspection_tire_item;
-
-            mTireAdapter = mTireList.getAdapter(template, TireObjects,
-                    new ExpandableListControl.ExpandableListAdapterGetViewListener() {
-                        @Override
-                        public View getView(final int position, View mView, ViewGroup parent) {
-                            if (mView == null) {
-                                mView = getLayoutInflater().inflate(template, parent, false);
-                            }
-
-                            final EditText serial = (EditText) mView.findViewById(R.id.serial);
-                            serial.setEnabled(mEditMode);
-                            TextView name = (TextView) mView.findViewById(R.id.name);
-                            TextView date_record = (TextView) mView.findViewById(R.id.date_record);
-//                            TextView tread_depreciation_percent = (TextView) mView.findViewById(R.id.tread_depreciation_percent);
-                            TextView current_position = (TextView) mView.findViewById(R.id.current_position);
-
-                            ODataRow row = (ODataRow) mTireAdapter.getItem(position);
-                            name.setText((position + 1) + ". " + row.getString("name"));
-                            date_record.setText(row.getString("date_record"));
-//                            tread_depreciation_percent.setText(row.getString("tread_depreciation_percent"));
-                            current_position.setText(row.getString("current_position"));
-                            serial.setText(row.getString("serial"));
-                            serial.addTextChangedListener(new TextWatcher() {
-                                @Override
-                                public void afterTextChanged(Editable s) {
-                                    if (s.length() != 0) {
-                                        tireLines.get(position).put("usage_value", serial.getText().toString());
-                                    }
-                                    Log.i("linesUom=====", tireLines.toString());
-                                }
-
-                                @Override
-                                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                                }
-
-                                @Override
-                                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                                }
-                            });
-
-                            return mView;
-                        }
-                    });
-            TireObjects.clear();
-            TireObjects.addAll(tireLines);
-            Log.i("TireObjects========", TireObjects.toString());
-            mTireAdapter.notifyDataSetChanged(TireObjects);
-        }
-    }
-
-    public void technisTire(ODataRow rows) {
-        try {
-            TechnicTire tire = new TechnicTire(this, null);
-            List<ODataRow> tireRow = tire.select(new String[]{}, "technic_id = ? ", new String[]{rows.getString("_id")});
-            if (tireRow.size() > 0) {
-                for (ODataRow row : tireRow) {
-                    ODataRow newRow = new ODataRow();
-                    newRow.put("name", row.getString("name"));
-                    newRow.put("date_record", row.getString("date_record"));
-                    newRow.put("current_position", row.getString("current_position"));
-                    newRow.put("serial", row.getString("serial"));
-                    tireLines.add(newRow);
-                }
-                getTire();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-
-    }
-
-    @Override
-    public void onSliderClick(BaseSliderView slider) {
-
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        OValues values = fileManager.handleResult(requestCode, resultCode, data);
-        if (values != null && !values.contains("size_limit_exceed")) {
-            newImage = values.getString("datas");
-            Uri selectedImageUri = data.getData();
 
-            String nameaa = data.getStringExtra("name");
-
-//            userImage.setImageBitmap(BitmapUtils.getBitmapImage(this, newImage));
-            url_maps.put("aaaa", nameaa);
-
-            for (String name : url_maps.keySet()) {
-                TextSliderView textSliderView = new TextSliderView(this);
-                // initialize a SliderLayout
-                textSliderView.description(name).image(file_maps.get(name))
-                        .setScaleType(BaseSliderView.ScaleType.Fit)
-                        .setOnSliderClickListener(this);
-
-                //add your extra information setImageBitmap
-//            userImage.setImageBitmap(BitmapUtils.getBitmapImage(this, newImage));
-                textSliderView.bundle(new Bundle());
-                textSliderView.getBundle()
-                        .putString("extra", name);
-
-                mDemoSlider.addSlider(textSliderView);
+        if (requestCode == REQUEST_ADD_ITEMS && resultCode == Activity.RESULT_OK) {
+            scrapPartLines.clear();
+            for (String key : data.getExtras().keySet()) {
+                if (data.getExtras().getBoolean(key)) {
+                    scrapPartLines.add(technicParts.select(null, "_id = ?", new String[]{key}).get(0));
+                }
             }
-
-//            userImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
-//            userImage.setColorFilter(null);
-//            userImage.setImageBitmap(BitmapUtils.getBitmapImage(this, newImage));
-//            file_maps.put("Hannibal", BitmapUtils.getBitmapImage(this, newImage));
-        } else if (values != null) {
-            Toast.makeText(this, R.string.toast_image_size_too_large, Toast.LENGTH_LONG).show();
+            drawPart(scrapPartLines);
         }
     }
-
 }
