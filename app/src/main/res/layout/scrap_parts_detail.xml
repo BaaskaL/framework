@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbarScrapPart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/theme_toolbar"
+        android:minHeight="?attr/actionBarSize"
+        android:paddingTop="@dimen/statusBarHeight"
+        app:layout_collapseMode="pin"
+        app:theme="@style/ToolBarBackTheme"
+        app:titleMarginStart="@dimen/default_8dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:paddingTop="@dimen/statusBarHeight">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <odoo.controls.OForm
+                android:id="@+id/OFormPartScrap"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#ffffff"
+                android:orientation="vertical"
+                app:modelName="technic.parts.scrap">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+
+                    <odoo.controls.OField
+                        android:id="@+id/OriginPartScrap"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:defaultFieldValue="-"
+                        app:fieldName="origin"
+                        app:fieldTextAppearance="?android:textAppearanceLarge" />
+
+                    <odoo.controls.OField
+                        android:id="@+id/DatePartScrap"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:fieldLabelColor="@color/theme_secondary"
+                        app:fieldName="date"
+                        app:fieldTextAppearance="?android:textAppearanceSmall"
+                        app:iconResource="@drawable/ic_action_time_clock" />
+
+                    <odoo.controls.OField
+                        android:id="@+id/TechnicPartScrap"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:fieldLabelColor="@color/theme_secondary"
+                        app:fieldName="technic"
+                        app:fieldTextAppearance="?android:textAppearanceSmall"
+                        app:widgetType="SearchableLive" />
+
+                    <odoo.controls.OField
+                        android:id="@+id/IsPayablePartScrap"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:fieldLabelColor="@color/theme_secondary"
+                        app:fieldName="is_payable"
+                        app:fieldTextAppearance="?android:textAppearanceMedium"
+                        app:showLabel="false" />
+
+                    <odoo.controls.OField
+                        android:id="@+id/description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:fieldLabelColor="@color/theme_secondary"
+                        app:fieldName="description"
+                        app:fieldTextAppearance="?android:textAppearanceMedium" />
+
+                    <odoo.controls.OField
+                        android:id="@+id/StatePartScrap"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:defaultFieldValue="request"
+                        app:fieldLabelColor="@color/theme_secondary"
+                        app:fieldName="state"
+                        app:fieldTextAppearance="?android:textAppearanceMedium" />
+
+                </LinearLayout>
+
+                <View
+                    style="@style/ViewSeparator"
+                    android:layout_marginLeft="72dp" />
+
+                <LinearLayout
+                    android:id="@+id/layoutAddItem"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:paddingBottom="@dimen/default_8dp"
+                    android:paddingLeft="@dimen/default_16dp"
+                    android:paddingRight="@dimen/default_16dp"
+                    android:paddingTop="@dimen/default_8dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:padding="2dp"
+                        android:src="@drawable/ic_action_edit"
+                        android:tint="@color/android_orange_dark" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:text="Manage Part lines"
+                        android:textAllCaps="true"
+                        android:textAppearance="?android:textAppearanceSmall"
+                        android:textColor="@color/android_orange_dark"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/partHeader"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#247648"
+                        android:divider="?android:attr/dividerHorizontal"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingLeft="@dimen/default_16dp"
+                        android:paddingRight="@dimen/default_16dp"
+                        android:showDividers="middle">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="@dimen/default_8dp"
+                            android:layout_weight="2.4"
+                            android:fontFamily="@string/font_normal"
+                            android:gravity="center"
+                            android:text="Нэр"
+                            android:textColor="@color/body_text_1"
+                            android:textSize="@dimen/text_size_medium" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_weight="1.1"
+                            android:fontFamily="@string/font_normal"
+                            android:gravity="center"
+                            android:text="Б/Огноо"
+                            android:textColor="@color/body_text_1"
+                            android:textSize="@dimen/text_size_medium" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_weight="2"
+                            android:fontFamily="@string/font_normal"
+                            android:gravity="center"
+                            android:text="Бараа"
+                            android:textColor="@color/body_text_1"
+                            android:textSize="@dimen/text_size_medium" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="Шалтгаан"
+                            android:textColor="@color/body_text_1"
+                            android:textSize="@dimen/text_size_medium" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_weight="1.2"
+                            android:gravity="center"
+                            android:text="Өртөг"
+                            android:textColor="@color/body_text_1"
+                            android:textSize="@dimen/text_size_medium" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_weight="1.5"
+                            android:gravity="center"
+                            android:text="Төлөв"
+                            android:textColor="@color/body_text_1"
+                            android:textSize="@dimen/text_size_medium" />
+
+                    </LinearLayout>
+
+                    <odoo.controls.ExpandableListControl
+                        android:id="@+id/ExpandListPartLine"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/partHeader"
+                        android:layout_marginBottom="@dimen/default_8dp"
+                        android:layout_marginTop="@dimen/default_8dp"
+                        android:orientation="vertical" />
+
+                    <ProgressBar
+                        android:id="@+id/partScrapProgress"
+                        style="?android:attr/progressBarStyleSmall"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:visibility="gone" />
+
+                </RelativeLayout>
+
+            </odoo.controls.OForm>
+        </ScrollView>
+    </LinearLayout>
+</LinearLayout>
