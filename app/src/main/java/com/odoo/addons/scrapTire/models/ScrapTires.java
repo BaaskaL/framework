@@ -45,10 +45,10 @@ public class ScrapTires extends OModel {
 
     OColumn origin = new OColumn("Актын дугаар", OVarchar.class);
     OColumn technic_id = new OColumn("Техник", TechnicsModel.class, OColumn.RelationType.ManyToOne);
-    OColumn tire_ids = new OColumn("Дугуй", TechnicTire.class, OColumn.RelationType.OneToMany).setRelatedColumn("scrap_id");
+    OColumn tire_ids = new OColumn("Дугуй", TechnicTire.class, OColumn.RelationType.ManyToMany);
     OColumn is_payable = new OColumn("Төлбөртэй эсэх", OBoolean.class);
     OColumn date = new OColumn("Огноо", ODateTime.class);
-    OColumn description = new OColumn("Тайлбар", OVarchar.class);
+    OColumn description = new OColumn("Тайлбар", OVarchar.class).setRequired();
     OColumn state = new OColumn("Төлөв", OSelection.class)
             .addSelection("request", "Хүсэлт")
             .addSelection("waiting_approval", "Баталгаа хүлээгдсэн")
@@ -57,6 +57,7 @@ public class ScrapTires extends OModel {
             .addSelection("done", "Дууссан")
             .setDefaultValue("request");
 
+    OColumn tire_photos = new OColumn("Parts photos", TireScrapPhoto.class, OColumn.RelationType.OneToMany).setRelatedColumn("scrap_id");
     @Odoo.Functional(store = true, depends = {"technic_id"}, method = "storeTechnicName")
     OColumn technic_name = new OColumn("Техник", OVarchar.class).setLocalColumn();
 
@@ -64,30 +65,16 @@ public class ScrapTires extends OModel {
         super(context, "tire.scrap", user);
     }
 
-    public String storeTechnicName(OValues row) {
-//        Log.i("ROW====", row.toString());
-//        String name = "Хоосон";
-        if (row.size() > 0) {
-            try {
-                if (!row.getString("technic_id").equals(null)) {
-                    List<Object> technic = (ArrayList<Object>) row.get("technic_id");
-                    return technic.get(1) + "";
-//                    Log.i("usage_uom_id====", row.getString("technic_id"));
-//                    String value = row.getString("technic_id");
-//                    String[] parts = value.split(",");
-//                    name = parts[1].substring(1, parts[1].length() - 1);
-//                    Log.i("name====", name);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+    public String storeTechnicName(OValues value) {
+        try {
+            if (!value.getString("technic_id").equals("false")) {
+                List<Object> technic = (ArrayList<Object>) value.get("technic_id");
+                return technic.get(1) + "";
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return "Хоосон";
-    }
-
-    @Override
-    public Uri uri() {
-        return buildURI(AUTHORITY);
+        return "";
     }
 
 }

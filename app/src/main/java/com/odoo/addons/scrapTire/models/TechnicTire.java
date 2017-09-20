@@ -23,14 +23,20 @@ import android.content.Context;
 
 import com.odoo.addons.technic.models.TechnicsModel;
 import com.odoo.core.orm.OModel;
+import com.odoo.core.orm.OValues;
+import com.odoo.core.orm.annotation.Odoo;
 import com.odoo.core.orm.fields.OColumn;
 import com.odoo.core.orm.fields.types.OBlob;
 import com.odoo.core.orm.fields.types.OBoolean;
 import com.odoo.core.orm.fields.types.ODateTime;
+import com.odoo.core.orm.fields.types.OFloat;
 import com.odoo.core.orm.fields.types.OInteger;
 import com.odoo.core.orm.fields.types.OSelection;
 import com.odoo.core.orm.fields.types.OVarchar;
 import com.odoo.core.support.OUser;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TechnicTire extends OModel {
 
@@ -38,7 +44,9 @@ public class TechnicTire extends OModel {
     OColumn serial = new OColumn("Сериал", OVarchar.class);
     OColumn technic_id = new OColumn("Техникийн нэр", TechnicsModel.class, OColumn.RelationType.ManyToOne);
     OColumn date_record = new OColumn("Суурилуулсан огноо", ODateTime.class);
-    //    OColumn tread_depreciation_percent = new OColumn("Хээний элэгдлийн хувь", Float.class);
+    OColumn usage_percent = new OColumn("Ашиглалтын хувь", OFloat.class);
+    OColumn tread_cuurnet_deep = new OColumn("Хээний одоогийн гүн", OFloat.class);
+    OColumn tread_depreciation_percent = new OColumn("Хээний элэгдлийн хувь", OFloat.class);
     OColumn current_position = new OColumn("Одоогийн байрлал", OInteger.class);
     OColumn reason = new OColumn("Reason", TiresScrapReason.class, OColumn.RelationType.ManyToOne);
     OColumn state = new OColumn("Төлөв", OSelection.class)
@@ -47,11 +55,25 @@ public class TechnicTire extends OModel {
             .addSelection("inactive", "Нөөцөнд")
             .addSelection("rejected", "Акталсан")
             .setDefaultValue("draft");
-    OColumn scrap_id = new OColumn("Scrap id", ScrapTires.class, OColumn.RelationType.ManyToOne);
-    OColumn tire_image = new OColumn("Tire image", OBlob.class);
+    OColumn scrap_photos = new OColumn("Photos", TireScrapPhoto.class, OColumn.RelationType.OneToMany).setRelatedColumn("part_id");
     OColumn in_scrap = new OColumn("In scrap", OBoolean.class);
+
+    @Odoo.Functional(store = true, depends = {"reason"}, method = "storeReasonName")
+    OColumn reason_name = new OColumn("Reason name", OVarchar.class).setLocalColumn();
 
     public TechnicTire(Context context, OUser user) {
         super(context, "tire.register", user);
+    }
+
+    public String storeReasonName(OValues value) {
+        try {
+            if (!value.getString("reason").equals("false")) {
+                List<Object> reason = (ArrayList<Object>) value.get("reason");
+                return reason.get(1) + "";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }

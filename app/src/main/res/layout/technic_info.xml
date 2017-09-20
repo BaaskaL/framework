@@ -226,7 +226,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:fieldLabelColor="@color/theme_secondary"
-                    app:fieldName="technic_color"
+                    app:fieldName="gatsuurt_technic_color"
                     app:fieldTextAppearance="?android:textAppearanceMedium" />
 
                 <odoo.controls.OField

@@ -305,9 +305,7 @@ public class ScrapPartsDetails extends OdooCompatActivity implements OField.IOnF
     }
 
     private void getTechnicParts(int techId) {
-        Log.i("technicParts===", technicParts.select().toString() + "======fff=====" + techId);
         technicPartLines = technicParts.select(null, "technic = ?", new String[]{techId + ""});
-        Log.i("technicPartLines==22=", technicPartLines.toString());
         toWizardTechParts.clear();
         for (ODataRow line : technicPartLines) {
             toWizardTechParts.put(line.getString("_id"), false);
@@ -366,10 +364,8 @@ public class ScrapPartsDetails extends OdooCompatActivity implements OField.IOnF
 
     @Override
     public void onFieldValueChange(OField field, Object value) {
-        Log.i("TechnicPartScrap=====", value.toString());
         if (record == null && field.getFieldName().equals("technic")) {
             ODataRow techVal = (ODataRow) value;
-            Log.i("TechnicPartScrap===22==", value.toString());
             technicSync(techVal.getString("id"));
         }
     }

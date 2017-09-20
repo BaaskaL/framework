@@ -372,6 +372,9 @@
         <activity
             android:name="mn.odoo.addons.scrapParts.wizards.PartsDetailsWizard"
             android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="mn.odoo.addons.scrapTire.wizards.TireDetailsWizard"
+            android:windowSoftInputMode="stateHidden" />
 
     </application>
 

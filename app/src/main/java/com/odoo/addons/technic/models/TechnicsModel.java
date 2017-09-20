@@ -64,7 +64,7 @@ public class TechnicsModel extends OModel {
     OColumn serial_vin_number = new OColumn("Сериал/Арлын дугаар", OVarchar.class);
     OColumn state_number = new OColumn("Улсын дугаар", OVarchar.class);
     OColumn engine_number = new OColumn("Хөдөлгүүрийн дугаар", OVarchar.class);
-    OColumn technic_color = new OColumn("Өнгө", GTechnicColor.class, OColumn.RelationType.ManyToOne);
+    OColumn gatsuurt_technic_color = new OColumn("Өнгө", GTechnicColor.class, OColumn.RelationType.ManyToOne);
     OColumn technic_number = new OColumn("Дугаарлалт", OVarchar.class);
     OColumn manufacture_date = new OColumn("Үйлдвэрлэсэн огноо", OVarchar.class);
     OColumn in_mongolia_date = new OColumn("МУ-д орж ирсэн он", OVarchar.class);

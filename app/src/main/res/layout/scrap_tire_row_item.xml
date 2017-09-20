@@ -25,7 +25,7 @@
             android:textColor="@color/body_text_1" />
 
         <TextView
-            android:id="@+id/tvTechnicName"
+            android:id="@+id/tvTireTechnicName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -37,7 +37,7 @@
             android:textColor="@color/body_text_1" />
 
         <TextView
-            android:id="@+id/tvDate"
+            android:id="@+id/tvTireDate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -45,6 +45,18 @@
             android:fontFamily="@string/font_normal"
             android:gravity="center"
             android:text="date"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:textColor="@color/body_text_1" />
+
+        <TextView
+            android:id="@+id/tvTireState"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="0.3"
+            android:fontFamily="@string/font_normal"
+            android:gravity="center"
+            android:text="State"
             android:textAppearance="?android:textAppearanceSmall"
             android:textColor="@color/body_text_1" />
     </LinearLayout>

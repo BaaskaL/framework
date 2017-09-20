@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.odoo.R;
 import com.odoo.addons.scrapTire.models.ScrapTires;
+import com.odoo.addons.scrapTire.models.TireScrapPhoto;
 import com.odoo.core.orm.ODataRow;
 import com.odoo.core.rpc.helper.ODomain;
 import com.odoo.core.support.addons.fragment.BaseFragment;
@@ -32,6 +33,7 @@ import com.odoo.core.support.list.OCursorListAdapter;
 import com.odoo.core.utils.IntentUtils;
 import com.odoo.core.utils.OControls;
 import com.odoo.core.utils.OCursorUtils;
+import com.odoo.core.utils.OResource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +52,7 @@ public class ScrapTire extends BaseFragment implements LoaderManager.LoaderCallb
     private OCursorListAdapter mAdapter = null;
     private boolean syncRequested = false;
     private ScrapTires scrapTire;
+    private TireScrapPhoto tireScrapPhoto;
     private Context mContext;
 
     @Override
@@ -58,7 +61,7 @@ public class ScrapTire extends BaseFragment implements LoaderManager.LoaderCallb
         setHasSyncStatusObserver(KEY, this, db());
         mView = inflater.inflate(R.layout.scrap_listview, container, false);
         LinearLayout HeaderContainer = (LinearLayout) mView.findViewById(R.id.scrap_header);
-        LinearLayout Header = (LinearLayout) inflater.inflate(R.layout.header_tire_scrap_list, container, false);
+        LinearLayout Header = (LinearLayout) inflater.inflate(R.layout.header_accumulator_scrap_list, container, false);
         HeaderContainer.addView(Header);
         return mView;
     }
@@ -69,6 +72,7 @@ public class ScrapTire extends BaseFragment implements LoaderManager.LoaderCallb
         mView = view;
         mContext = this.getContext();
         scrapTire = new ScrapTires(mContext, null);
+        tireScrapPhoto = new TireScrapPhoto(mContext, null);
         ListView mListViewScrap = (ListView) mView.findViewById(R.id.listview_scrap);
         mAdapter = new OCursorListAdapter(getActivity(), null, R.layout.scrap_tire_row_item);
         mAdapter.setOnViewBindListener(this);
@@ -82,17 +86,38 @@ public class ScrapTire extends BaseFragment implements LoaderManager.LoaderCallb
 
     @Override
     public void onStatusChange(Boolean changed) {
-//        if (changed) {
-//            getLoaderManager().restartLoader(0, null, this);
-//        }
         getLoaderManager().restartLoader(0, null, this);
     }
 
     @Override
     public void onViewBind(View view, Cursor cursor, ODataRow row) {
-        OControls.setText(view, R.id.tvTireName, (row.getString("origin").equals("false") ? "" : row.getString("origin")));
-        OControls.setText(view, R.id.tvTechnicName, (row.getString("technic_name")));
-        OControls.setText(view, R.id.tvDate, (row.getString("date")));
+        String state = "";
+        switch (row.getString("state")) {
+            case "request":
+                state = "Хүсэлт";
+                break;
+            case "waiting_approval":
+                state = "Баталгаа хүлээгдсэн";
+                break;
+            case "approved":
+                state = "Баталсан";
+                break;
+            case "refused":
+                state = "Татгалзсан";
+                break;
+            case "returned":
+                state = "Буцаагдсан";
+                break;
+            case "done":
+                state = "Дууссан";
+                break;
+
+        }
+
+        OControls.setText(view, R.id.tvTireName, (row.getString("origin").equals("-") ? "Илгээгдээгүй" : row.getString("origin")));
+        OControls.setText(view, R.id.tvTireTechnicName, (row.getString("technic_name")));
+        OControls.setText(view, R.id.tvTireDate, (row.getString("date")));
+        OControls.setText(view, R.id.tvTireState, state);
     }
 
     @Override
@@ -170,16 +195,33 @@ public class ScrapTire extends BaseFragment implements LoaderManager.LoaderCallb
         protected void onPreExecute() {
             super.onPreExecute();
             progressDialog = new ProgressDialog(mContext);
-            progressDialog.setCancelable(false);
-            progressDialog.setTitle(R.string.title_please_wait);
-            progressDialog.setMessage("Update");
-            progressDialog.hide();
+            progressDialog.setTitle(R.string.title_please_wait_mn);
+            progressDialog.setMessage("Мэдээлэл шинэчилж байна.");
+//            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+//            progressDialog.setProgress(1);
+            progressDialog.setMax(mAdapter.getCount());
+            progressDialog.setCancelable(true);
+            progressDialog.show();
         }
 
         @Override
         protected Void doInBackground(ODomain... params) {
-            ODomain domain = params[0];
-            scrapTire.quickSyncRecords(domain);
+            if (inNetwork()) {
+                ODomain domain = params[0];
+                List<ODataRow> rows = scrapTire.select(null, "id = ?", new String[]{"0"});
+                List<ODataRow> photoRows = tireScrapPhoto.select(null, "id = ?", new String[]{"0"});
+                for (ODataRow row : rows) {
+                    scrapTire.quickCreateRecord(row);
+                }
+                for (ODataRow row : photoRows) {
+                    tireScrapPhoto.quickCreateRecord(row);
+                }
+                /*Бусад бичлэгүүдийг update хийж байна*/
+                scrapTire.quickSyncRecords(domain);
+                tireScrapPhoto.quickSyncRecords(domain);
+            } else {
+                Toast.makeText(mContext, OResource.string(mContext, R.string.toast_network_required), Toast.LENGTH_LONG).show();
+            }
             return null;
         }
 
@@ -236,9 +278,8 @@ public class ScrapTire extends BaseFragment implements LoaderManager.LoaderCallb
         }
         IntentUtils.startActivity(getActivity(), ScrapTireDetails.class, data);
         /*Дэлгэрэнгүйг харуулахдаа sync хийх.*/
-//        ODomain aa = new ODomain();
 //        aa.put("id","=",id)
-//        ScrapTires.quickSyncRecords(aa);
+//        ScrapTires.quickSyncRecords(null);
     }
 
     @Override
