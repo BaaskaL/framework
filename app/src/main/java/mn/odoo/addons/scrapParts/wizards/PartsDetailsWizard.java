@@ -283,7 +283,7 @@ public class PartsDetailsWizard extends OdooCompatActivity implements View.OnCli
             ODataRow row = new ODataRow();
             row.put("scrap_id", scrap_id);
             row.put("photo", values.getString("datas"));
-            row.put("shtm_id", rowId);
+            row.put("part_id", rowId);
             row.put("name", "(" + record.getString("name") + ")_" + timeStamp);
             row.put("id", 0);
             if (!gridAdapter.updateContent(row)) {

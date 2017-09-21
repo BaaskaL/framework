@@ -19,8 +19,8 @@ import android.widget.Toast;
 
 import com.odoo.App;
 import com.odoo.R;
-import com.odoo.addons.scrapParts.models.PartScrapPhotos;
-import com.odoo.addons.scrapParts.models.TechnicParts;
+import com.odoo.addons.scrapTire.models.TechnicTire;
+import com.odoo.addons.scrapTire.models.TireScrapPhoto;
 import com.odoo.base.addons.ir.feature.OFileManager;
 import com.odoo.core.orm.ODataRow;
 import com.odoo.core.orm.OValues;
@@ -45,8 +45,8 @@ import odoo.controls.OForm;
 
 public class TireDetailsWizard extends OdooCompatActivity implements View.OnClickListener {
 
-    private TechnicParts technicParts;
-    private PartScrapPhotos partScrapPhotos;
+    private TechnicTire technicTire;
+    private TireScrapPhoto tireScrapPhoto;
 
     private Toolbar toolbar;
     private OField oReason;
@@ -76,28 +76,28 @@ public class TireDetailsWizard extends OdooCompatActivity implements View.OnClic
 
         setTitle(scrap_name);
         rowId = String.valueOf(extra.getInt(OColumn.ROW_ID));
-        setContentView(R.layout.parts_detail_wizard);
+        setContentView(R.layout.tire_detail_wizard);
         setResult(RESULT_CANCELED);
         mContext = getApplicationContext();
 
-        toolbar = (Toolbar) findViewById(R.id.toolbarPartWizard);
-        mForm = (OForm) findViewById(R.id.OFormPartScrapWizard);
-        gridView = (GridView) findViewById(R.id.gridViewPartImage);
-        oReason = (OField) mForm.findViewById(R.id.partReason);
-        takePic = (Button) findViewById(R.id.takePicturePart);
+        toolbar = (Toolbar) findViewById(R.id.toolbarTireWizard);
+        mForm = (OForm) findViewById(R.id.OFormTireScrapWizard);
+        gridView = (GridView) findViewById(R.id.gridViewTireImage);
+        oReason = (OField) mForm.findViewById(R.id.tireReason);
+        takePic = (Button) findViewById(R.id.takePictureTire);
         app = (App) getApplicationContext();
 
         fileManager = new OFileManager(this);
-        technicParts = new TechnicParts(this, null);
-        partScrapPhotos = new PartScrapPhotos(this, null);
+        technicTire = new TechnicTire(this, null);
+        tireScrapPhoto = new TireScrapPhoto(this, null);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        record = technicParts.browse(Integer.parseInt(rowId));
+        record = technicTire.browse(Integer.parseInt(rowId));
         mForm.initForm(record);
 
         List<ODataRow> scrapPhotos = new ArrayList<>();
-        scrapPhotos = partScrapPhotos.select(null, "scrap_id = ? and part_id = ?", new String[]{scrap_id, rowId});
+        scrapPhotos = tireScrapPhoto.select(null, "scrap_id = ? and tire_id = ?", new String[]{scrap_id, rowId});
         gridAdapter = new GridViewAdapter(this, R.layout.grid_item_layout, scrapPhotos);
         gridView.setAdapter(gridAdapter);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -174,7 +174,7 @@ public class TireDetailsWizard extends OdooCompatActivity implements View.OnClic
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        OnPartScrapPhotoChangeUpdate onPartScrapPhotoChangeUpdate = new OnPartScrapPhotoChangeUpdate();
+        OnTireScrapPhotoChangeUpdate onTireScrapPhotoChangeUpdate = new OnTireScrapPhotoChangeUpdate();
         ODomain domain = new ODomain();
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -192,8 +192,8 @@ public class TireDetailsWizard extends OdooCompatActivity implements View.OnClic
                             }
                         }
                         values.put("scrap_photos", new RelValues().append(imgValuene.toArray(new OValues[imgValuene.size()])).delete(gridAdapter.deleteIds));
-                        technicParts.update(record.getInt(OColumn.ROW_ID), values);
-                        onPartScrapPhotoChangeUpdate.execute(domain);
+                        technicTire.update(record.getInt(OColumn.ROW_ID), values);
+                        onTireScrapPhotoChangeUpdate.execute(domain);
                         mEditMode = !mEditMode;
                         setMode(mEditMode);
                         Toast.makeText(this, R.string.tech_toast_information_saved, Toast.LENGTH_LONG).show();
@@ -220,18 +220,18 @@ public class TireDetailsWizard extends OdooCompatActivity implements View.OnClic
         return super.onOptionsItemSelected(item);
     }
 
-    private class OnPartScrapPhotoChangeUpdate extends AsyncTask<ODomain, Void, Void> {
+    private class OnTireScrapPhotoChangeUpdate extends AsyncTask<ODomain, Void, Void> {
 
         @Override
         protected Void doInBackground(ODomain... params) {
             if (app.inNetwork()) {
                 ODomain domain = params[0];
-                List<ODataRow> rows = partScrapPhotos.select(null, "id = ?", new String[]{"0"});
+                List<ODataRow> rows = tireScrapPhoto.select(null, "id = ?", new String[]{"0"});
                 for (ODataRow row : rows) {
-                    partScrapPhotos.quickCreateRecord(row);
+                    tireScrapPhoto.quickCreateRecord(row);
                 }
                 /*Бусад бичлэгүүдийг update хийж байна*/
-                partScrapPhotos.quickSyncRecords(domain);
+                tireScrapPhoto.quickSyncRecords(domain);
             }
             return null;
         }
@@ -265,7 +265,7 @@ public class TireDetailsWizard extends OdooCompatActivity implements View.OnClic
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.takePicturePart:
+            case R.id.takePictureTire:
                 fileManager.requestForFile(OFileManager.RequestType.IMAGE_OR_CAPTURE_IMAGE);
                 break;
             default:
@@ -283,7 +283,7 @@ public class TireDetailsWizard extends OdooCompatActivity implements View.OnClic
             ODataRow row = new ODataRow();
             row.put("scrap_id", scrap_id);
             row.put("photo", values.getString("datas"));
-            row.put("shtm_id", rowId);
+            row.put("tire_id", rowId);
             row.put("name", "(" + record.getString("name") + ")_" + timeStamp);
             row.put("id", 0);
             if (!gridAdapter.updateContent(row)) {

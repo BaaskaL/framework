@@ -48,7 +48,7 @@ public class TechnicTire extends OModel {
     OColumn tread_cuurnet_deep = new OColumn("Хээний одоогийн гүн", OFloat.class);
     OColumn tread_depreciation_percent = new OColumn("Хээний элэгдлийн хувь", OFloat.class);
     OColumn current_position = new OColumn("Одоогийн байрлал", OInteger.class);
-    OColumn reason = new OColumn("Reason", TiresScrapReason.class, OColumn.RelationType.ManyToOne);
+    OColumn reason = new OColumn("Шалтгаан", TiresScrapReason.class, OColumn.RelationType.ManyToOne);
     OColumn state = new OColumn("Төлөв", OSelection.class)
             .addSelection("draft", "Ноорог")
             .addSelection("using", "Хэрэглэж буй")

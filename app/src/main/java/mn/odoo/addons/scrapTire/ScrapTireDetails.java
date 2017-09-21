@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -153,14 +152,13 @@ public class ScrapTireDetails extends OdooCompatActivity implements OField.IOnFi
                     @Override
                     public View getView(final int position, View mView, ViewGroup parent) {
                         ODataRow row = (ODataRow) mAdapter.getItem(position);
-                        Log.i("row====", row.toString());
                         OControls.setText(mView, R.id.name, (position + 1) + ". " + row.getString("name"));
                         OControls.setText(mView, R.id.date, row.getString("date_record"));
                         if (row.getString("date_record").equals("false"))
                             OControls.setText(mView, R.id.date, "");
-                        OControls.setText(mView, R.id.product, row.getString("usage_percent"));
-                        OControls.setText(mView, R.id.capacity, row.getString("tread_cuurnet_deep"));
-                        OControls.setText(mView, R.id.usage_percent, row.getString("tread_depreciation_percent"));
+                        OControls.setText(mView, R.id.product, row.getString("usage_percent").equals("false") ? "" : row.getString("usage_percent"));
+                        OControls.setText(mView, R.id.capacity, row.getString("tread_cuurnet_deep").equals("false") ? "" : row.getString("tread_cuurnet_deep"));
+                        OControls.setText(mView, R.id.usage_percent, row.getString("tread_depreciation_percent").equals("false") ? "" : row.getString("tread_depreciation_percent"));
 
                         if (row.getString("state").equals("draft"))
                             OControls.setText(mView, R.id.state, "Ноорог");

@@ -32,7 +32,7 @@ import mn.odoo.addons.scrapTire.ScrapTire;
 
 public class TireScrapPhoto extends OModel {
     OColumn scrap_id = new OColumn("Акт", ScrapTires.class, OColumn.RelationType.ManyToOne);
-    OColumn part_id = new OColumn("Сэлбэг", TechnicTire.class, OColumn.RelationType.ManyToOne);
+    OColumn tire_id = new OColumn("Дугуй", TechnicTire.class, OColumn.RelationType.ManyToOne);
     OColumn photo = new OColumn("Зураг", OBlob.class);
     OColumn name = new OColumn("Нэр", OVarchar.class);
 

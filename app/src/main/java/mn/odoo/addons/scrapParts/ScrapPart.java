@@ -193,7 +193,7 @@ public class ScrapPart extends BaseFragment implements LoaderManager.LoaderCallb
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog = new ProgressDialog(mContext);
+            progressDialog = new ProgressDialog(getContext());
             progressDialog.setTitle(R.string.title_please_wait_mn);
             progressDialog.setMessage("Мэдээлэл шинэчилж байна.");
 //            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
