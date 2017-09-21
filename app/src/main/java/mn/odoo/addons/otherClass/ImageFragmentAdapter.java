@@ -52,10 +52,15 @@ public class ImageFragmentAdapter extends FragmentPagerAdapter {
         return mCount;
     }
 
-    public void update(ODataRow row) {
-        CONTENT.add(row);
-        mCount = CONTENT.size();
-        notifyDataSetChanged();
+    public boolean update(ODataRow content) {
+        for (ODataRow row : CONTENT) {
+            if (row.getString("photo").equals(content.getString("photo"))) {
+                return false;
+            }
+        }
+        this.CONTENT.add(content);
+        this.notifyDataSetChanged();
+        return true;
     }
 
     public ODataRow getRow(int position) {
@@ -99,7 +104,7 @@ public class ImageFragmentAdapter extends FragmentPagerAdapter {
                 String newImage = mContent.getString("photo");
                 Bitmap img = BitmapUtils.getBitmapImage(getContext(), newImage);
                 imageView.setImageBitmap(img);
-                String name = mContent.getString("create_date");
+                String name = mContent.getString("name");
                 if (!name.equals("false"))
                     textView.setText(name);
             }

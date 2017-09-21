@@ -26,6 +26,8 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
             case 1:
                 return new TabInspectionTire();
             case 2:
+                return new TabInspectionAccumulator();
+            case 3:
                 return new TabInspectionUsageUom();
             default:
                 return null;

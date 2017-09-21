@@ -185,10 +185,13 @@ public class TechnicsInspection extends BaseFragment implements LoaderManager.Lo
         protected void onPreExecute() {
             super.onPreExecute();
             progressDialog = new ProgressDialog(mContext);
-            progressDialog.setCancelable(false);
-            progressDialog.setTitle(R.string.title_please_wait);
-            progressDialog.setMessage("Update");
-            progressDialog.hide();
+            progressDialog.setTitle(R.string.title_please_wait_mn);
+            progressDialog.setMessage("Мэдээлэл шинэчилж байна.");
+//            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+//            progressDialog.setProgress(1);
+            progressDialog.setMax(mAdapter.getCount());
+            progressDialog.setCancelable(true);
+            progressDialog.show();
         }
 
         @Override

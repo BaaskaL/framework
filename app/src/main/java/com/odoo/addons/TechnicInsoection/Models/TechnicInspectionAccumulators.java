@@ -23,18 +23,21 @@ import android.content.Context;
 
 import com.odoo.core.orm.OModel;
 import com.odoo.core.orm.fields.OColumn;
-import com.odoo.core.orm.fields.types.OBlob;
+import com.odoo.core.orm.fields.types.ODateTime;
+import com.odoo.core.orm.fields.types.OFloat;
 import com.odoo.core.orm.fields.types.OVarchar;
 import com.odoo.core.support.OUser;
 
-public class TechnicInspectionPhoto extends OModel {
+public class TechnicInspectionAccumulators extends OModel {
 
     OColumn inspection_id = new OColumn("Inspection", TechnicsInspectionModel.class, OColumn.RelationType.ManyToOne);
-    OColumn photo = new OColumn("Зураг", OBlob.class);
     OColumn name = new OColumn("Нэр", OVarchar.class);
+    OColumn date = new OColumn("Date record", ODateTime.class);
+    OColumn serial = new OColumn("Serial", OVarchar.class);
+    OColumn norm = new OColumn("Norm", OVarchar.class);
+    OColumn usage_percent = new OColumn("Usage percent", OFloat.class);
 
-    public TechnicInspectionPhoto(Context context, OUser user) {
-        super(context, "gatsuurt.tehcnic.inspection.photo", user);
+    public TechnicInspectionAccumulators(Context context, OUser user) {
+        super(context, "gatsuurt.accumulator.inspection", user);
     }
-
 }

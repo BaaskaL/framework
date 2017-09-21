@@ -24,48 +24,21 @@
             app:expandedTitleMarginStart="16dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-            <com.daimajia.slider.library.SliderLayout
-                android:id="@+id/slider"
+            <android.support.v4.view.ViewPager
+                android:id="@+id/pagerInspection"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fitsSystemWindows="true"
-                custom:auto_cycle="true"
-                custom:indicator_visibility="visible"
-                custom:pager_animation="Accordion"
-                custom:pager_animation_span="1100" />
+                android:layout_height="match_parent" />
 
-            <com.daimajia.slider.library.Indicators.PagerIndicator
-                android:id="@+id/custom_indicator"
-                android:layout_width="wrap_content"
+            <mn.odoo.addons.otherClass.InkPageIndicator
+                android:id="@+id/indicator"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="20dp"
-                android:gravity="center"
-                custom:selected_color="#0095BF"
-                custom:selected_drawable="@drawable/bird"
-                custom:selected_height="6dp"
-                custom:selected_padding_left="5dp"
-                custom:selected_padding_right="5dp"
-                custom:selected_width="6dp"
-                custom:shape="oval"
-                custom:unselected_color="#55333333"
-                custom:unselected_height="6dp"
-                custom:unselected_padding_left="5dp"
-                custom:unselected_padding_right="5dp"
-                custom:unselected_width="6dp" />
-
-
-            <ImageView
-                android:id="@+id/technic_image"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clickable="false"
-                android:fitsSystemWindows="true"
-                android:scaleType="centerCrop"
-                android:src="@drawable/user_xlarge"
-                android:visibility="gone"
-                app:layout_collapseMode="parallax" />
+                android:padding="10dip"
+                app:animationDuration="320"
+                app:currentPageIndicatorColor="@android:color/black"
+                app:dotDiameter="8dp"
+                app:dotGap="8dp"
+                app:pageIndicatorColor="@android:color/darker_gray" />
 
             <View
                 android:layout_width="match_parent"

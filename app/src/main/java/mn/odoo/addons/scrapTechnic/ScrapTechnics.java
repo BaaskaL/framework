@@ -10,6 +10,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -190,16 +191,24 @@ public class ScrapTechnics extends BaseFragment implements LoaderManager.LoaderC
         protected void onPreExecute() {
             super.onPreExecute();
             progressDialog = new ProgressDialog(mContext);
-            progressDialog.setCancelable(false);
-            progressDialog.setTitle(R.string.title_please_wait);
-            progressDialog.setMessage("Update");
-            progressDialog.hide();
+            progressDialog.setTitle(R.string.title_please_wait_mn);
+            progressDialog.setMessage("Мэдээлэл шинэчилж байна.");
+//            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+//            progressDialog.setProgress(1);
+            progressDialog.setMax(mAdapter.getCount());
+            progressDialog.setCancelable(true);
+            progressDialog.show();
         }
 
         @Override
         protected Void doInBackground(ODomain... params) {
-            ODomain domain = params[0];
-            scrapTechnic.quickSyncRecords(domain);
+            try {
+                Thread.sleep(500);
+                ODomain domain = params[0];
+                scrapTechnic.quickSyncRecords(domain);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             return null;
         }
 

@@ -26,6 +26,7 @@ import android.util.Log;
 
 import com.odoo.BuildConfig;
 import com.odoo.addons.employees.models.Employee;
+import com.odoo.addons.scrapAccumulator.Accumulator;
 import com.odoo.addons.technic.models.TechnicsModel;
 import com.odoo.base.addons.res.ResUsers;
 import com.odoo.core.orm.ODataRow;
@@ -60,6 +61,7 @@ public class TechnicsInspectionModel extends OModel {
     OColumn technic_inspection_check_list_ids = new OColumn("Check lists", TechnicInspectionCheckList.class, OColumn.RelationType.OneToMany).setRelatedColumn("inspection_id");
     OColumn inspection_usage_ids = new OColumn("inspection_id", TechnicInspectionUsage.class, OColumn.RelationType.OneToMany).setRelatedColumn("inspection_id");
     OColumn tire_ids = new OColumn("Дугуй", TechnicInspectionTires.class, OColumn.RelationType.OneToMany).setRelatedColumn("inspection_id");
+    OColumn accumulator_ids = new OColumn("Аккумулятор", TechnicInspectionAccumulators.class, OColumn.RelationType.OneToMany).setRelatedColumn("inspection_id");
     OColumn ins_photo = new OColumn("Зураг", TechnicInspectionPhoto.class, OColumn.RelationType.OneToMany).setRelatedColumn("inspection_id");
     OColumn inspection_respondent_id = new OColumn("Жолооч/Хариуцагч", Employee.class, OColumn.RelationType.ManyToOne);
     OColumn inspection_registrar_id = new OColumn("Бүртгэгч", ResUsers.class, OColumn.RelationType.ManyToOne);

@@ -114,18 +114,17 @@ public class ScrapTechnicsDetail extends OdooCompatActivity implements View.OnCl
     }
 
     private void setupToolbar() {
-        OnTechnicScrapImageSync imageSync = new OnTechnicScrapImageSync();
         if (!hasRecordInExtra()) {
             setTitle("Үүсгэх");
             mForm.setEditable(mEditMode);
-            imageSync.execute(recScrapTechImages);
+            imageTheard(recScrapTechImages);
             mForm.initForm(null);
             ((OField) mForm.findViewById(R.id.dateTechnicScrap)).setValue(ODateUtils.getDate());
         } else {
-            setTitle("Техник акт дэлгэрэнгүй");
+            setTitle("Техникийн үзлэг дэлгэрэнгүй");
             record = scrapTechnic.browse(ScrapId);
             recScrapTechImages = record.getO2MRecord("scrap_photos").browseEach();
-            imageSync.execute(recScrapTechImages);
+            imageTheard(recScrapTechImages);
             mForm.initForm(record);
             mForm.setEditable(mEditMode);
         }
@@ -270,7 +269,20 @@ public class ScrapTechnicsDetail extends OdooCompatActivity implements View.OnCl
         }
     }
 
-    private class OnTechnicScrapImageSync extends AsyncTask<List<ODataRow>, Void, Void> {
+
+    private void imageTheard(final List<ODataRow> rows) {
+        new Thread(new Runnable() {
+            public void run() {
+                mAdapter = new ImageFragmentAdapter(getSupportFragmentManager(), rows);
+                mPager.setAdapter(null);
+                mPager.setAdapter(mAdapter);
+                InkPageIndicator mIndicator = (InkPageIndicator) findViewById(R.id.indicator);
+                mIndicator.setViewPager(mPager);
+            }
+        }).start();
+    }
+
+    /*private class OnTechnicScrapImageSync extends AsyncTask<List<ODataRow>, Void, Void> {
 
         @Override
         protected void onPreExecute() {
@@ -279,7 +291,13 @@ public class ScrapTechnicsDetail extends OdooCompatActivity implements View.OnCl
 
         @Override
         protected Void doInBackground(List<ODataRow>... params) {
-            mAdapter = new ImageFragmentAdapter(getSupportFragmentManager(), params[0]);
+            try {
+                Thread.sleep(500);
+                mAdapter = new ImageFragmentAdapter(getSupportFragmentManager(), params[0]);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
             return null;
         }
 
@@ -292,7 +310,7 @@ public class ScrapTechnicsDetail extends OdooCompatActivity implements View.OnCl
             mIndicator = (InkPageIndicator) findViewById(R.id.indicator);
             mIndicator.setViewPager(mPager);
         }
-    }
+    }*/
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -303,7 +321,9 @@ public class ScrapTechnicsDetail extends OdooCompatActivity implements View.OnCl
             row.put("photo", values.getString("datas"));
             row.put("scrap_id", ScrapId);
             row.put("id", 0);
-            mAdapter.update(row);
+            if (!mAdapter.update(row)) {
+                Toast.makeText(this, "Уг зураг аль хэдийн орсон байна!!!", Toast.LENGTH_LONG).show();
+            }
         } else if (values != null) {
             Toast.makeText(this, R.string.toast_image_size_too_large, Toast.LENGTH_LONG).show();
         }

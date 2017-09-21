@@ -50,13 +50,14 @@ public class TechnicInspectionSyncService extends OSyncService implements ISyncF
     @Override
     public OSyncAdapter performNextSync(OUser user, SyncResult syncResult) {
         TechnicInspectionItems isnpectionItem = new TechnicInspectionItems(mContext, user);
-        List<ODataRow> rows = isnpectionItem.select();
-        for (ODataRow row : rows) {
-            if (row.getString("inspection_category_id").equals("false")) {
-                Log.i("created inspection item", row.toString());
-                isnpectionItem.quickCreateRecord(row);
-            }
-        }
+        isnpectionItem.quickSyncRecords(null);
+//        List<ODataRow> rows = isnpectionItem.select();
+//        for (ODataRow row : rows) {
+//            if (row.getString("inspection_category_id").equals("false")) {
+//                Log.i("created inspection item", row.toString());
+//                isnpectionItem.quickCreateRecord(row);
+//            }
+//        }
         return null;
     }
 }
