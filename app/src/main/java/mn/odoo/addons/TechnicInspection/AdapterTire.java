@@ -1,11 +1,9 @@
 package mn.odoo.addons.TechnicInspection;
 
-import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +23,6 @@ import java.util.List;
 
 public class AdapterTire extends RecyclerView.Adapter<AdapterTire.ViewHolderTire> {
     private List<ODataRow> tireRows = new ArrayList<>();
-    public TechnicsInspectionDetails technicsInspectionDetails;
     private static final int CAMERA_REQUEST = 1888;
 
     public static class ViewHolderTire extends RecyclerView.ViewHolder {
@@ -41,9 +38,7 @@ public class AdapterTire extends RecyclerView.Adapter<AdapterTire.ViewHolderTire
             state = (TextView) view.findViewById(R.id.state);
             serial = (EditText) view.findViewById(R.id.serial);
             captureImageTire = (FloatingActionButton) view.findViewById(R.id.captureImageTire);
-
             serial.setEnabled(TechnicsInspectionDetails.mEditMode);
-
         }
     }
 
@@ -54,7 +49,6 @@ public class AdapterTire extends RecyclerView.Adapter<AdapterTire.ViewHolderTire
 
     @Override
     public ViewHolderTire onCreateViewHolder(ViewGroup parent, int viewType) {
-        technicsInspectionDetails = new TechnicsInspectionDetails();
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.technic_inspection_tire_item, null);
         return new ViewHolderTire(itemView);
@@ -62,13 +56,13 @@ public class AdapterTire extends RecyclerView.Adapter<AdapterTire.ViewHolderTire
 
     @Override
     public void onBindViewHolder(final ViewHolderTire holder, final int position) {
-        ODataRow tireRow = tireRows.get(position);
-        holder.name.setText(((position + 1) + ". " + tireRow.getString("name")));
-        holder.date_record.setText(tireRow.getString("date_record").toString());
-        holder.current_position.setText(tireRow.getString("current_position").toString());
+        final ODataRow row = tireRows.get(position);
+        holder.name.setText(((position + 1) + ". " + row.getString("name")));
+        holder.date_record.setText(row.getString("date_record").toString());
+        holder.current_position.setText(row.getString("current_position").toString());
         holder.serial.setText("");
-        if (!tireRow.getString("serial").equals("false"))
-            holder.serial.setText(tireRow.getString("serial").toString());
+        if (!row.getString("serial").equals("false"))
+            holder.serial.setText(row.getString("serial").toString());
         holder.serial.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -89,16 +83,14 @@ public class AdapterTire extends RecyclerView.Adapter<AdapterTire.ViewHolderTire
         holder.captureImageTire.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                technicsInspectionDetails.captureTire("name");
-//                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-//                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                String name = "(" + row.getString("name") + ")";
+                TechnicsInspectionDetails.captureOfLine(name);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        Log.i("tireRows_size()====", tireRows.size() + "");
         return tireRows.size();
     }
 }

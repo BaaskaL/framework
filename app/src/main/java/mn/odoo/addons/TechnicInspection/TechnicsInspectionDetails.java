@@ -101,7 +101,7 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
     public int myId;
     private Uri mCapturedImageURI;
     private Toolbar toolbar;
-    private OFileManager fileManager;
+    public static OFileManager fileManager;
     private String newImage = null;
     private HashMap<String, File> file_maps = new HashMap<>();
     private int inspectionItemId;
@@ -121,8 +121,9 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
     private CollapsingToolbarLayout collapsingToolbarLayout;
     public List<ODataRow> recTechInspectionImages = new ArrayList<>();
     private int inspectionId = 0;
-    private String imgName = "";
+    private static String imgName = "";
     private List<ODataRow> technic_inspection = new ArrayList<>();
+    private String unSaveTechId = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -138,7 +139,6 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mEditMode = (!hasRecordInExtra() ? true : false);
-        findViewById(R.id.captureImage).setOnClickListener(this);
         fileManager = new OFileManager(this);
         OAppBarUtils.setAppBar(this, true);
         if (savedInstanceState != null) {
@@ -252,6 +252,7 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
     @Override
     public void onFieldValueChange(OField field, Object value) {
         ODataRow row = ((ODataRow) value);
+        unSaveTechId = row.getString("_id");
         if (field.getFieldName().equals("inspection_type_id")) {
             if (record != null && record.getInt("inspection_type_id") != 0) {
             } else {
@@ -267,9 +268,12 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
             domain.add("id", "=", row.getString("id"));
             params.add(domain);
             params.add(row.getString("_id"));
-            sync.execute(params);
+            if (app.inNetwork()) {
+                sync.execute(params);
+            } else {
+                Toast.makeText(this, R.string.toast_network_required, Toast.LENGTH_SHORT).show();
+            }
 //          end sync
-
             technisUsageUoms(row);
             technisTire(row);
             technisAccumulator(row);
@@ -277,12 +281,6 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
             typeField.setValue(false);
             viewPager.setAdapter(adapter);
         }
-    }
-
-    private void setInsImage(ODataRow row) {
-        InspectionId = row.getInt("_id");
-        inspectionImages.put(InspectionId, row.getString("photo"));
-//        getTire();
     }
 
     @Override
@@ -311,11 +309,13 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
         try {
             List<ODataRow> val = norm_obj.select(new String[]{"inspection_pack_id"}, "inspection_type_id = ? and norm_id = ?", new String[]{"" + rows.getInt(OColumn.ROW_ID), "" + technicIns.getTechnicNorm()});
             inspectionItemLines.clear();
+//            for (ODataRow row : val) {
+//                ODataRow inspectionPack = isectionPack.select(new String[]{"inspection_items"}, "id = ? ", new String[]{row.getString("inspection_pack_id")}).get(0);
+//            }
             if (val.size() > 0) {
                 ODataRow result = norm_obj.select(new String[]{"inspection_pack_id"}, "inspection_type_id = ? and norm_id = ?", new String[]{"" + rows.getInt(OColumn.ROW_ID), "" + technicIns.getTechnicNorm()}).get(0);
                 ODataRow inspectionPack = isectionPack.select(new String[]{"inspection_items"}, "id = ? ", new String[]{result.getString("inspection_pack_id")}).get(0);
                 List<ODataRow> resultInspectionPack = isectionPack.selectManyToManyRecords(new String[]{"name", "inspection_category_id"}, "inspection_items", inspectionPack.getInt("id"));
-                Log.i("resultInspectionPack=", resultInspectionPack.toString());
                 List<ODataRow> lines = new ArrayList<>();
                 for (ODataRow row : resultInspectionPack) {
                     Log.i("row==ll=", row.toString());
@@ -349,11 +349,16 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.captureImage:
-                imgName = technic.browse(record.getInt("inspection_technic_id")).getString("state_number");
+                if (record == null) {
+                    if (unSaveTechId == "") {
+                        Toast.makeText(this, "Техник сонгоно уу!!!", Toast.LENGTH_LONG).show();
+                        break;
+                    }
+                    imgName = technic.browse(Integer.parseInt(unSaveTechId)).getString("state_number");
+                } else {
+                    imgName = technic.browse(record.getInt("inspection_technic_id")).getString("state_number");
+                }
                 imgName = imgName.equals("false") ? "" : imgName;
-                fileManager.requestForFile(OFileManager.RequestType.IMAGE_OR_CAPTURE_IMAGE);
-                break;
-            case R.id.captureImageTire:
                 fileManager.requestForFile(OFileManager.RequestType.IMAGE_OR_CAPTURE_IMAGE);
                 break;
         }
@@ -363,7 +368,8 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
         return extra != null && extra.containsKey(OColumn.ROW_ID);
     }
 
-    public void captureTire(String name) {
+    public static void captureOfLine(String name) {
+        imgName = name;
         fileManager.requestForFile(OFileManager.RequestType.IMAGE_OR_CAPTURE_IMAGE);
     }
 
@@ -547,14 +553,38 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
     }
 
     private class OnTechnicSync extends AsyncTask<List<Object>, Void, Void> {
+        private String id = "0";
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            findViewById(R.id.InspectionProgress).setVisibility(View.VISIBLE);
+        }
+
         @Override
         protected Void doInBackground(List<Object>... params) {
-            if (app.inNetwork()) {
+            try {
                 List parameter = params[0];
                 ODomain domain = (ODomain) parameter.get(0);
+                id = parameter.get(1).toString();
                 technic.quickSyncRecords(domain);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+//            if (!id.equals("0")) {
+//               /* ODataRow technic = technicIns.browse(Integer.parseInt(id));
+//                Log.i("technic====", technic.toString());
+////                inspectionItemLines = technic.getO2MRecord("technic_inspection_check_list_ids").browseEach();
+//                linesUom = technic.getO2MRecord("inspection_usage_ids").browseEach();
+//                tireLines = technic.getO2MRecord("tire_ids").browseEach();
+//                accumulatorLines = technic.getO2MRecord("accumulator_ids").browseEach();*/
+//            }
+            findViewById(R.id.InspectionProgress).setVisibility(View.GONE);
         }
     }
 
@@ -656,9 +686,7 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
 //            image.put("photo", newImage);
             //garin usgiig yah weeeeeee
 //            recInsImages.add(image);
-
-            onOptionsItemSelected(item);
-
+//            onOptionsItemSelected(item);
         } else {
             OValues values = fileManager.handleResult(requestCode, resultCode, data);
             if (values != null && !values.contains("size_limit_exceed")) {
@@ -670,6 +698,8 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
                 row.put("id", 0);
                 if (!mAdapter.update(row)) {
                     Toast.makeText(this, "Уг зураг аль хэдийн орсон байна!!!", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(this, imgName + "_" + timeStamp + "-нэртэй зураг нэмэгдлээ.", Toast.LENGTH_LONG).show();
                 }
             } else if (values != null) {
                 Toast.makeText(this, R.string.toast_image_size_too_large, Toast.LENGTH_LONG).show();
@@ -678,15 +708,11 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
     }
 
     private void imgTheard(final List<ODataRow> imgRows) {
-        new Thread(new Runnable() {
-            public void run() {
-                mAdapter = new ImageFragmentAdapter(getSupportFragmentManager(), imgRows);
-                mPager.setAdapter(null);
-                mPager.setAdapter(mAdapter);
-                InkPageIndicator mIndicator = (InkPageIndicator) findViewById(R.id.indicator);
-                mIndicator.setViewPager(mPager);
-            }
-        }).start();
+        mAdapter = new ImageFragmentAdapter(getSupportFragmentManager(), imgRows);
+        mPager.setAdapter(null);
+        mPager.setAdapter(mAdapter);
+        InkPageIndicator mIndicator = (InkPageIndicator) findViewById(R.id.indicator);
+        mIndicator.setViewPager(mPager);
     }
 
 /*    private class OnInspectionImageSync extends AsyncTask<List<ODataRow>, Void, Void> {

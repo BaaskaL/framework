@@ -59,6 +59,7 @@ public class ImageFragmentAdapter extends FragmentPagerAdapter {
             }
         }
         this.CONTENT.add(content);
+        mCount = CONTENT.size();
         this.notifyDataSetChanged();
         return true;
     }

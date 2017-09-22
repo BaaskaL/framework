@@ -271,15 +271,11 @@ public class ScrapTechnicsDetail extends OdooCompatActivity implements View.OnCl
 
 
     private void imageTheard(final List<ODataRow> rows) {
-        new Thread(new Runnable() {
-            public void run() {
-                mAdapter = new ImageFragmentAdapter(getSupportFragmentManager(), rows);
-                mPager.setAdapter(null);
-                mPager.setAdapter(mAdapter);
-                InkPageIndicator mIndicator = (InkPageIndicator) findViewById(R.id.indicator);
-                mIndicator.setViewPager(mPager);
-            }
-        }).start();
+        mAdapter = new ImageFragmentAdapter(getSupportFragmentManager(), rows);
+        mPager.setAdapter(null);
+        mPager.setAdapter(mAdapter);
+        InkPageIndicator mIndicator = (InkPageIndicator) findViewById(R.id.indicator);
+        mIndicator.setViewPager(mPager);
     }
 
     /*private class OnTechnicScrapImageSync extends AsyncTask<List<ODataRow>, Void, Void> {

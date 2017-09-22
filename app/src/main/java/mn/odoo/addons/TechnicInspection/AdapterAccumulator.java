@@ -4,7 +4,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +23,6 @@ import java.util.List;
 
 public class AdapterAccumulator extends RecyclerView.Adapter<AdapterAccumulator.ViewHolderAccum> {
     private List<ODataRow> accumulatorRows = new ArrayList<>();
-    public TechnicsInspectionDetails technicsInspectionDetails;
     private static final int CAMERA_REQUEST = 1888;
 
     public static class ViewHolderAccum extends RecyclerView.ViewHolder {
@@ -39,9 +37,7 @@ public class AdapterAccumulator extends RecyclerView.Adapter<AdapterAccumulator.
             usage = (TextView) view.findViewById(R.id.stateUsagePercent);
             serial = (EditText) view.findViewById(R.id.serialAccum);
             captureImageAccum = (FloatingActionButton) view.findViewById(R.id.captureImageAccumu);
-
             serial.setEnabled(TechnicsInspectionDetails.mEditMode);
-
         }
     }
 
@@ -52,7 +48,6 @@ public class AdapterAccumulator extends RecyclerView.Adapter<AdapterAccumulator.
 
     @Override
     public ViewHolderAccum onCreateViewHolder(ViewGroup parent, int viewType) {
-        technicsInspectionDetails = new TechnicsInspectionDetails();
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.technic_inspection_accumulator_item, null);
         return new ViewHolderAccum(itemView);
@@ -60,7 +55,7 @@ public class AdapterAccumulator extends RecyclerView.Adapter<AdapterAccumulator.
 
     @Override
     public void onBindViewHolder(final ViewHolderAccum holder, final int position) {
-        ODataRow row = accumulatorRows.get(position);
+        final ODataRow row = accumulatorRows.get(position);
         holder.name.setText(((position + 1) + ". " + row.getString("name")));
         holder.date.setText(row.getString("date").toString());
         holder.usage.setText(row.getString("usage_percent"));
@@ -87,16 +82,14 @@ public class AdapterAccumulator extends RecyclerView.Adapter<AdapterAccumulator.
         holder.captureImageAccum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                technicsInspectionDetails.captureAccum("name");
-//                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-//                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                String name = "(" + row.getString("name") + ")";
+                TechnicsInspectionDetails.captureOfLine(name);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        Log.i("accumulatorRows_size===", accumulatorRows.size() + "");
         return accumulatorRows.size();
     }
 }
