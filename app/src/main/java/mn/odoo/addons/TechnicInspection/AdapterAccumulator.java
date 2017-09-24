@@ -23,7 +23,6 @@ import java.util.List;
 
 public class AdapterAccumulator extends RecyclerView.Adapter<AdapterAccumulator.ViewHolderAccum> {
     private List<ODataRow> accumulatorRows = new ArrayList<>();
-    private static final int CAMERA_REQUEST = 1888;
 
     public static class ViewHolderAccum extends RecyclerView.ViewHolder {
         public TextView name, date, usage;

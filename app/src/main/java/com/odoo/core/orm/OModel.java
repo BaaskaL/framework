@@ -961,18 +961,8 @@ public class OModel implements ISyncServiceListener {
             Log.i("1==getRelatedColumn==", column.getRelatedColumn() + "");
             old_values.put(column.getRelatedColumn(), 0);
             Log.i("1==old_values==", old_values + "");
-            List<ODataRow> before = relModel.select(new String[]{"scrap_id", "accumulator_id"}, column.getRelatedColumn() + " = ?", new String[]{record_id + ""});
-            Log.i("1==before_ssize==", before.size() + "");
-            for (ODataRow row : before) {
-                Log.i("1==before_select==", row.toString());
-            }
             int count = relModel.update(column.getRelatedColumn() + " = ?", new String[]{record_id + ""},
                     old_values);
-            List<ODataRow> after = relModel.select(new String[]{"scrap_id", "accumulator_id"});
-            Log.i("1==after_ssize==", after.size() + "");
-            for (ODataRow row : after) {
-                Log.i("1==after_select==", row.toString());
-            }
             Log.i(TAG, String.format("#%d references removed " + relModel.getModelName(), count));
         }
         Log.i("1==values==", values.toString());

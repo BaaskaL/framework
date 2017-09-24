@@ -11,6 +11,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -197,6 +198,10 @@ public class TechnicsInspection extends BaseFragment implements LoaderManager.Lo
         @Override
         protected Void doInBackground(ODomain... params) {
             ODomain domain = params[0];
+//            List<ODataRow> rows = techInspection.select(null, "id = ?", new String[]{"0"});
+//            for (ODataRow row : rows) {
+//                techInspection.quickCreateRecord(row);
+//            }
             techInspection.quickSyncRecords(domain);
             return null;
         }
@@ -204,6 +209,7 @@ public class TechnicsInspection extends BaseFragment implements LoaderManager.Lo
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            setSwipeRefreshing(false);
             progressDialog.dismiss();
         }
     }

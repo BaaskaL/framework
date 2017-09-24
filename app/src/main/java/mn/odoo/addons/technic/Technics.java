@@ -230,6 +230,7 @@ public class Technics extends BaseFragment implements LoaderManager.LoaderCallba
 
         @Override
         protected Void doInBackground(ODomain... params) {
+            Log.i("dawtaad_bainaaa====", "aaaaa");
             ODomain domain = params[0];
             GTechnicColor colorr = new GTechnicColor(mContext, null);
             Log.i("colorr====", colorr.select().toString());

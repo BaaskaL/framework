@@ -34,30 +34,16 @@ public class TechnicInspectionSyncService extends OSyncService implements ISyncF
 
     @Override
     public void performDataSync(OSyncAdapter adapter, Bundle extras, OUser user) {
-        TechnicInspectionNorm norm = new TechnicInspectionNorm(getApplicationContext(), user);
-        TechnicsModel technic = new TechnicsModel(getApplicationContext(), user);
-        TechnicsInspectionModel model = new TechnicsInspectionModel(getApplicationContext(), user);
-        ODomain normDomain = new ODomain();
-        if (technic.isEmptyTable()) {
-
-        } else {
-            norm.quickSyncRecords(normDomain);
-            adapter.syncDataLimit(80);
-            adapter.onSyncFinish(this);
-        }
+        adapter.syncDataLimit(80);
+        adapter.onSyncFinish(this);
     }
 
     @Override
     public OSyncAdapter performNextSync(OUser user, SyncResult syncResult) {
         TechnicInspectionItems isnpectionItem = new TechnicInspectionItems(mContext, user);
+        TechnicInspectionNorm norm = new TechnicInspectionNorm(getApplicationContext(), user);
         isnpectionItem.quickSyncRecords(null);
-//        List<ODataRow> rows = isnpectionItem.select();
-//        for (ODataRow row : rows) {
-//            if (row.getString("inspection_category_id").equals("false")) {
-//                Log.i("created inspection item", row.toString());
-//                isnpectionItem.quickCreateRecord(row);
-//            }
-//        }
+        norm.quickSyncRecords(null);
         return null;
     }
 }

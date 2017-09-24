@@ -32,6 +32,7 @@ public class AdapterUsageUom extends RecyclerView.Adapter<AdapterUsageUom.ViewHo
             productUom = (TextView) view.findViewById(R.id.productUom);
             usageUom = (TextView) view.findViewById(R.id.usageUom);
             usageValue = (EditText) view.findViewById(R.id.usageValue);
+            usageValue.setEnabled(TechnicsInspectionDetails.mEditMode);
         }
     }
 
@@ -59,9 +60,7 @@ public class AdapterUsageUom extends RecyclerView.Adapter<AdapterUsageUom.ViewHo
         holder.usageValue.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                if (s.length() != 0) {
-                    TechnicsInspectionDetails.linesUom.get(position).put("usage_value", holder.usageValue.getText().toString());
-                }
+
             }
 
             @Override
@@ -71,7 +70,9 @@ public class AdapterUsageUom extends RecyclerView.Adapter<AdapterUsageUom.ViewHo
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                if (s.length() != 0) {
+                    TechnicsInspectionDetails.linesUom.get(position).put("usage_value", holder.usageValue.getText().toString());
+                }
             }
         });
 

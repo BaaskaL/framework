@@ -21,8 +21,10 @@ import com.daimajia.slider.library.Tricks.ViewPagerEx;
 import com.odoo.App;
 import com.odoo.R;
 import com.odoo.addons.TechnicInsoection.Models.ProductUom;
+import com.odoo.addons.TechnicInsoection.Models.TechnicInspectionAccumulators;
 import com.odoo.addons.TechnicInsoection.Models.TechnicInspectionCategory;
 import com.odoo.addons.TechnicInsoection.Models.TechnicInspectionCheckList;
+import com.odoo.addons.TechnicInsoection.Models.TechnicInspectionItems;
 import com.odoo.addons.TechnicInsoection.Models.TechnicInspectionNorm;
 import com.odoo.addons.TechnicInsoection.Models.TechnicInspectionPack;
 import com.odoo.addons.TechnicInsoection.Models.TechnicInspectionPhoto;
@@ -39,12 +41,17 @@ import com.odoo.core.orm.ODataRow;
 import com.odoo.core.orm.OValues;
 import com.odoo.core.orm.RelValues;
 import com.odoo.core.orm.fields.OColumn;
+import com.odoo.core.orm.fields.types.OVarchar;
 import com.odoo.core.rpc.helper.ODomain;
+import com.odoo.core.support.OUser;
 import com.odoo.core.support.OdooCompatActivity;
 import com.odoo.core.utils.OAlert;
 import com.odoo.core.utils.OAppBarUtils;
 import com.odoo.core.utils.ODateUtils;
 import com.odoo.core.utils.OResource;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -87,6 +94,7 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
     private TechnicInspectionPhoto inspectionPhoto;
     private TechnicInspectionCheckList inspectionLines;
     private TechnicInspectionTires inspectionTires;
+    private TechnicInspectionAccumulators inspectionAccumulators;
     private TechnicInspectionUsage inspectionUsage;
     private TechnicInspectionNorm norm_obj;
     private TechnicInspectionPack isectionPack;
@@ -123,7 +131,6 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
     private int inspectionId = 0;
     private static String imgName = "";
     private List<ODataRow> technic_inspection = new ArrayList<>();
-    private String unSaveTechId = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -151,10 +158,12 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
         inspectionLines = new TechnicInspectionCheckList(this, null);
         inspectionPhoto = new TechnicInspectionPhoto(this, null);
         inspectionTires = new TechnicInspectionTires(this, null);
+        inspectionAccumulators = new TechnicInspectionAccumulators(this, null);
         inspectionUsage = new TechnicInspectionUsage(this, null);
         norm_obj = new TechnicInspectionNorm(this, null);
         isectionPack = new TechnicInspectionPack(this, null);
         inspectionCategory = new TechnicInspectionCategory(this, null);
+
         technic = new TechnicsModel(this, null);
         usageUom = new UsageUom(this, null);
         productUom = new ProductUom(this, null);
@@ -218,6 +227,7 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
             linesUom = record.getO2MRecord("inspection_usage_ids").browseEach();
             tireLines = record.getO2MRecord("tire_ids").browseEach();
             accumulatorLines = record.getO2MRecord("accumulator_ids").browseEach();
+            Log.i("accumulatorLines==111==", accumulatorLines.toString());
         }
         mForm.setEditable(mEditMode);
         setMode(mEditMode);
@@ -252,7 +262,6 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
     @Override
     public void onFieldValueChange(OField field, Object value) {
         ODataRow row = ((ODataRow) value);
-        unSaveTechId = row.getString("_id");
         if (field.getFieldName().equals("inspection_type_id")) {
             if (record != null && record.getInt("inspection_type_id") != 0) {
             } else {
@@ -324,13 +333,9 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
                     newRow.put("_id", row.getString("_id"));
                     newRow.put("technic_inspection_category_id", row.get("inspection_category_id"));
                     if (!row.get("inspection_category_id").equals("false")) {
-                        List<ODataRow> inspectionCateg = inspectionCategory.select(new String[]{"name"}, "_id = ? ", new String[]{row.getString("inspection_category_id")});
-                        Log.i("inspectionCateg===", inspectionCateg.toString());
-                        for (ODataRow categ : inspectionCateg) {
-                            newRow.put("categ_name", categ.getString("name"));
-                        }
+                        newRow.put("categ_name", inspectionCategory.browse(row.getInt("inspection_category_id")).getString("name"));
                     } else {
-                        newRow.put("categ_name", "Хоосон");
+                        newRow.put("categ_name", "");
                     }
                     newRow.put(("technic_inspection_item_id"), row.get("_id"));
                     newRow.put("inspection_isitnormal", true);
@@ -350,11 +355,11 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
         switch (v.getId()) {
             case R.id.captureImage:
                 if (record == null) {
-                    if (unSaveTechId == "") {
+                    if ((Integer) technicId.getValue() == -1) {
                         Toast.makeText(this, "Техник сонгоно уу!!!", Toast.LENGTH_LONG).show();
                         break;
                     }
-                    imgName = technic.browse(Integer.parseInt(unSaveTechId)).getString("state_number");
+                    imgName = technic.browse((Integer) technicId.getValue()).getString("state_number");
                 } else {
                     imgName = technic.browse(record.getInt("inspection_technic_id")).getString("state_number");
                 }
@@ -389,15 +394,33 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
                 ODomain domain = params[0];
                 List<ODataRow> rows = technicIns.select(null, "id = ?", new String[]{"0"});
                 List<ODataRow> rowsImg = inspectionPhoto.select(null, "id = ?", new String[]{"0"});
-                for (ODataRow row : rows) {
+                List<ODataRow> rowsAccum = inspectionAccumulators.select(null, "id = ?", new String[]{"0"});
+                List<ODataRow> rowsTire = inspectionTires.select(null, "id = ?", new String[]{"0"});
+                for (ODataRow row : rows)
                     technicIns.quickCreateRecord(row);
-                }
-                for (ODataRow row : rowsImg) {
+                for (ODataRow row : rowsImg)
                     inspectionPhoto.quickCreateRecord(row);
-                }
+                for (ODataRow row : rowsAccum)
+                    inspectionAccumulators.quickCreateRecord(row);
+                for (ODataRow row : rowsTire)
+                    inspectionTires.quickCreateRecord(row);
                 /*Бусад бичлэгүүдийг update хийж байна*/
                 technicIns.quickSyncRecords(domain);
-                inspectionPhoto.quickSyncRecords(domain);
+                JSONArray jDomain = domain.getArray();
+                try {
+                    ODomain d = new ODomain();
+                    if (jDomain.length() > 0) {
+                        jDomain = jDomain.getJSONArray(0);
+                        d.add("inspection_id", "=", jDomain.getString(2));
+                    }
+                    inspectionPhoto.quickSyncRecords(d);
+                    inspectionAccumulators.quickSyncRecords(d);
+                    inspectionTires.quickSyncRecords(d);
+                    inspectionLines.quickSyncRecords(d);
+                    inspectionUsage.quickSyncRecords(d);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
             return null;
         }
@@ -412,14 +435,14 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        OnTechnicInspecinChangeUpdate onInsChangeUpdate = new OnTechnicInspecinChangeUpdate();
-        ODomain domain = new ODomain();
+        final OnTechnicInspecinChangeUpdate onInsChangeUpdate = new OnTechnicInspecinChangeUpdate();
+        final ODomain domain = new ODomain();
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 break;
             case R.id.menu_technic_save:
-                if (!saveData) {
+                if (!saveData && (Integer) technicId.getValue() != -1 && (Integer) typeField.getValue() != -1) {
                     Intent intent = new Intent(this, TechnicsInspectionSignature.class);
                     startActivityForResult(intent, REQUEST_ADD_ITEMS);
                 }
@@ -429,18 +452,50 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
                     List<Integer> uoomIds = new ArrayList<>();
                     List<Integer> tireIds = new ArrayList<>();
 
-                    List<OValues> imgValuene = new ArrayList();
+                    List<OValues> imgValue = new ArrayList();
                     for (int i = 0; i < mAdapter.getCount(); i++) {
                         ODataRow row = mAdapter.getRow(i);
                         if (row.getString("id").equals("0")) {
-                            imgValuene.add(row.toValues());
+                            imgValue.add(row.toValues());
                         }
                     }
-                    values.put("ins_photo", new RelValues().append(imgValuene.toArray(new OValues[imgValuene.size()])).delete(mAdapter.getDeleteIds()));
+                    values.put("ins_photo", new RelValues().append(imgValue.toArray(new OValues[imgValue.size()])).delete(mAdapter.getDeleteIds()));
 
                     if (record != null) {
+                        for (ODataRow row : accumulatorLines) {
+                            OValues value = new OValues();
+                            value.put("serial", row.getString("serial"));
+                            inspectionAccumulators.update(row.getInt("_id"), value);
+                        }
+
+                        for (ODataRow row : tireLines) {
+                            OValues value = new OValues();
+                            value.put("serial", row.getString("serial"));
+                            inspectionTires.update(row.getInt("_id"), value);
+                        }
+
+                        for (ODataRow row : inspectionItemLines) {
+                            OValues value = new OValues();
+                            value.put("inspection_isitnormal", row.getBoolean("inspection_isitnormal"));
+                            value.put("inspection_check", row.getBoolean("inspection_check"));
+                            value.put("description", row.getString("description"));
+                            inspectionLines.update(row.getInt("_id"), value);
+                        }
+
+                        for (ODataRow row : linesUom) {
+                            OValues value = new OValues();
+                            value.put("usage_value", row.getString("usage_value"));
+                            inspectionUsage.update(row.getInt("_id"), value);
+                        }
+
+                        ODataRow employObj = employee.browse(values.getInt("inspection_respondent_id"));
+                        values.put("inspection_respondent_name", employObj.get("name"));
+                        ODataRow insType = techInsType.browse(values.getInt("inspection_type_id"));
+                        values.put("inspection_type_name", insType.get("name"));
+
                         technicIns.update(record.getInt(OColumn.ROW_ID), values);
-                        domain.add("id", "=", record.getInt(OColumn.ROW_ID));
+                        record.getString("id");
+                        domain.add("id", "=", record.getString("id"));
                         onInsChangeUpdate.execute(domain);
                         Toast.makeText(this, R.string.toast_information_saved, Toast.LENGTH_LONG).show();
                         mEditMode = !mEditMode;
@@ -453,6 +508,8 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
                             insNewVal.put("inspection_isitnormal", row.getBoolean("inspection_isitnormal"));
                             insNewVal.put("inspection_check", row.getBoolean("inspection_check"));
                             insNewVal.put("description", row.getString("description"));
+                            insNewVal.put("item_name", row.getString("item_name"));
+                            insNewVal.put("categ_name", row.getString("categ_name"));
                             int newId = inspectionLines.insert(insNewVal);
                             inspectionItemIds.add(newId);
                         }
@@ -474,24 +531,20 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
                             int newId = inspectionTires.insert(insNewVal);
                             tireIds.add(newId);
                         }
-                        /*for (ODataRow row : accumulatorLines) {
-                            OValues insNewVal = new OValues();
-                            insNewVal.put("name", row.getString("name"));
-                            insNewVal.put("date_record", row.getString("date_record"));
-                            insNewVal.put("serial", row.getString("serial"));
-                            insNewVal.put("current_position", row.getString("current_position"));
-                            int newId = inspectionTires.insert(insNewVal);
-                            tireIds.add(newId);
-                        }*/
+
+                        List<OValues> accumValue = new ArrayList();
+                        for (ODataRow row : accumulatorLines) {
+                            accumValue.add(row.toValues());
+                        }
+
+                        values.put("accumulator_ids", new RelValues().append(accumValue.toArray(new OValues[accumValue.size()])));
                         values.put("technic_inspection_check_list_ids", inspectionItemIds);
                         values.put("tire_ids", tireIds);
-
-                        values.put("technic_name", technic.browse(values.getInt("inspection_technic_id")).getString("name"));
                         values.put("inspection_usage_ids", uoomIds);
 
+                        values.put("technic_name", technic.browse(values.getInt("inspection_technic_id")).getString("name"));
                         ODataRow employObj = employee.browse(values.getInt("inspection_respondent_id"));
                         values.put("inspection_respondent_name", employObj.get("name"));
-
                         ODataRow insType = techInsType.browse(values.getInt("inspection_type_id"));
                         values.put("inspection_type_name", insType.get("name"));
 
@@ -540,6 +593,7 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
                             public void onConfirmChoiceSelect(OAlert.ConfirmType type) {
                                 if (type == OAlert.ConfirmType.POSITIVE) {
                                     if (technicIns.delete(record.getInt(OColumn.ROW_ID))) {
+                                        onInsChangeUpdate.execute(domain);
                                         Toast.makeText(TechnicsInspectionDetails.this, R.string.tech_toast_information_deleted,
                                                 Toast.LENGTH_SHORT).show();
                                         finish();
@@ -644,7 +698,14 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
             accumulatorLines.clear();
             List<ODataRow> techs = technic.select(new String[]{"accumulators"}, "_id = ? ", new String[]{rows.getString("_id")});
             for (ODataRow tech : techs) {
-                accumulatorLines = tech.getO2MRecord("accumulators").browseEach();
+                for (ODataRow row : tech.getO2MRecord("accumulators").browseEach()) {
+                    ODataRow newRow = new ODataRow();
+                    newRow.put("name", row.getString("name"));
+                    newRow.put("date", row.getString("date"));
+                    newRow.put("serial", row.getString("serial"));
+                    newRow.put("usage_percent", row.getString("usage_percent"));
+                    accumulatorLines.add(newRow);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -686,7 +747,7 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
 //            image.put("photo", newImage);
             //garin usgiig yah weeeeeee
 //            recInsImages.add(image);
-//            onOptionsItemSelected(item);
+            onOptionsItemSelected(item);
         } else {
             OValues values = fileManager.handleResult(requestCode, resultCode, data);
             if (values != null && !values.contains("size_limit_exceed")) {

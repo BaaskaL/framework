@@ -34,7 +34,7 @@ public class TechnicInspectionNorm extends OModel {
 
 
     public TechnicInspectionNorm(Context context, OUser user) {
-        super(context, "technic.inspection.norm", user);
+            super(context, "technic.inspection.norm", user);
     }
 
 }
