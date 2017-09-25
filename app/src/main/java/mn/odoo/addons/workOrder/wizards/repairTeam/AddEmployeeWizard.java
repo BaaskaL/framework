@@ -14,6 +14,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.odoo.R;
 import com.odoo.core.orm.ODataRow;
@@ -45,11 +46,20 @@ public class AddEmployeeWizard extends ActionBarActivity implements
     private List<String> employeeIds = new ArrayList<>();
     public static OModel mModel;
     private CheckBox clearChbox;
+    private TextView lName, name, wName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.item_add_base);
+
+        lName = (TextView) findViewById(R.id.headerLastName);
+        lName.setText("Овог");
+        name = (TextView) findViewById(R.id.headerName);
+        name.setText("Нэр");
+        wName = (TextView) findViewById(R.id.headerWorkName);
+        wName.setText("Ажлын нэр");
+
         edt_searchable_input = (EditText) findViewById(R.id.edt_searchable_input);
         edt_searchable_input.addTextChangedListener(this);
         findViewById(R.id.done).setOnClickListener(this);

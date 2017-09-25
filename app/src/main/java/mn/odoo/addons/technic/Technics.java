@@ -236,7 +236,7 @@ public class Technics extends BaseFragment implements LoaderManager.LoaderCallba
         protected Void doInBackground(ODomain... params) {
             ODomain domain = params[0];
             technicsModel.quickSyncRecords(domain);
-//            technicDocument.quickSyncRecords(domain);
+            technicDocument.quickSyncRecords(domain);
             return null;
         }
 

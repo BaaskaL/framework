@@ -483,6 +483,7 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
                             OValues value = new OValues();
                             value.put("usage_value", row.getString("usage_value"));
                             inspectionUsage.update(row.getInt("_id"), value);
+                            Log.i("inspectionUsage===", inspectionUsage.select(null, "_id=?", new String[]{row.getString("_id")}).toString());
                         }
 
                         ODataRow employObj = employee.browse(values.getInt("inspection_respondent_id"));
@@ -494,7 +495,7 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
                         record.getString("id");
                         domain.add("id", "=", record.getString("id"));
                         onInsChangeUpdate.execute(domain);
-                        Toast.makeText(this, R.string.toast_information_saved, Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, R.string.tech_toast_information_created, Toast.LENGTH_LONG).show();
                         mEditMode = !mEditMode;
                         finish();
                     } else {

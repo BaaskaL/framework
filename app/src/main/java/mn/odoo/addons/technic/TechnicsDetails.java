@@ -1,5 +1,6 @@
 package mn.odoo.addons.technic;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -10,10 +11,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.odoo.R;
-import com.odoo.addons.technic.models.TechnicNorm;
+import com.odoo.addons.technic.models.TechnicDocument;
 import com.odoo.addons.technic.models.TechnicsModel;
 import com.odoo.core.orm.ODataRow;
 import com.odoo.core.orm.fields.OColumn;
+import com.odoo.core.rpc.helper.ODomain;
 import com.odoo.core.support.OdooCompatActivity;
 
 import java.util.ArrayList;
@@ -39,7 +41,7 @@ public class TechnicsDetails extends OdooCompatActivity {
     private TechnicsModel technic;
     private ODataRow record = null;
     private Toolbar toolbar;
-    private TechnicNorm technic_norm;
+    private TechnicDocument technicDocument;
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private int TechnicId;
@@ -50,6 +52,11 @@ public class TechnicsDetails extends OdooCompatActivity {
         setContentView(R.layout.technic_detail);
         extras = getIntent().getExtras();
         TechnicId = extras.getInt(OColumn.ROW_ID);
+        OnTechnicChangeUpdate onTechnicChangeUpdate = new OnTechnicChangeUpdate();
+        ODomain d = new ODomain();
+        d.add("technic_id", "=", TechnicId);
+        technicDocument = new TechnicDocument(getApplicationContext(), null);
+        onTechnicChangeUpdate.execute(d);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Техникийн дэлгэрэнгүй");
@@ -110,6 +117,16 @@ public class TechnicsDetails extends OdooCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private class OnTechnicChangeUpdate extends AsyncTask<ODomain, Void, Void> {
+
+        @Override
+        protected Void doInBackground(ODomain... params) {
+            ODomain domain = params[0];
+            technicDocument.quickSyncRecords(null);
+            return null;
+        }
     }
 
 }

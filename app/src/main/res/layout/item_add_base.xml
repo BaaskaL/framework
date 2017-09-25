@@ -78,6 +78,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <TextView
+            android:id="@+id/headerLastName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -85,11 +86,11 @@
             android:ellipsize="end"
             android:fontFamily="@string/font_normal"
             android:gravity="center"
-            android:text="Овог"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/body_text_2" />
 
         <TextView
+            android:id="@+id/headerName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -97,11 +98,11 @@
             android:ellipsize="end"
             android:fontFamily="@string/font_normal"
             android:gravity="center"
-            android:text="Нэр"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/body_text_2" />
 
         <TextView
+            android:id="@+id/headerWorkName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -109,7 +110,6 @@
             android:ellipsize="end"
             android:fontFamily="@string/font_normal"
             android:gravity="center"
-            android:text="Ажлын нэр"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/body_text_2" />
 

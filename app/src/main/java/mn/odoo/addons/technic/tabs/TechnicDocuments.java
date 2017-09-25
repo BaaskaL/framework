@@ -76,11 +76,11 @@ public class TechnicDocuments extends Fragment {
                 row.put("register_date", exRow.getString("register_date"));
                 row.put("expiry_date", exRow.getString("expiry_date"));
                 row.put("alert_date", exRow.getString("alert_date"));
-                if (exRow.getString("alert_date").equals("using"))
+                if (exRow.getString("state").equals("using"))
                     row.put("state", "Ашиглагдаж буй");
-                else if (exRow.getString("alert_date").equals("exceed"))
+                else if (exRow.getString("state").equals("exceed"))
                     row.put("state", "Хэтэрсэн");
-                else if (exRow.getString("alert_date").equals("finished"))
+                else if (exRow.getString("state").equals("finished"))
                     row.put("state", "Сунгасан");
             }
             rows.add(row);

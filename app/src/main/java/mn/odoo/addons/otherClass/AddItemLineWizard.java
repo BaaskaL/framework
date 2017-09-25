@@ -41,7 +41,7 @@ public class AddItemLineWizard extends ActionBarActivity implements
     private OColumn mCol = null;
     private HashMap<String, Boolean> lineValues = new HashMap<>();
     private Boolean mLongClicked = false;
-    private List<String> oilIds = new ArrayList<>();
+    private List<String> valIds = new ArrayList<>();
     public static OModel mModel;
 
     @Override
@@ -59,9 +59,9 @@ public class AddItemLineWizard extends ActionBarActivity implements
             mList.setOnItemClickListener(this);
             for (String key : extra.keySet()) {
                 lineValues.put(key, extra.getBoolean(key));//baigaa baraanuudiig haruulna
-                oilIds.add(key);
+                valIds.add(key);
             }
-            List<ODataRow> oilRows = mModel.select(null, "_id IN (" + StringUtils.repeat(" ?, ", oilIds.size() - 1) + " ?)", oilIds.toArray(new String[oilIds.size()]));
+            List<ODataRow> oilRows = mModel.select(null, "_id IN (" + StringUtils.repeat(" ?, ", valIds.size() - 1) + " ?)", valIds.toArray(new String[valIds.size()]));
             objects.addAll(oilRows);
             mAdapter = new OListAdapter(this, R.layout.item_line_base, objects) {
                 @Override

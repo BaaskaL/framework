@@ -6,155 +6,143 @@
     android:background="#fff"
     android:orientation="vertical">
 
-    <!--Edit Layout-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipToPadding="false"
+        android:orientation="vertical"
         android:paddingTop="@dimen/statusBarHeight">
 
-        <ScrollView
+        <odoo.controls.OForm
+            android:id="@+id/technic_inspection_form"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:modelName="technic.inspection">
 
-            <odoo.controls.OForm
-                android:id="@+id/technic_inspection_form"
+
+            <odoo.controls.OField
+                android:id="@+id/originTechIns"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#ffffff"
+                android:paddingLeft="@dimen/default_8dp"
+                app:defaultFieldValue="/"
+                app:fieldName="origin"
+                app:fieldTextAppearance="?android:textAppearanceLarge" />
+
+            <odoo.controls.OField
+                android:id="@+id/inspection_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:fieldLabelColor="@color/theme_secondary"
+                app:fieldName="inspection_date"
+                app:fieldTextAppearance="?android:textAppearanceSmall" />
+
+            <odoo.controls.OField
+                android:id="@+id/inspection_technic_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:fieldLabelColor="@color/theme_secondary"
+                app:fieldName="inspection_technic_id"
+                app:fieldTextAppearance="?android:textAppearanceSmall"
+                app:fieldType="Selection"
+                app:widgetType="SearchableLive" />
+
+            <odoo.controls.OField
+                android:id="@+id/inspection_type_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:fieldLabelColor="@color/theme_secondary"
+                app:fieldName="inspection_type_id"
+                app:fieldTextAppearance="?android:textAppearanceSmall"
+                app:fieldType="Selection" />
+
+            <odoo.controls.OField
+                android:id="@+id/inspection_respondent_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:fieldLabelColor="@color/theme_secondary"
+                app:fieldName="inspection_respondent_id"
+                app:fieldTextAppearance="?android:textAppearanceMedium"
+                app:fieldType="Selection"
+                app:widgetType="SearchableLive" />
+
+            <odoo.controls.OField
+                android:id="@+id/inspection_registrar_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:fieldLabelColor="@color/theme_secondary"
+                app:fieldName="inspection_registrar_id"
+                app:fieldTextAppearance="?android:textAppearanceMedium"
+                app:fieldType="Selection" />
+
+            <odoo.controls.OField
+                android:id="@+id/ins_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:fieldLabelColor="@color/theme_secondary"
+                app:fieldName="ins_description"
+                app:fieldTextAppearance="?android:textAppearanceMedium" />
+
+            <odoo.controls.OField
+                android:id="@+id/stateTechIns"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:defaultFieldValue="draft"
+                app:fieldLabelColor="@color/theme_secondary"
+                app:fieldName="state"
+                app:fieldTextAppearance="?android:textAppearanceMedium" />
+
+
+            <View
+                style="@style/ViewSeparator"
+                android:layout_marginLeft="72dp" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:modelName="technic.inspection">
+                android:paddingTop="20dp">
 
-                <LinearLayout
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <android.support.design.widget.TabLayout
+                        android:id="@+id/tab_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/colorPrimary"
+                        android:minHeight="?attr/actionBarSize"
+                        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+                    <ProgressBar
+                        android:id="@+id/InspectionProgress"
+                        style="?android:attr/progressBarStyleSmall"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:visibility="gone" />
+                </RelativeLayout>
+
+                <ScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <odoo.controls.OField
-                        android:id="@+id/originTechIns"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="@dimen/default_8dp"
-                        app:defaultFieldValue="/"
-                        app:fieldName="origin"
-                        app:fieldTextAppearance="?android:textAppearanceLarge" />
-
-                    <odoo.controls.OField
-                        android:id="@+id/inspection_date"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:fieldLabelColor="@color/theme_secondary"
-                        app:fieldName="inspection_date"
-                        app:fieldTextAppearance="?android:textAppearanceSmall" />
-
-                    <odoo.controls.OField
-                        android:id="@+id/inspection_technic_id"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:fieldLabelColor="@color/theme_secondary"
-                        app:fieldName="inspection_technic_id"
-                        app:fieldTextAppearance="?android:textAppearanceSmall"
-                        app:fieldType="Selection"
-                        app:widgetType="SearchableLive" />
-
-                    <odoo.controls.OField
-                        android:id="@+id/inspection_type_id"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:fieldLabelColor="@color/theme_secondary"
-                        app:fieldName="inspection_type_id"
-                        app:fieldTextAppearance="?android:textAppearanceSmall"
-                        app:fieldType="Selection" />
-
-                    <odoo.controls.OField
-                        android:id="@+id/inspection_respondent_id"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:fieldLabelColor="@color/theme_secondary"
-                        app:fieldName="inspection_respondent_id"
-                        app:fieldTextAppearance="?android:textAppearanceMedium"
-                        app:fieldType="Selection"
-                        app:widgetType="SearchableLive" />
-
-                    <odoo.controls.OField
-                        android:id="@+id/inspection_registrar_id"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:fieldLabelColor="@color/theme_secondary"
-                        app:fieldName="inspection_registrar_id"
-                        app:fieldTextAppearance="?android:textAppearanceMedium"
-                        app:fieldType="Selection" />
-
-                    <odoo.controls.OField
-                        android:id="@+id/ins_description"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:fieldLabelColor="@color/theme_secondary"
-                        app:fieldName="ins_description"
-                        app:fieldTextAppearance="?android:textAppearanceMedium" />
-
-                    <odoo.controls.OField
-                        android:id="@+id/stateTechIns"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:defaultFieldValue="draft"
-                        app:fieldLabelColor="@color/theme_secondary"
-                        app:fieldName="state"
-                        app:fieldTextAppearance="?android:textAppearanceMedium" />
-
-                </LinearLayout>
-
-                <View
-                    style="@style/ViewSeparator"
-                    android:layout_marginLeft="72dp" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
                     android:paddingTop="20dp">
 
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
 
-                        <android.support.design.widget.TabLayout
-                            android:id="@+id/tab_layout"
+                        <view
+                            android:id="@+id/pageViewer"
+                            class="mn.odoo.addons.TechnicInspection.CustomerViewPager"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="?attr/colorPrimary"
-                            android:minHeight="?attr/actionBarSize"
-                            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+                            android:layout_marginBottom="200dp" />
+                    </LinearLayout>
 
-                        <ProgressBar
-                            android:id="@+id/InspectionProgress"
-                            style="?android:attr/progressBarStyleSmall"
-                            android:layout_width="match_parent"
-                            android:layout_height="50dp"
-                            android:visibility="gone" />
-                    </RelativeLayout>
-
-                    <ScrollView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="20dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                            <view
-                                android:id="@+id/pageViewer"
-                                class="mn.odoo.addons.TechnicInspection.CustomerViewPager"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content" />
-                        </LinearLayout>
-
-                    </ScrollView>
-
-                </LinearLayout>
-
-            </odoo.controls.OForm>
-        </ScrollView>
+                </ScrollView>
+            </LinearLayout>
+        </odoo.controls.OForm>
     </LinearLayout>
 </LinearLayout>
