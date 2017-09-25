@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.odoo.R;
 import com.odoo.addons.technic.models.GTechnicColor;
@@ -206,12 +207,15 @@ public class Technics extends BaseFragment implements LoaderManager.LoaderCallba
     @Override
     public void onRefresh() {
         if (inNetwork()) {
+            parent().sync().requestSync(TechnicsModel.AUTHORITY);
             OnTechnicChangeUpdate onTechnicChangeUpdate = new OnTechnicChangeUpdate();
             ODomain d = new ODomain();
             /*swipe хийхэд бүх өгөгдлийг update хйих*/
             onTechnicChangeUpdate.execute(d);
             setSwipeRefreshing(true);
-            parent().sync().requestSync(TechnicsModel.AUTHORITY);
+        } else {
+            hideRefreshingProgress();
+            Toast.makeText(getActivity(), _s(R.string.toast_network_required), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -230,10 +234,7 @@ public class Technics extends BaseFragment implements LoaderManager.LoaderCallba
 
         @Override
         protected Void doInBackground(ODomain... params) {
-            Log.i("dawtaad_bainaaa====", "aaaaa");
             ODomain domain = params[0];
-            GTechnicColor colorr = new GTechnicColor(mContext, null);
-            Log.i("colorr====", colorr.select().toString());
             technicsModel.quickSyncRecords(domain);
 //            technicDocument.quickSyncRecords(domain);
             return null;
@@ -242,6 +243,7 @@ public class Technics extends BaseFragment implements LoaderManager.LoaderCallba
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            hideRefreshingProgress();
             progressDialog.dismiss();
         }
     }

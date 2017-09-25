@@ -24,7 +24,6 @@ import com.odoo.addons.TechnicInsoection.Models.ProductUom;
 import com.odoo.addons.TechnicInsoection.Models.TechnicInspectionAccumulators;
 import com.odoo.addons.TechnicInsoection.Models.TechnicInspectionCategory;
 import com.odoo.addons.TechnicInsoection.Models.TechnicInspectionCheckList;
-import com.odoo.addons.TechnicInsoection.Models.TechnicInspectionItems;
 import com.odoo.addons.TechnicInsoection.Models.TechnicInspectionNorm;
 import com.odoo.addons.TechnicInsoection.Models.TechnicInspectionPack;
 import com.odoo.addons.TechnicInsoection.Models.TechnicInspectionPhoto;
@@ -41,9 +40,7 @@ import com.odoo.core.orm.ODataRow;
 import com.odoo.core.orm.OValues;
 import com.odoo.core.orm.RelValues;
 import com.odoo.core.orm.fields.OColumn;
-import com.odoo.core.orm.fields.types.OVarchar;
 import com.odoo.core.rpc.helper.ODomain;
-import com.odoo.core.support.OUser;
 import com.odoo.core.support.OdooCompatActivity;
 import com.odoo.core.utils.OAlert;
 import com.odoo.core.utils.OAppBarUtils;
@@ -61,7 +58,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import mn.odoo.addons.otherClass.ImageFragmentAdapter;
-import mn.odoo.addons.otherClass.InkPageIndicator;
 import odoo.controls.OField;
 import odoo.controls.OForm;
 
@@ -317,6 +313,7 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
     public void inspection_items(ODataRow rows) {
         try {
             List<ODataRow> val = norm_obj.select(new String[]{"inspection_pack_id"}, "inspection_type_id = ? and norm_id = ?", new String[]{"" + rows.getInt(OColumn.ROW_ID), "" + technicIns.getTechnicNorm()});
+            Log.i("val=====", val.toString());
             inspectionItemLines.clear();
 //            for (ODataRow row : val) {
 //                ODataRow inspectionPack = isectionPack.select(new String[]{"inspection_items"}, "id = ? ", new String[]{row.getString("inspection_pack_id")}).get(0);

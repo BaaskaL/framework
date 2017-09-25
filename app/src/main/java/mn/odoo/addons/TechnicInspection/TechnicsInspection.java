@@ -23,6 +23,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.odoo.R;
+import com.odoo.addons.TechnicInsoection.Models.TechnicInspectionItems;
+import com.odoo.addons.TechnicInsoection.Models.TechnicInspectionNorm;
 import com.odoo.addons.TechnicInsoection.Models.TechnicsInspectionModel;
 import com.odoo.core.orm.ODataRow;
 import com.odoo.core.rpc.helper.ODomain;
@@ -52,6 +54,8 @@ public class TechnicsInspection extends BaseFragment implements LoaderManager.Lo
     private OCursorListAdapter mAdapter = null;
     private boolean syncRequested = false;
     private TechnicsInspectionModel techInspection;
+    TechnicInspectionItems isnpectionItem;
+    TechnicInspectionNorm norm;
     private Context mContext;
 
     @Override
@@ -71,6 +75,8 @@ public class TechnicsInspection extends BaseFragment implements LoaderManager.Lo
         mView = view;
         mContext = this.getContext();
         techInspection = new TechnicsInspectionModel(mContext, null);
+        isnpectionItem = new TechnicInspectionItems(mContext, null);
+        norm = new TechnicInspectionNorm(mContext, null);
         ListView mTechnicInspectionList = (ListView) mView.findViewById(R.id.listview_technic_inspection);
         mAdapter = new OCursorListAdapter(getActivity(), null, R.layout.technic_inspection_row_item);
         mAdapter.setOnViewBindListener(this);
@@ -203,6 +209,8 @@ public class TechnicsInspection extends BaseFragment implements LoaderManager.Lo
                 techInspection.quickCreateRecord(row);
             }
                 /*Бусад бичлэгүүдийг update хийж байна*/
+            isnpectionItem.quickSyncRecords(null);
+            norm.quickSyncRecords(null);
             techInspection.quickSyncRecords(domain);
             return null;
         }
