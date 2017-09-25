@@ -130,13 +130,17 @@ public class TechnicsModel extends OModel {
         List<ODataRow> projectRows = projectObj.select();
         for (ODataRow row : projectRows) {
             List<ODataRow> memberRows = row.getM2MRecord("members").browseEach();
+            Log.i("memberRows====", memberRows.toString());
+            Log.i("getUserId====", userObj.getUserId().toString());
+            Log.i("row_projId====", row.getString("id").toString());
             for (ODataRow memerRow : memberRows) {
                 if (memerRow.getString("_id").equals(userObj.getUserId().toString())) {
                     projectIds.add(row.getInt("id"));
                 }
             }
         }
-//        List<Integer> projectIds = projectObj.selectManyToManyRecords("members", userObj.getUserId());
+        Log.i("projectIds====", projectIds.toString());
+//        List<Integer> projectIds = projectObj.selectManyToManyServerIds("members", userObj.getUserId());
         domain.add("project", "in", projectIds);
         return domain;
     }

@@ -171,7 +171,7 @@ public class ScrapOil extends BaseFragment implements LoaderManager.LoaderCallba
     @Override
     public void onRefresh() {
         if (inNetwork()) {
-            parent().sync().requestSync(ScrapOils.AUTHORITY);
+//            parent().sync().requestSync(ScrapOils.AUTHORITY);
             OnOilScrapChangeUpdate onTireScrapChangeUpdate = new OnOilScrapChangeUpdate();
             ODomain d = new ODomain();
             /*swipe хийхэд бүх үзлэгийг update хйих*/
@@ -223,6 +223,7 @@ public class ScrapOil extends BaseFragment implements LoaderManager.LoaderCallba
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            hideRefreshingProgress();
             progressDialog.dismiss();
         }
     }

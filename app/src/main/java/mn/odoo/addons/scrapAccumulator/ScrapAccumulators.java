@@ -172,7 +172,7 @@ public class ScrapAccumulators extends BaseFragment implements LoaderManager.Loa
     @Override
     public void onRefresh() {
         if (inNetwork()) {
-            parent().sync().requestSync(ScrapAccumulator.AUTHORITY);
+//            parent().sync().requestSync(ScrapAccumulator.AUTHORITY);
             OnAccumScrapChangeUpdate onAccumScrapChangeUpdate = new OnAccumScrapChangeUpdate();
             ODomain d = new ODomain();
             /*swipe хийхэд бүх аккумулятор актыг update хйих*/
@@ -224,6 +224,7 @@ public class ScrapAccumulators extends BaseFragment implements LoaderManager.Loa
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            hideRefreshingProgress();
             progressDialog.dismiss();
         }
     }

@@ -170,7 +170,7 @@ public class Employees extends BaseFragment implements LoaderManager.LoaderCallb
     @Override
     public void onRefresh() {
         if (inNetwork()) {
-            parent().sync().requestSync(Employee.AUTHORITY);
+//            parent().sync().requestSync(Employee.AUTHORITY);
             OnEmployeeChangeUpdate onEmployeeChangeUpdate = new OnEmployeeChangeUpdate();
             ODomain d = new ODomain();
             /*swipe хийхэд бүх ажилтанг update хйих*/
@@ -186,9 +186,19 @@ public class Employees extends BaseFragment implements LoaderManager.LoaderCallb
         @Override
         protected Void doInBackground(ODomain... params) {
             ODomain domain = params[0];
-            employee.quickSyncRecords(domain);
+            List<ODataRow> rows = employee.select(null, "id = ?", new String[]{"0"});
+            for (ODataRow row : rows) {
+                employee.quickCreateRecord(row);
+            }
+                /*Бусад бичлэгүүдийг update хийж байна*/
             employee.quickSyncRecords(domain);
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            hideRefreshingProgress();
         }
     }
 

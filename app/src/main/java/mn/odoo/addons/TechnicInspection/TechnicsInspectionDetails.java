@@ -772,8 +772,8 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
         mAdapter = new ImageFragmentAdapter(getSupportFragmentManager(), imgRows);
         mPager.setAdapter(null);
         mPager.setAdapter(mAdapter);
-        InkPageIndicator mIndicator = (InkPageIndicator) findViewById(R.id.indicator);
-        mIndicator.setViewPager(mPager);
+//        InkPageIndicator mIndicator = (InkPageIndicator) findViewById(R.id.indicator);
+//        mIndicator.setViewPager(mPager);
     }
 
 /*    private class OnInspectionImageSync extends AsyncTask<List<ODataRow>, Void, Void> {

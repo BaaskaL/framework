@@ -175,7 +175,7 @@ public class ScrapPart extends BaseFragment implements LoaderManager.LoaderCallb
     @Override
     public void onRefresh() {
         if (inNetwork()) {
-            parent().sync().requestSync(ScrapParts.AUTHORITY);
+//            parent().sync().requestSync(ScrapParts.AUTHORITY);
             OnPartScrapChangeUpdate onTireScrapChangeUpdate = new OnPartScrapChangeUpdate();
             ODomain d = new ODomain();
             /*swipe хийхэд бүх үзлэгийг update хйих*/
@@ -227,6 +227,7 @@ public class ScrapPart extends BaseFragment implements LoaderManager.LoaderCallb
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            hideRefreshingProgress();
             progressDialog.dismiss();
         }
     }

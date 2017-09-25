@@ -166,7 +166,7 @@ public class TechnicsInspection extends BaseFragment implements LoaderManager.Lo
     @Override
     public void onRefresh() {
         if (inNetwork()) {
-            parent().sync().requestSync(TechnicsInspectionModel.AUTHORITY);
+//            parent().sync().requestSync(TechnicsInspectionModel.AUTHORITY);
             OnTechnicInspectionChangeUpdate onTechnicInspectionChangeUpdate = new OnTechnicInspectionChangeUpdate();
             ODomain d = new ODomain();
             /*swipe хийхэд бүх үзлэгийг update хйих*/
@@ -198,10 +198,11 @@ public class TechnicsInspection extends BaseFragment implements LoaderManager.Lo
         @Override
         protected Void doInBackground(ODomain... params) {
             ODomain domain = params[0];
-//            List<ODataRow> rows = techInspection.select(null, "id = ?", new String[]{"0"});
-//            for (ODataRow row : rows) {
-//                techInspection.quickCreateRecord(row);
-//            }
+            List<ODataRow> rows = techInspection.select(null, "id = ?", new String[]{"0"});
+            for (ODataRow row : rows) {
+                techInspection.quickCreateRecord(row);
+            }
+                /*Бусад бичлэгүүдийг update хийж байна*/
             techInspection.quickSyncRecords(domain);
             return null;
         }

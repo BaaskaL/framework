@@ -171,13 +171,12 @@ public class ScrapTechnics extends BaseFragment implements LoaderManager.LoaderC
     @Override
     public void onRefresh() {
         if (inNetwork()) {
-            parent().sync().requestSync(ScrapOils.AUTHORITY);
+//            parent().sync().requestSync(ScrapOils.AUTHORITY);
             setSwipeRefreshing(true);
             OnTechnicScrapChangeUpdate onTechnicScrapChangeUpdate = new OnTechnicScrapChangeUpdate();
             ODomain d = new ODomain();
             /*swipe хийхэд бүх техникийн актыг update хйих*/
             onTechnicScrapChangeUpdate.execute(d);
-            setSwipeRefreshing(true);
         } else {
             hideRefreshingProgress();
             Toast.makeText(getActivity(), _s(R.string.toast_network_required), Toast.LENGTH_LONG).show();
@@ -205,6 +204,10 @@ public class ScrapTechnics extends BaseFragment implements LoaderManager.LoaderC
             try {
                 Thread.sleep(500);
                 ODomain domain = params[0];
+                List<ODataRow> rows = scrapTechnic.select(null, "id = ?", new String[]{"0"});
+                for (ODataRow row : rows) {
+                    scrapTechnic.quickCreateRecord(row);
+                }
                 scrapTechnic.quickSyncRecords(domain);
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -215,6 +218,7 @@ public class ScrapTechnics extends BaseFragment implements LoaderManager.LoaderC
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            hideRefreshingProgress();
             progressDialog.dismiss();
         }
     }

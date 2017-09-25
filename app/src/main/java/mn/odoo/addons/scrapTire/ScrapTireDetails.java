@@ -226,7 +226,7 @@ public class ScrapTireDetails extends OdooCompatActivity implements OField.IOnFi
                         Toast.makeText(this, R.string.tech_toast_information_saved, Toast.LENGTH_LONG).show();
                     } else {
                         values.put("tire_ids", ids);
-                        values.put("technic_name", technic.browse(values.getInt("technic")).getString("name"));
+                        values.put("technic_name", technic.browse(values.getInt("technic_id")).getString("name"));
                         int row_id = scrapTires.insert(values);
                         if (row_id != scrapTires.INVALID_ROW_ID) {
                             onTireScrapChangeUpdate.execute(domain);
