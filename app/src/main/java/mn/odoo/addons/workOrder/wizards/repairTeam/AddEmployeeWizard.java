@@ -1,6 +1,7 @@
 package mn.odoo.addons.workOrder.wizards.repairTeam;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
@@ -17,9 +18,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.odoo.R;
+import com.odoo.addons.employees.models.Employee;
 import com.odoo.core.orm.ODataRow;
 import com.odoo.core.orm.OModel;
+import com.odoo.core.orm.ServerDataHelper;
 import com.odoo.core.orm.fields.OColumn;
+import com.odoo.core.rpc.helper.ODomain;
+import com.odoo.core.rpc.helper.OdooFields;
 import com.odoo.core.support.list.OListAdapter;
 import com.odoo.core.utils.OControls;
 import com.odoo.core.utils.StringUtils;
@@ -39,7 +44,6 @@ public class AddEmployeeWizard extends ActionBarActivity implements
     private OListAdapter mAdapter;
     private List<Object> objects = new ArrayList<>();
     private int selected_position = -1;
-    //    private LiveSearch mLiveDataLoader = null;
     private OColumn mCol = null;
     private HashMap<String, Boolean> lineValues = new HashMap<>();
     private Boolean mLongClicked = false;
@@ -47,6 +51,9 @@ public class AddEmployeeWizard extends ActionBarActivity implements
     public static OModel mModel;
     private CheckBox clearChbox;
     private TextView lName, name, wName;
+    private LiveSearch mLiveDataLoader = null;
+    private Boolean mLiveSearch = false;
+    private Employee employee;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +69,7 @@ public class AddEmployeeWizard extends ActionBarActivity implements
 
         edt_searchable_input = (EditText) findViewById(R.id.edt_searchable_input);
         edt_searchable_input.addTextChangedListener(this);
+        employee = new Employee(this, null);
         findViewById(R.id.done).setOnClickListener(this);
         clearChbox = (CheckBox) findViewById(R.id.clearChecks);
         clearChbox.setOnClickListener(this);
@@ -105,6 +113,10 @@ public class AddEmployeeWizard extends ActionBarActivity implements
                     return v;
                 }
             };
+            if (mLiveSearch) {
+                mAdapter.setOnSearchChange(this);
+//                mAdapter.setOnSearchChange(onSearchChange());
+            }
             objects.addAll(empRows);
             mList.setAdapter(mAdapter);
         } else {
@@ -231,68 +243,72 @@ public class AddEmployeeWizard extends ActionBarActivity implements
 
     @Override
     public void onSearchChange(List<Object> newRecords) {
+        Log.i("newRecords====", newRecords.toString());
         if (newRecords.size() <= 2) {
-//            if (mLiveDataLoader != null)
-//                mLiveDataLoader.cancel(true);
-//            if (edt_searchable_input.getText().length() >= 2) {
-//                mLiveDataLoader = new LiveSearch();
-//                mLiveDataLoader.execute(edt_searchable_input.getText()
-//                        .toString());
-//            }
+            if (mLiveDataLoader != null)
+                mLiveDataLoader.cancel(true);
+            if (edt_searchable_input.getText().length() >= 2) {
+                mLiveDataLoader = new LiveSearch();
+                Log.i("ssssss====", edt_searchable_input.getText()
+                        .toString());
+                mLiveDataLoader.execute(edt_searchable_input.getText()
+                        .toString());
+            }
         }
     }
 
+    private class LiveSearch extends AsyncTask<String, Void, List<ODataRow>> {
 
-//    private class LiveSearch extends AsyncTask<String, Void, List<ODataRow>> {
-//
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//            findViewById(R.id.loading_progress).setVisibility(View.VISIBLE);
-//            mList.setVisibility(View.GONE);
-//        }
-//
-////        @Override
-////        protected List<ODataRow> doInBackground(String... params) {
-////            try {
-////                ServerDataHelper helper = productProduct.getServerDataHelper();
-//////                ODomain domain = new ODomain();
-////////                domain.add(productProduct.getDefaultNameColumn(), "ilike", params[0]);
-//////                domain.add("id", "not in", productProduct.getServerIds());
-//////                if (mCol != null) {
-//////                    for (String key : mCol.getDomains().keySet()) {
-//////                        // domain.add("sale_ok", "=", true);
-//////                    }
-//////                }
-//////                OdooFields fields = new OdooFields(productProduct.getColumns());
-//////                //return helper.searchRecords(fields, domain, 10);
-////                return helper.nameSearch(params[0], domain, 10);
-////            } catch (Exception e) {
-////                e.printStackTrace();
-////            }
-////            return null;
-////        }
-//
-//        @Override
-//        protected void onPostExecute(List<ODataRow> result) {
-//            super.onPostExecute(result);
-//            findViewById(R.id.loading_progress).setVisibility(View.GONE);
-//            mList.setVisibility(View.VISIBLE);
-//            if (result != null && result.size() > 0) {
-//                objects.clear();
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            findViewById(R.id.loading_progress).setVisibility(View.VISIBLE);
+            mList.setVisibility(View.GONE);
+        }
+
+        @Override
+        protected List<ODataRow> doInBackground(String... params) {
+            try {
+                ServerDataHelper helper = employee.getServerDataHelper();
+                ODomain domain = new ODomain();
+//                domain.add(employee.getDefaultNameColumn(), "ilike", params[0]);
+                domain.add("id", "not in", employee.getServerIds());
+                if (mCol != null) {
+                    for (String key : mCol.getDomains().keySet()) {
+                        // domain.add("sale_ok", "=", true);
+                    }
+                }
+                OdooFields fields = new OdooFields(employee.getColumns());
+                return employee.select(null, "name like ?", new String[]{"Бат"});
+                //return helper.searchRecords(fields, domain, 10);
+//                return helper.nameSearch(params[0], domain, 10);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(List<ODataRow> result) {
+            super.onPostExecute(result);
+            findViewById(R.id.loading_progress).setVisibility(View.GONE);
+            mList.setVisibility(View.VISIBLE);
+            Log.i("result===", result.toString());
+            if (result != null && result.size() > 0) {
+                objects.clear();
 //                objects.addAll(localItems);
-//                objects.addAll(result);
-//                mAdapter.notifiyDataChange(objects);
-//            }
-//        }
-//
-//        @Override
-//        protected void onCancelled() {
-//            super.onCancelled();
-//            findViewById(R.id.loading_progress).setVisibility(View.GONE);
-//            mList.setVisibility(View.VISIBLE);
-//        }
-//    }
+                objects.addAll(result);
+                mAdapter.notifiyDataChange(objects);
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            findViewById(R.id.loading_progress).setVisibility(View.GONE);
+            mList.setVisibility(View.VISIBLE);
+        }
+    }
 
 //    private class QuickCreateRecordProcess extends AsyncTask<ODataRow, Void, ODataRow> {
 //

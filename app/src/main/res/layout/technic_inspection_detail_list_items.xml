@@ -64,8 +64,7 @@
                 app:fieldLabelColor="@color/theme_secondary"
                 app:fieldName="inspection_respondent_id"
                 app:fieldTextAppearance="?android:textAppearanceMedium"
-                app:fieldType="Selection"
-                app:widgetType="SearchableLive" />
+                app:fieldType="Selection" />
 
             <odoo.controls.OField
                 android:id="@+id/inspection_registrar_id"

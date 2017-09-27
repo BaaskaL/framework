@@ -7,9 +7,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.app.NavUtils;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -46,7 +48,7 @@ public class Employees extends BaseFragment implements LoaderManager.LoaderCallb
         AdapterView.OnItemClickListener, View.OnClickListener {
 
     public static final String KEY = Employees.class.getSimpleName();
-    private String mCurFilter = null;
+    private String mCurFilter = "";
     private Employee employee;
     private View mView;
     private OCursorListAdapter mAdapter = null;
@@ -82,9 +84,6 @@ public class Employees extends BaseFragment implements LoaderManager.LoaderCallb
 
     @Override
     public void onStatusChange(Boolean changed) {
-//        if (changed) {
-//            getLoaderManager().restartLoader(0, null, this);
-//        }
         getLoaderManager().restartLoader(0, null, this);
     }
 
@@ -118,16 +117,11 @@ public class Employees extends BaseFragment implements LoaderManager.LoaderCallb
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle data) {
         String where = "";
-        String order_by = "";
+        String order_by = "name ASC";
         String[] whereArgs = null;
         List<String> args = new ArrayList<>();
-
-        if (mCurFilter != null) {
-            where += " name like ? ";
-            args.add("%" + mCurFilter + "%");
-            order_by = "name ASC";
-        }
-
+        where += " name like ? ";
+        args.add("%" + mCurFilter + "%");
         where = (args.size() > 0) ? where : null;
         order_by = (args.size() > 0) ? order_by : null;
         whereArgs = (args.size() > 0) ? args.toArray(new String[args.size()]) : null;
@@ -231,6 +225,8 @@ public class Employees extends BaseFragment implements LoaderManager.LoaderCallb
 
     @Override
     public boolean onSearchViewTextChange(String newFilter) {
+        if (newFilter == null)
+            newFilter = "";
         mCurFilter = newFilter;
         getLoaderManager().restartLoader(0, null, this);
         return true;

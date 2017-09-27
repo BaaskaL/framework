@@ -96,9 +96,8 @@ public class WorkOrders extends BaseFragment implements LoaderManager.LoaderCall
             args.add("%" + mCurFilter + "%");
             args.add("%" + mCurFilter + "%");
             args.add("%" + mCurFilter + "%");
-            order_by = "origin ASC";
         }
-
+        order_by = "origin DESC";
         where = (args.size() > 0) ? where : null;
         order_by = (args.size() > 0) ? order_by : null;
         whereArgs = (args.size() > 0) ? args.toArray(new String[args.size()]) : null;

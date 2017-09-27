@@ -92,7 +92,7 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
     private TechnicInspectionTires inspectionTires;
     private TechnicInspectionAccumulators inspectionAccumulators;
     private TechnicInspectionUsage inspectionUsage;
-    private TechnicInspectionNorm norm_obj;
+    private TechnicInspectionNorm inspectionNorm;
     private TechnicInspectionPack isectionPack;
     private TechnicInspectionCategory inspectionCategory;
     private UsageUom usageUom;
@@ -156,7 +156,7 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
         inspectionTires = new TechnicInspectionTires(this, null);
         inspectionAccumulators = new TechnicInspectionAccumulators(this, null);
         inspectionUsage = new TechnicInspectionUsage(this, null);
-        norm_obj = new TechnicInspectionNorm(this, null);
+        inspectionNorm = new TechnicInspectionNorm(this, null);
         isectionPack = new TechnicInspectionPack(this, null);
         inspectionCategory = new TechnicInspectionCategory(this, null);
 
@@ -312,35 +312,29 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
 
     public void inspection_items(ODataRow rows) {
         try {
-            List<ODataRow> val = norm_obj.select(new String[]{"inspection_pack_id"}, "inspection_type_id = ? and norm_id = ?", new String[]{"" + rows.getInt(OColumn.ROW_ID), "" + technicIns.getTechnicNorm()});
-            Log.i("val=====", val.toString());
+            List<ODataRow> vals = inspectionNorm.select(new String[]{"inspection_pack_id"}, "inspection_type_id = ? and norm_id = ?", new String[]{"" + rows.getInt(OColumn.ROW_ID), "" + technicIns.getTechnicNorm()});
             inspectionItemLines.clear();
-//            for (ODataRow row : val) {
-//                ODataRow inspectionPack = isectionPack.select(new String[]{"inspection_items"}, "id = ? ", new String[]{row.getString("inspection_pack_id")}).get(0);
-//            }
-            if (val.size() > 0) {
-                ODataRow result = norm_obj.select(new String[]{"inspection_pack_id"}, "inspection_type_id = ? and norm_id = ?", new String[]{"" + rows.getInt(OColumn.ROW_ID), "" + technicIns.getTechnicNorm()}).get(0);
-                ODataRow inspectionPack = isectionPack.select(new String[]{"inspection_items"}, "id = ? ", new String[]{result.getString("inspection_pack_id")}).get(0);
-                List<ODataRow> resultInspectionPack = isectionPack.selectManyToManyRecords(new String[]{"name", "inspection_category_id"}, "inspection_items", inspectionPack.getInt("id"));
-                List<ODataRow> lines = new ArrayList<>();
-                for (ODataRow row : resultInspectionPack) {
-                    Log.i("row==ll=", row.toString());
-                    ODataRow newRow = new ODataRow();
-                    newRow.put("item_name", row.getString("name"));
-                    newRow.put("_id", row.getString("_id"));
-                    newRow.put("technic_inspection_category_id", row.get("inspection_category_id"));
-                    if (!row.get("inspection_category_id").equals("false")) {
-                        newRow.put("categ_name", inspectionCategory.browse(row.getInt("inspection_category_id")).getString("name"));
-                    } else {
+            for (ODataRow val : vals) {
+                List<ODataRow> inspectionPack = isectionPack.select(null, "_id = ? ", new String[]{val.getString("inspection_pack_id")});
+                for (ODataRow pack : inspectionPack) {
+                    List<ODataRow> resultInspectionPack = isectionPack.selectManyToManyRecords(new String[]{"name", "inspection_category_id"}, "inspection_items", pack.getInt("_id"));
+                    for (ODataRow row : resultInspectionPack) {
+                        List<ODataRow> lines = new ArrayList<>();
+                        ODataRow newRow = new ODataRow();
+                        newRow.put("item_name", row.getString("name"));
+                        newRow.put("_id", row.getString("_id"));
+                        newRow.put("technic_inspection_category_id", row.get("inspection_category_id"));
                         newRow.put("categ_name", "");
+                        if (!row.get("inspection_category_id").equals("false"))
+                            newRow.put("categ_name", inspectionCategory.browse(row.getInt("inspection_category_id")).getString("name"));
+                        newRow.put(("technic_inspection_item_id"), row.get("_id"));
+                        newRow.put("inspection_isitnormal", true);
+                        newRow.put("inspection_check", false);
+                        newRow.put("description", "");
+                        lines.add(newRow);
+                        inspectionItemLines.addAll(lines);
                     }
-                    newRow.put(("technic_inspection_item_id"), row.get("_id"));
-                    newRow.put("inspection_isitnormal", true);
-                    newRow.put("inspection_check", false);
-                    newRow.put("description", "");
-                    lines.add(newRow);
                 }
-                inspectionItemLines.addAll(lines);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -578,7 +572,6 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
                     mForm.setEditable(mEditMode);
                     setMode(mEditMode);
                     viewPager.setAdapter(adapter);
-//                    getUsageUom();
                 } else {
                     finish();
                 }

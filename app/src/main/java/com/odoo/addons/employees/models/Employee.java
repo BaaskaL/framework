@@ -53,11 +53,11 @@ public class Employee extends OModel {
     OColumn image_medium = new OColumn("Image medium", OVarchar.class);
 
     @Odoo.Functional(store = true, depends = {"company_id"}, method = "storeCompanyName")
-    OColumn company_name = new OColumn("company name", OVarchar.class).setLocalColumn();
+    OColumn company_name = new OColumn("Компани", OVarchar.class).setLocalColumn();
     @Odoo.Functional(store = true, depends = {"job_id"}, method = "storeJobName")
-    OColumn job_name = new OColumn("job_name", OVarchar.class).setLocalColumn();
+    OColumn job_name = new OColumn("Ажлын нэр", OVarchar.class).setLocalColumn();
     @Odoo.Functional(store = true, depends = {"department_id"}, method = "storeDepartmentName")
-    OColumn department_name = new OColumn("department_name", OVarchar.class).setLocalColumn();
+    OColumn department_name = new OColumn("Хэлтэс", OVarchar.class).setLocalColumn();
 
     public Employee(Context context, OUser user) {
         super(context, "hr.employee", user);

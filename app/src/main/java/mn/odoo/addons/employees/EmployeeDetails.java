@@ -19,11 +19,15 @@ import com.odoo.App;
 import com.odoo.R;
 import com.odoo.addons.customers.utils.ShareUtil;
 import com.odoo.addons.employees.models.Employee;
+import com.odoo.addons.employees.models.HrDepartment;
+import com.odoo.addons.employees.models.HrJob;
 import com.odoo.base.addons.ir.feature.OFileManager;
+import com.odoo.base.addons.res.ResCompany;
 import com.odoo.core.orm.ODataRow;
 import com.odoo.core.orm.OModel;
 import com.odoo.core.orm.OValues;
 import com.odoo.core.orm.fields.OColumn;
+import com.odoo.core.rpc.helper.ODomain;
 import com.odoo.core.rpc.helper.OdooFields;
 import com.odoo.core.rpc.helper.utils.gson.OdooResult;
 import com.odoo.core.support.OdooCompatActivity;
@@ -31,6 +35,9 @@ import com.odoo.core.utils.BitmapUtils;
 import com.odoo.core.utils.OAlert;
 import com.odoo.core.utils.OResource;
 import com.odoo.core.utils.OStringColorUtil;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +60,9 @@ public class EmployeeDetails extends OdooCompatActivity
     private final String KEY_MODE = "key_edit_mode";
     private final String KEY_NEW_IMAGE = "key_new_image";
     private Employee employ;
+    private ResCompany resCompany;
+    private HrJob hrJob;
+    private HrDepartment hrDepartment;
     private ODataRow record = null;
     private Boolean mEditMode = false;
     private Menu mMenu;
@@ -74,6 +84,7 @@ public class EmployeeDetails extends OdooCompatActivity
     private TextInputLayout inputLayoutPass, inputLayoutEditPass;
     private EditText editPass;
     private TextView showPass;
+    App app;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,6 +97,7 @@ public class EmployeeDetails extends OdooCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        app = (App) getApplicationContext();
 
         userImage = (ImageView) findViewById(R.id.user_image);
         findViewById(R.id.captureImage).setOnClickListener(this);
@@ -99,6 +111,9 @@ public class EmployeeDetails extends OdooCompatActivity
         }
         App app = (App) getApplicationContext();
         employ = new Employee(this, null);
+        resCompany = new ResCompany(this, null);
+        hrJob = new HrJob(this, null);
+        hrDepartment = new HrDepartment(this, null);
         extras = getIntent().getExtras();
         if (!hasRecordInExtra())
             mEditMode = true;
@@ -209,6 +224,8 @@ public class EmployeeDetails extends OdooCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        final OnEmployeeChangeUpdate onEmployeeChangeUpdate = new OnEmployeeChangeUpdate();
+        final ODomain domain = new ODomain();
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
@@ -222,13 +239,22 @@ public class EmployeeDetails extends OdooCompatActivity
                     }
                     values.put("confirm_code", editPass.getText());
                     if (record != null) {
+                        values.put("company_name", resCompany.browse(values.getInt("company_id")).getString("name"));
+                        values.put("job_name", hrJob.browse(values.getInt("job_id")).getString("name"));
+                        values.put("department_name", hrDepartment.browse(values.getInt("department_id")).getString("name"));
                         employ.update(record.getInt(OColumn.ROW_ID), values);
+                        onEmployeeChangeUpdate.execute(domain);
                         Toast.makeText(this, R.string.tech_toast_information_saved, Toast.LENGTH_LONG).show();
                         mEditMode = !mEditMode;
                         setupToolbar();
                     } else {
-                        final int row_id = employ.insert(values);
+                        values.put("company_name", resCompany.browse(values.getInt("company_id")).getString("name"));
+                        values.put("job_name", hrJob.browse(values.getInt("job_id")).getString("name"));
+                        values.put("department_name", hrDepartment.browse(values.getInt("department_id")).getString("name"));
+                        int row_id = employ.insert(values);
                         if (row_id != OModel.INVALID_ROW_ID) {
+                            onEmployeeChangeUpdate.execute(domain);
+                            Toast.makeText(this, R.string.tech_toast_information_created, Toast.LENGTH_LONG).show();
                             finish();
                         }
                     }
@@ -261,6 +287,7 @@ public class EmployeeDetails extends OdooCompatActivity
                                 if (type == OAlert.ConfirmType.POSITIVE) {
                                     // Deleting record and finishing activity if success.
                                     if (employ.delete(record.getInt(OColumn.ROW_ID))) {
+                                        onEmployeeChangeUpdate.execute(domain);
                                         Toast.makeText(EmployeeDetails.this, R.string.tech_toast_information_deleted,
                                                 Toast.LENGTH_SHORT).show();
                                         finish();
@@ -272,6 +299,29 @@ public class EmployeeDetails extends OdooCompatActivity
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private class OnEmployeeChangeUpdate extends AsyncTask<ODomain, Void, Void> {
+
+        @Override
+        protected Void doInBackground(ODomain... params) {
+            if (app.inNetwork()) {
+                ODomain domain = params[0];
+                List<ODataRow> rows = employ.select(null, "id = ?", new String[]{"0"});
+                for (ODataRow row : rows)
+                    employ.quickCreateRecord(row);
+                /*Бусад бичлэгүүдийг update хийж байна*/
+                employ.quickSyncRecords(domain);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (!app.inNetwork())
+                Toast.makeText(getApplicationContext(), OResource.string(getApplicationContext(), R.string.toast_network_required), Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override

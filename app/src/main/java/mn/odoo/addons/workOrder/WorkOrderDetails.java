@@ -149,7 +149,7 @@ public class WorkOrderDetails extends OdooCompatActivity implements OField.IOnFi
             ((OField) mForm.findViewById(R.id.CreateDateWO)).setValue(ODateUtils.getDate());
             ((OField) mForm.findViewById(R.id.PlannedDateWO)).setValue(ODateUtils.getDate());
             ((OField) mForm.findViewById(R.id.AssignedWO)).setValue(user.myId(this));
-            ((OField) mForm.findViewById(R.id.StageWO)).setValue(1);
+            ((OField) mForm.findViewById(R.id.StageWO)).setValue(2);
         } else {
             setTitle("Засварын ажилбар дэлгэрэнгүй");
             int woId = extra.getInt(OColumn.ROW_ID);
