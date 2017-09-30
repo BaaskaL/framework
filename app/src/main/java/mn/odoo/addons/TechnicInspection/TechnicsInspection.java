@@ -49,7 +49,7 @@ public class TechnicsInspection extends BaseFragment implements LoaderManager.Lo
         AdapterView.OnItemClickListener, View.OnClickListener {
 
     public static final String KEY = TechnicsInspection.class.getSimpleName();
-    private String mCurFilter = null;
+    private String mCurFilter = "";
     private View mView;
     private OCursorListAdapter mAdapter = null;
     private boolean syncRequested = false;
@@ -123,12 +123,10 @@ public class TechnicsInspection extends BaseFragment implements LoaderManager.Lo
         String[] whereArgs = null;
         List<String> args = new ArrayList<>();
 
-        if (mCurFilter != null) {
-            where += " origin like ? or technic_name like ?";
-            args.add("%" + mCurFilter + "%");
-            args.add("%" + mCurFilter + "%");
-            order_by = "origin ASC";
-        }
+        where += " origin like ? or technic_name like ?";
+        args.add("%" + mCurFilter + "%");
+        args.add("%" + mCurFilter + "%");
+        order_by = "origin DESC";
 
         where = (args.size() > 0) ? where : null;
         order_by = (args.size() > 0) ? order_by : null;
@@ -253,6 +251,9 @@ public class TechnicsInspection extends BaseFragment implements LoaderManager.Lo
 
     @Override
     public boolean onSearchViewTextChange(String newFilter) {
+        if (newFilter == null) {
+            newFilter = "";
+        }
         mCurFilter = newFilter;
         getLoaderManager().restartLoader(0, null, this);
         return true;

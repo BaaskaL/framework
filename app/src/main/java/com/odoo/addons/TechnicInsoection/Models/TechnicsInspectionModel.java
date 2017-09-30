@@ -56,6 +56,7 @@ public class TechnicsInspectionModel extends OModel {
     @Odoo.onChange(method = "technicIdOnChange")
     OColumn inspection_technic_id = new OColumn("Техникийн нэр", TechnicsModel.class, OColumn.RelationType.ManyToOne).setRequired();
     OColumn inspection_type_id = new OColumn("Үзлэгийн төрөл", TechnicInspectionType.class, OColumn.RelationType.ManyToOne).setRequired();
+    OColumn inspection_commis = new OColumn("Комисс", Employee.class, OColumn.RelationType.ManyToOne);
     @Odoo.Functional(store = true, depends = {"inspection_type_id"}, method = "storeTypeName")
     OColumn inspection_type_name = new OColumn("Үзлэгийн төрөл", OVarchar.class).setLocalColumn();
     OColumn technic_inspection_check_list_ids = new OColumn("Check lists", TechnicInspectionCheckList.class, OColumn.RelationType.OneToMany).setRelatedColumn("inspection_id");

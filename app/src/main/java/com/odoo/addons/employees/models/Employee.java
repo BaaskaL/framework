@@ -20,6 +20,7 @@
 package com.odoo.addons.employees.models;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.odoo.BuildConfig;
 import com.odoo.base.addons.res.ResCompany;
@@ -38,7 +39,7 @@ import java.util.List;
 public class Employee extends OModel {
     public static final String AUTHORITY = BuildConfig.APPLICATION_ID + ".core.provider.content.sync.hr_employee";
 
-    OColumn last_name = new OColumn("Овог", OVarchar.class);
+    OColumn last_name = new OColumn("Овог", OVarchar.class).setRequired();
     OColumn name = new OColumn("Нэр", OVarchar.class).setRequired();
     OColumn confirm_code = new OColumn("Зөвшөөрөх код", OVarchar.class);
     OColumn work_phone = new OColumn("Ажлын утас", OVarchar.class);
@@ -58,9 +59,29 @@ public class Employee extends OModel {
     OColumn job_name = new OColumn("Ажлын нэр", OVarchar.class).setLocalColumn();
     @Odoo.Functional(store = true, depends = {"department_id"}, method = "storeDepartmentName")
     OColumn department_name = new OColumn("Хэлтэс", OVarchar.class).setLocalColumn();
+    @Odoo.Functional(store = true, depends = {"name", "last_name"}, method = "storeFirstName")
+    OColumn last_and_first_name = new OColumn("Нэр", OVarchar.class).setLocalColumn();
 
     public Employee(Context context, OUser user) {
         super(context, "hr.employee", user);
+        setDefaultNameColumn("last_and_first_name");
+    }
+
+    public String storeFirstName(OValues row) {
+        try {
+            if (!row.getString("name").equals("false")) {
+                String name;
+                if (!row.getString("last_name").equals("false")) {
+                    name = row.getString("last_name") + " " + row.getString("name");
+                } else {
+                    name = "- " + row.getString("name");
+                }
+                return name;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "Хоосон";
     }
 
     public String storeCompanyName(OValues value) {

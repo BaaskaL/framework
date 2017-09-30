@@ -10,13 +10,16 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.odoo.R;
 import com.odoo.addons.TechnicInsoection.Models.TechnicsInspectionModel;
@@ -31,9 +34,9 @@ public class TechnicsInspectionSignature extends Activity {
     signature mSignature;
     private TechnicsInspectionModel technicIns;
     private Employee employee;
-    LinearLayout mContent;
-    Button clear, save;
-    private EditText etxConfirmCode;
+    ImageView mContent;
+    TextView clear, save;
+    private TextView etxConfirmCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,12 +45,12 @@ public class TechnicsInspectionSignature extends Activity {
         setContentView(R.layout.technic_inspection_signature);
         technicIns = new TechnicsInspectionModel(this, null);
         employee = new Employee(this, null);
-        save = (Button) findViewById(R.id.save);
-        clear = (Button) findViewById(R.id.clear);
-        mContent = (LinearLayout) findViewById(R.id.mysignature);
-        etxConfirmCode = (EditText) findViewById(R.id.et_confirm_code);
+        save = (TextView) findViewById(R.id.tvSave);
+        clear = (Button) findViewById(R.id.btnClear);
+        mContent = (ImageView) findViewById(R.id.imgSignature);
+        etxConfirmCode = (TextView) findViewById(R.id.tvCode);
         mSignature = new signature(this, null);
-        mContent.addView(mSignature);
+//        mContent.addView(mSignature);
 
         save.setOnClickListener(onButtonClick);
         clear.setOnClickListener(onButtonClick);

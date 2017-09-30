@@ -58,6 +58,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import mn.odoo.addons.otherClass.ImageFragmentAdapter;
+import mn.odoo.addons.otherClass.InkPageIndicator;
 import odoo.controls.OField;
 import odoo.controls.OForm;
 
@@ -109,7 +110,7 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
     private String newImage = null;
     private HashMap<String, File> file_maps = new HashMap<>();
     private int inspectionItemId;
-    private OField oState, oOrigin, date, technicId, typeField;
+    private OField oState, oOrigin, date, technicId, typeField, registrar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private PagerAdapter adapter;
@@ -121,6 +122,7 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
     App app;
     /*picture*/
     private ViewPager mPager;
+    private InkPageIndicator mIndicator;
     private ImageFragmentAdapter mAdapter;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     public List<ODataRow> recTechInspectionImages = new ArrayList<>();
@@ -197,18 +199,26 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
         mForm = (OForm) findViewById(R.id.technic_inspection_form);
         technicId = (OField) mForm.findViewById(R.id.inspection_technic_id);
         oOrigin = (OField) mForm.findViewById(R.id.originTechIns);
+        registrar = (OField) mForm.findViewById(R.id.inspection_registrar_id);
         oState = (OField) mForm.findViewById(R.id.stateTechIns);
         date = (OField) mForm.findViewById(R.id.inspection_date);
         typeField = (OField) findViewById(R.id.inspection_type_id);
+        mAdapter = new ImageFragmentAdapter(getSupportFragmentManager(), recInsImages);
+        mPager.setAdapter(null);
+        mPager.setAdapter(mAdapter);
+        mIndicator = (InkPageIndicator) findViewById(R.id.indicator);
+        mIndicator.setViewPager(mPager);
+
         setupToolbar();
     }
 
     private void setupToolbar() {
+        OnInspectionImageSync onInspectionImageSync = new OnInspectionImageSync();
         if (!hasRecordInExtra()) {
             setTitle("Үүсгэх");
             myId = technicIns.myId();
             mForm.initForm(null);
-            imgTheard(recInsImages);
+            onInspectionImageSync.execute(recInsImages);
             ((OField) mForm.findViewById(R.id.inspection_registrar_id)).setValue(myId);
             ((OField) mForm.findViewById(R.id.inspection_date)).setValue(ODateUtils.getDate());
         } else {
@@ -216,7 +226,7 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
             setTitle("Техникийн үзлэг дэлгэрэнгүй");
             record = technicIns.browse(rowId);
             recInsImages = record.getO2MRecord("ins_photo").browseEach();
-            imgTheard(recInsImages);
+            onInspectionImageSync.execute(recInsImages);
             mForm.initForm(record);
             technicIns.setTechnicNorm(record.getInt("inspection_technic_id"));
             inspectionItemLines = record.getO2MRecord("technic_inspection_check_list_ids").browseEach();
@@ -229,7 +239,7 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
         setMode(mEditMode);
     }
 
-    private void ToolbarMenuSetVisibl(Boolean Visibility) {
+    private void ToolbarMenuSetVisible(Boolean Visibility) {
         if (mMenu != null) {
             mMenu.findItem(R.id.menu_technic_detail_more).setVisible(!Visibility);
             mMenu.findItem(R.id.menu_technic_edit).setVisible(!Visibility);
@@ -240,8 +250,9 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
 
     private void setMode(Boolean edit) {
         oOrigin.setEditable(false);
+        registrar.setEditable(false);
         oState.setEditable(false);
-        ToolbarMenuSetVisibl(edit);
+        ToolbarMenuSetVisible(edit);
         findViewById(R.id.captureImage).setVisibility(View.GONE);
         if (edit) {
             technicId.setOnValueChangeListener(this);
@@ -373,7 +384,7 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_technic_inspection_detail, menu);
         mMenu = menu;
-        ToolbarMenuSetVisibl(mEditMode);
+        ToolbarMenuSetVisible(mEditMode);
         return true;
     }
 
@@ -536,7 +547,8 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
 
                         values.put("technic_name", technic.browse(values.getInt("inspection_technic_id")).getString("name"));
                         ODataRow employObj = employee.browse(values.getInt("inspection_respondent_id"));
-                        values.put("inspection_respondent_name", employObj.get("name"));
+                        if (employObj != null)
+                            values.put("inspection_respondent_name", employObj.get("name"));
                         ODataRow insType = techInsType.browse(values.getInt("inspection_type_id"));
                         values.put("inspection_type_name", insType.get("name"));
 
@@ -759,12 +771,24 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
         }
     }
 
-    private void imgTheard(final List<ODataRow> imgRows) {
-        mAdapter = new ImageFragmentAdapter(getSupportFragmentManager(), imgRows);
-        mPager.setAdapter(null);
-        mPager.setAdapter(mAdapter);
-//        InkPageIndicator mIndicator = (InkPageIndicator) findViewById(R.id.indicator);
-//        mIndicator.setViewPager(mPager);
+    private class OnInspectionImageSync extends AsyncTask<List<ODataRow>, Void, Void> {
+        @Override
+        protected Void doInBackground(List<ODataRow>... params) {
+            try {
+                mAdapter = new ImageFragmentAdapter(getSupportFragmentManager(), params[0]);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            mPager.setAdapter(null);
+            mPager.setAdapter(mAdapter);
+            mIndicator.setViewPager(mPager);
+        }
     }
 
 /*    private class OnInspectionImageSync extends AsyncTask<List<ODataRow>, Void, Void> {
