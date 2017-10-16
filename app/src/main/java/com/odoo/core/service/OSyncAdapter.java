@@ -272,9 +272,13 @@ public class OSyncAdapter extends AbstractThreadedSyncAdapter {
                     break;
                 case OneToMany:
                     // Update related_column with base id's row_id for each of record ids
+                    Log.i("record====", record.getUniqueIds().toString());
                     String related_column = record.getRelatedColumn();
                     for (Integer id : record.getUniqueIds()) {
                         OValues values = new OValues();
+                        Log.i("rel_model====", rel_model.toString());
+                        Log.i("id====", id.toString());
+                        Log.i("selectRowId====", rel_model.selectRowId(id) + "");
                         ODataRow rec = rel_model.browse(rel_model.selectRowId(id));
                         Log.i("related_column====", related_column.toString());
                         Log.i("rec====", rec.toString());

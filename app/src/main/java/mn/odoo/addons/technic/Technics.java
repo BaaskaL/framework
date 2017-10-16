@@ -92,9 +92,8 @@ public class Technics extends BaseFragment implements LoaderManager.LoaderCallba
         technicDocument = new TechnicDocument(mContext, null);
         ListView mTechnicList = (ListView) view.findViewById(R.id.listview_technic);
         mAdapter = new OCursorListAdapter(getActivity(), null, R.layout.technic_row_item);
-
+        mAdapter.setHasSectionIndexers(false, "name");
         mAdapter.setOnViewBindListener(this);
-
         mTechnicList.setAdapter(mAdapter);
         mTechnicList.setFastScrollAlwaysVisible(true);
         mTechnicList.setOnItemClickListener(this);

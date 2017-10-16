@@ -644,7 +644,6 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
                 List parameter = params[0];
                 ODomain domain = (ODomain) parameter.get(0);
                 id = parameter.get(1).toString();
-                Log.i("domain===", domain.toString());
                 technic.quickSyncRecords(domain);
             } catch (Exception e) {
                 e.printStackTrace();
