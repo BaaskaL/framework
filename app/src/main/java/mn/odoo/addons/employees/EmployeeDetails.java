@@ -241,6 +241,7 @@ public class EmployeeDetails extends OdooCompatActivity
                     if (record != null) {
                         values.put("company_name", resCompany.browse(values.getInt("company_id")).getString("name"));
                         values.put("job_name", hrJob.browse(values.getInt("job_id")).getString("name"));
+                        values.put("last_and_first_name", values.getString("last_name") + values.getString("name"));
                         values.put("department_name", hrDepartment.browse(values.getInt("department_id")).getString("name"));
                         employ.update(record.getInt(OColumn.ROW_ID), values);
                         onEmployeeChangeUpdate.execute(domain);
@@ -249,6 +250,7 @@ public class EmployeeDetails extends OdooCompatActivity
                         setupToolbar();
                     } else {
                         values.put("company_name", resCompany.browse(values.getInt("company_id")).getString("name"));
+                        values.put("last_and_first_name", values.getString("last_name") + " " + values.getString("name"));
                         values.put("job_name", hrJob.browse(values.getInt("job_id")).getString("name"));
                         values.put("department_name", hrDepartment.browse(values.getInt("department_id")).getString("name"));
                         int row_id = employ.insert(values);

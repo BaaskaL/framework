@@ -253,6 +253,7 @@ public class TechnicsInspection extends BaseFragment implements LoaderManager.Lo
         if (newFilter == null) {
             newFilter = "";
         }
+        mCurFilter = newFilter;
         getLoaderManager().restartLoader(0, null, this);
         return true;
     }
