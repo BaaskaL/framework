@@ -34,6 +34,7 @@ import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Interpolator;
 
@@ -336,13 +337,19 @@ public class InkPageIndicator extends View implements ViewPager.OnPageChangeList
         // draw any settled, revealing or joining dots
         for (int page = 0; page < pageCount; page++) {
             int nextXIndex = page == pageCount - 1 ? page : page + 1;
-            Path unselectedPath = getUnselectedPath(page,
-                    dotCenterX[page],
-                    dotCenterX[nextXIndex],
-                    page == pageCount - 1 ? INVALID_FRACTION : joiningFractions[page],
-                    dotRevealFractions[page]);
-            unselectedPath.addPath(combinedUnselectedPath);
-            combinedUnselectedPath.addPath(unselectedPath);
+            try {
+                Path unselectedPath = getUnselectedPath(page,
+                        dotCenterX[page],
+                        dotCenterX[nextXIndex],
+                        page == pageCount - 1 ? INVALID_FRACTION : joiningFractions[page],
+                        dotRevealFractions[page]);
+                unselectedPath.addPath(combinedUnselectedPath);
+                combinedUnselectedPath.addPath(unselectedPath);
+            } catch (ArrayIndexOutOfBoundsException ex) {
+                Log.i("camernii aldaa  ", ex.getMessage());
+            }
+
+
         }
         // draw any retreating joins
         if (retreatingJoinX1 != INVALID_FRACTION) {

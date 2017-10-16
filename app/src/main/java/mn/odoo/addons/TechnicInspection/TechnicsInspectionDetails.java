@@ -283,6 +283,7 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
             OnTechnicSync sync = new OnTechnicSync();
             List<Object> params = new ArrayList<>();
             ODomain domain = new ODomain();
+            Log.i("technic_id=====", row.getString("id"));
             domain.add("id", "=", row.getString("id"));
             params.add(domain);
             params.add(row.getString("_id"));
@@ -453,7 +454,6 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
                     extra.putInt("registrar_worker", (Integer) registrar_worker.getValue());
                     extra.putInt("inspection_commis", (Integer) inspection_commis.getValue());
                     intent.putExtras(extra);
-
                     startActivityForResult(intent, REQUEST_ADD_ITEMS);
                 }
                 OValues values = mForm.getValues();
@@ -644,6 +644,7 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
                 List parameter = params[0];
                 ODomain domain = (ODomain) parameter.get(0);
                 id = parameter.get(1).toString();
+                Log.i("domain===", domain.toString());
                 technic.quickSyncRecords(domain);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -811,22 +812,4 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
             mIndicator.setViewPager(mPager);
         }
     }
-
-
-/*    private class OnInspectionImageSync extends AsyncTask<List<ODataRow>, Void, Void> {
-        @Override
-        protected Void doInBackground(List<ODataRow>... params) {
-            mAdapter = new ImageFragmentAdapter(getSupportFragmentManager(), params[0]);
-            return null;
-        }
-
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            mPager.setAdapter(null);
-            mPager.setAdapter(mAdapter);
-//            InkPageIndicator mIndicator;
-//            mIndicator = (InkPageIndicator) findViewById(R.id.indicator);
-//            mIndicator.setViewPager(mPager);
-        }
-    }*/
 }

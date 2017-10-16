@@ -67,16 +67,6 @@
                 app:widgetType="SearchableLive" />
 
             <odoo.controls.OField
-                android:id="@+id/inspection_commis"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:fieldLabelColor="@color/theme_secondary"
-                app:fieldName="inspection_commis"
-                app:fieldTextAppearance="?android:textAppearanceMedium"
-                app:fieldType="Selection"
-                app:widgetType="SearchableLive" />
-
-            <odoo.controls.OField
                 android:id="@+id/inspection_registrar_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -91,7 +81,8 @@
                 app:fieldLabelColor="@color/theme_secondary"
                 app:fieldName="inspection_commis"
                 app:fieldTextAppearance="?android:textAppearanceMedium"
-                app:fieldType="Selection" />
+                app:fieldType="Selection"
+                app:widgetType="SearchableLive" />
 
             <odoo.controls.OField
                 android:id="@+id/ins_description"
@@ -144,6 +135,7 @@
                 <ScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="400dp"
                     android:paddingTop="20dp">
 
                     <LinearLayout

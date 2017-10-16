@@ -90,9 +90,6 @@ public class TechnicsInspection extends BaseFragment implements LoaderManager.Lo
 
     @Override
     public void onStatusChange(Boolean changed) {
-//        if (changed) {
-//            getLoaderManager().restartLoader(0, null, this);
-//        }
         getLoaderManager().restartLoader(0, null, this);
     }
 
@@ -206,9 +203,9 @@ public class TechnicsInspection extends BaseFragment implements LoaderManager.Lo
                 techInspection.quickCreateRecord(row);
             }
                 /*Бусад бичлэгүүдийг update хийж байна*/
+            techInspection.quickSyncRecords(domain);
             isnpectionItem.quickSyncRecords(null);
             norm.quickSyncRecords(null);
-            techInspection.quickSyncRecords(domain);
             return null;
         }
 

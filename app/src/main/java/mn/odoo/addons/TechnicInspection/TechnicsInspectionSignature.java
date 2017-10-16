@@ -84,7 +84,9 @@ public class TechnicsInspectionSignature extends OdooCompatActivity {
         title_1 = (TextView) findViewById(R.id.worker_1_title);
         title_2 = (TextView) findViewById(R.id.worker_2_title);
         title_3 = (TextView) findViewById(R.id.worker_3_title);
-
+        isSave = true;
+        isSave_2 = true;
+        isSave_3 = true;
         if (registrar_worker > 0) {
             title_1.setText("Бүртгэгч: " + resUsers.browse(registrar_worker).getString("name"));
             worker_1.setVisibility(View.VISIBLE);
@@ -97,7 +99,7 @@ public class TechnicsInspectionSignature extends OdooCompatActivity {
             isSave_2 = false;
         }
         if (inspection_commis > 0) {
-            title_3.setText("Коммис: " + employee.browse(inspection_commis).getString("name"));
+            title_3.setText("Комисс: " + employee.browse(inspection_commis).getString("name"));
             worker_3.setVisibility(View.VISIBLE);
             isSave_3 = false;
         }
@@ -306,7 +308,6 @@ public class TechnicsInspectionSignature extends OdooCompatActivity {
                         path.lineTo(eventX, eventY);
                         break;
                 }
-
                 invalidate((int) (dirtyRect.left - HALF_STROKE_WIDTH),
                         (int) (dirtyRect.top - HALF_STROKE_WIDTH),
                         (int) (dirtyRect.right + HALF_STROKE_WIDTH),

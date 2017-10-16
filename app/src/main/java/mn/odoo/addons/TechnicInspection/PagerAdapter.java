@@ -19,18 +19,22 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        Log.i("imput_position==", position + "");
-        switch (position) {
-            case 0:
-                return new TabInspectionItems();
-            case 1:
-                return new TabInspectionTire();
-            case 2:
-                return new TabInspectionAccumulator();
-            case 3:
-                return new TabInspectionUsageUom();
-            default:
-                return null;
+        try {
+            switch (position) {
+                case 0:
+                    return new TabInspectionItems();
+                case 1:
+                    return new TabInspectionTire();
+                case 2:
+                    return new TabInspectionAccumulator();
+                case 3:
+                    return new TabInspectionUsageUom();
+                default:
+                    return null;
+            }
+        } catch (Exception ex) {
+            Log.e("Exception: ", ex.getMessage());
+            return null;
         }
     }
 
