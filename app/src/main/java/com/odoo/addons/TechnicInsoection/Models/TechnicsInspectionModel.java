@@ -64,6 +64,7 @@ public class TechnicsInspectionModel extends OModel {
     OColumn accumulator_ids = new OColumn("Аккумулятор", TechnicInspectionAccumulators.class, OColumn.RelationType.OneToMany).setRelatedColumn("inspection_id");
     OColumn ins_photo = new OColumn("Зураг", TechnicInspectionPhoto.class, OColumn.RelationType.OneToMany).setRelatedColumn("inspection_id");
     OColumn inspection_respondent_id = new OColumn("Жолооч/Хариуцагч", Employee.class, OColumn.RelationType.ManyToOne);
+    OColumn inspection_commis = new OColumn("Коммис", Employee.class, OColumn.RelationType.ManyToOne);
     OColumn inspection_registrar_id = new OColumn("Бүртгэгч", ResUsers.class, OColumn.RelationType.ManyToOne);
     @Odoo.Functional(store = true, depends = {"inspection_respondent_id"}, method = "storeInsName")
     OColumn inspection_respondent_name = new OColumn("Жолооч", OVarchar.class).setLocalColumn();

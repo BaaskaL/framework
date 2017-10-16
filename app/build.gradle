@@ -5,7 +5,7 @@ android {
     buildToolsVersion '25'
     defaultConfig {
         useLibrary 'org.apache.http.legacy'
-        manifestPlaceholders = [applicationName: "Техник Ашиглалт Бүртгэл"]
+        manifestPlaceholders = [applicationName: "Гацуурт"]
         applicationId "com.odoo"
         minSdkVersion 14
         targetSdkVersion 25
