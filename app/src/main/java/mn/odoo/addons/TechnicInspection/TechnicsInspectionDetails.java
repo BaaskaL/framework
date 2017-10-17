@@ -283,7 +283,6 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
             OnTechnicSync sync = new OnTechnicSync();
             List<Object> params = new ArrayList<>();
             ODomain domain = new ODomain();
-            Log.i("technic_id=====", row.getString("id"));
             domain.add("id", "=", row.getString("id"));
             params.add(domain);
             params.add(row.getString("_id"));
@@ -653,17 +652,13 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
 
         @Override
         protected void onPostExecute(Void aVoid) {
-//            if (!id.equals("0")) {
-//                ODataRow technic = technicIns.browse(Integer.parseInt(id));
-//                Log.i("technic====", technic.toString());
-//                inspectionItemLines = technic.getO2MRecord("technic_inspection_check_list_ids").browseEach();
-//                linesUom = technic.getO2MRecord("inspection_usage_ids").browseEach();
-//                Log.i("linesUom====", linesUom.toString());
-//                tireLines = technic.getO2MRecord("tire_ids").browseEach();
-//                Log.i("tireLines====", tireLines.toString());
-//                tireLines = technic.getO2MRecord("accumulator_ids").browseEach();
-//                Log.i("technic====", tireLines.toString());
-//            }
+            if (!id.equals("0")) {
+                ODataRow technicRow = technic.browse(Integer.parseInt(id));
+//                inspectionItemLines = technicRow.getO2MRecord("technic_inspection_check_list_ids").browseEach();
+//                linesUom = technicRow.getO2MRecord("inspection_usage_ids").browseEach();
+                tireLines = technicRow.getO2MRecord("tires").browseEach();
+                accumulatorLines = technicRow.getO2MRecord("accumulators").browseEach();
+            }
             findViewById(R.id.InspectionProgress).setVisibility(View.GONE);
         }
     }
@@ -705,8 +700,10 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
         try {
             tireLines.clear();
             List<ODataRow> techs = technic.select(new String[]{"tires"}, "_id = ? ", new String[]{rows.getString("_id")});
+            Log.i("techs====", techs.toString());
             for (ODataRow tech : techs) {
                 tireLines = tech.getO2MRecord("tires").browseEach();
+                Log.i("tireLines====", tireLines.toString());
             }
         } catch (Exception e) {
             e.printStackTrace();

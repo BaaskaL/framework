@@ -750,12 +750,9 @@ public class OModel implements ISyncServiceListener {
     public int insertOrUpdate(int serverId, OValues values) {
         if (hasServerRecord(serverId)) {
             int row_id = selectRowId(serverId);
-            Log.i("server_id===update", row_id + "");
-            Log.i("vals========", values.toString());
             update(row_id, values);
             return row_id;
         } else {
-            Log.i("inserted_vals====", values.toString());
             return insert(values);
         }
     }
