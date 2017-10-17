@@ -654,12 +654,15 @@ public class TechnicsInspectionDetails extends OdooCompatActivity implements OFi
         @Override
         protected void onPostExecute(Void aVoid) {
 //            if (!id.equals("0")) {
-//               /* ODataRow technic = technicIns.browse(Integer.parseInt(id));
+//                ODataRow technic = technicIns.browse(Integer.parseInt(id));
 //                Log.i("technic====", technic.toString());
-////                inspectionItemLines = technic.getO2MRecord("technic_inspection_check_list_ids").browseEach();
+//                inspectionItemLines = technic.getO2MRecord("technic_inspection_check_list_ids").browseEach();
 //                linesUom = technic.getO2MRecord("inspection_usage_ids").browseEach();
+//                Log.i("linesUom====", linesUom.toString());
 //                tireLines = technic.getO2MRecord("tire_ids").browseEach();
-//                accumulatorLines = technic.getO2MRecord("accumulator_ids").browseEach();*/
+//                Log.i("tireLines====", tireLines.toString());
+//                tireLines = technic.getO2MRecord("accumulator_ids").browseEach();
+//                Log.i("technic====", tireLines.toString());
 //            }
             findViewById(R.id.InspectionProgress).setVisibility(View.GONE);
         }
